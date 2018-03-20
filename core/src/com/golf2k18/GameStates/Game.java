@@ -12,6 +12,7 @@ public class Game extends GameState
     protected Game(GameStateManager gsm)
     {
         super(gsm);
+        perspective.setToOrtho(false, 50, 50);
         grass = new Texture("1200px-Grass-JW.jpg");
     }
 

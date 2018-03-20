@@ -11,13 +11,14 @@ public class Menu extends GameState
 	public Menu(GameStateManager gsm)
 	{
 		super(gsm);
+		perspective.setToOrtho(false, golf_2k18.WIDTH,golf_2k18.HEIGHT);
 		backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
 	}
 	public void handleInput()
 	{
 		if(Gdx.input.justTouched())
         {
-            //push playstate
+            gsm.push(new Game(gsm));
         }
 	}
 	public void update(float dt)
@@ -26,6 +27,7 @@ public class Menu extends GameState
 	}
 	public void render(SpriteBatch sb)
 	{
+	    sb.setProjectionMatrix(perspective.combined);
 		sb.begin();
 		sb.draw(backgroundMenu, 0, 0, golf_2k18.HEIGHT, golf_2k18.WIDTH);
 		sb.end();
