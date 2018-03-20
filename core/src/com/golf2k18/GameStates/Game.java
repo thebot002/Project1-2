@@ -12,7 +12,7 @@ public class Game extends GameState
     protected Game(GameStateManager gsm)
     {
         super(gsm);
-        perspective.setToOrtho(false, 50, 50);
+        perspective.setToOrtho(false, 300, 300);
         grass = new Texture("1200px-Grass-JW.jpg");
     }
 
@@ -39,6 +39,7 @@ public class Game extends GameState
     @Override
     public void render(SpriteBatch sb)
     {
+        sb.setProjectionMatrix(perspective.combined);
         sb.begin();
         sb.draw(grass,0,0, golf_2k18.HEIGHT, golf_2k18.WIDTH);
         sb.end();
