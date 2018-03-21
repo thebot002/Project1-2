@@ -13,7 +13,7 @@ public class function
 			this.value = value;
 			left = right = null;
 		}		
-	}
+	
 	
 	public class functionTree
 	{
@@ -73,7 +73,7 @@ public class function
 		}
 	}
 	
-	public static void main(String[] args)
+	public void main(String[] args)
 	{
 		function test = new function();
 		Node root = new Node("+");
@@ -81,5 +81,6 @@ public class function
 		root.right = new Node("4");
 		functionTree ft = new functionTree();
 		System.out.println(ft.evaluate(root));
+	}
 	}
 }
