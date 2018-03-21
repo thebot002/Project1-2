@@ -70,13 +70,13 @@ public class function
 		}
 	}
 	
-	public static void main(String[] args)
-	{
-		function test = new function();
-		Node root = new Node("+");
-		root.left = new Node("5");
-		root.right = new Node("4");
-		functionTree ft = new functionTree();
-		System.out.println(ft.evaluate(root));
-	}
+//	public static void main(String[] args)
+//	{
+//		function test = new function();
+//		Node root = new Node("+");
+//		root.left = new Node("5");
+//		root.right = new Node("4");
+//		functionTree ft = new functionTree();
+//		System.out.println(ft.evaluate(root));
+//	}
 }
