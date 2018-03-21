@@ -61,7 +61,7 @@ public class function
 				{
 					return Math.sin(leftValue);					
 				}
-			
+			//sure?
 			if(leftValue == null)
 			{
 				return Math.cos(rightValue);
