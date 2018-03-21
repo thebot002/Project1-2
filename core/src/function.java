@@ -19,7 +19,7 @@ public class function
 	{
 		boolean isOperator(String s)
 		{
-			if(s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "sin" || s == "cos")
+			if(s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "sin" || s == "cos" || s == "sqrt")
 			{
 				return true;
 			}
@@ -49,6 +49,9 @@ public class function
 			if(node.value == "^")
 				return Math.pow(leftValue, rightValue);
 			
+			if(node.value == "sqrt")
+				return Math.sqrt(rightValue);
+			
 			if(node.value == "sin")
 				if(leftValue == null)
 				{
@@ -70,13 +73,13 @@ public class function
 		}
 	}
 	
-//	public static void main(String[] args)
-//	{
-//		function test = new function();
-//		Node root = new Node("+");
-//		root.left = new Node("5");
-//		root.right = new Node("4");
-//		functionTree ft = new functionTree();
-//		System.out.println(ft.evaluate(root));
-//	}
+	public static void main(String[] args)
+	{
+		function test = new function();
+		Node root = new Node("+");
+		root.left = new Node("5");
+		root.right = new Node("4");
+		functionTree ft = new functionTree();
+		System.out.println(ft.evaluate(root));
+	}
 }
