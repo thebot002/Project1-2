@@ -17,7 +17,7 @@ public class golf_2k18 extends ApplicationAdapter {
 	public void create () {
 	    gsm = new GameStateManager();
 		batch = new SpriteBatch();
-		gsm.push(new Menu(gsm));
+		gsm.push(new Menu(gsm, batch));
         Gdx.gl.glClearColor(0, 0, 0, 1);
 	}
 
