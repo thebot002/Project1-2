@@ -20,7 +20,10 @@ public class Course {
             }
         }
     }
-
+    public double getMu(int x, int y)
+    {
+        return grid[x][y].getHeight();
+    }
     public Course(Function f){
         this.f = f;
     }

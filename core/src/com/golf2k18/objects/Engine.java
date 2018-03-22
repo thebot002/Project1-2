@@ -12,5 +12,12 @@ public class Engine
     {
         Vector Fz = new Vector();
 
+        return Fz;
+    }
+    public Vector calcFriction(Ball ball)
+    {
+        Vector v = new Vector();
+
+        return v;
     }
 }
