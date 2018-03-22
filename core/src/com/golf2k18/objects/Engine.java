@@ -10,6 +10,7 @@ public class Engine
     }
     public Vector calcGravity(Ball ball)
     {
+        Vector Fz = new Vector();
 
     }
 }

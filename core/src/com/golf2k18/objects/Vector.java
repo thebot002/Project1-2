@@ -29,6 +29,20 @@ public class Vector
     public int getZ() {
         return z;
     }
+    public Vector add(Vector vector)
+    {
+        Vector v = vector;
+        v.setX(this.x + v.getX());
+        v.setY(this.y + v.getY());
+        v.setZ(this.z + v.getZ());
+        return v;
+    }
+    public void scale(double a)
+    {
+        this.x *= a;
+        this.y *= a;
+        this.z *= a;
+    }
 
 
     public Vector(int x, int y , int z)
