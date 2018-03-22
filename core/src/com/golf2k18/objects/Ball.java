@@ -1,32 +1,33 @@
 package com.golf2k18.objects;
 
-public class Ball 
+import com.badlogic.gdx.graphics.Texture;
+
+public class Ball
 {
-	private double mass;
+	private final double MASS = 0.45;
 	private Vector velocity;
-	private double x;
-	private double y;
-	private double z;
-	
-	public Ball(double x, double y, Vector v, double mass){
+
+	private Vector position;
+	private Texture ball;
+
+	public Ball(double x, double y, Vector v){
 		velocity = v;
-		this.x = x;
-		this.y = y; 
-		this.mass = mass;
-		
-	}
-	
-	public Ball(double mass) {
-		velocity = new Vector(0,0,0);
-		this.x = 0;
-		this.y = 0;
-		this.z = 0;
-		this.mass = mass;
-	}
-	
-	public void hit(Vector vector) {
+        position = new Vector(x,y,0);
+        ball = new Texture("golfBall.png");
+    }
+
+    public Ball(){
+        velocity = new Vector(1,1,0);
+        position = new Vector(0,0,0);
+        ball = new Texture("golfBall.png");
+    }
+
+    public Texture getTexture() {
+        return ball;
+    }
+
+    public void hit(Vector vector) {
 		this.velocity = vector;
-		
 	}
 	
 	public void updateVelocityX(double x) {
@@ -38,35 +39,35 @@ public class Ball
     }
 	public void updateLocation(double x, double y)
 	{
-		this.x = x;
-		this.y = y;
+        position.x = x;
+		position.y = y;
 	}
 	
 	public double getMass() {
-		return mass;
+		return MASS;
 	}
 	
 	public double getX() {
-		return x;
+		return position.x;
 	}
 	public double getY() {
-		return y;
+		return position.y;
 	}
 	public double getZ() {
-		return x;
+		return position.z;
 	}
 	public void setX(double x) {
-		this.x = x;
+		position.x = x;
 	}
 	public void setY(double y) {
-		this.y = y;
+		position.y = y;
 	}
 	public void setZ(double z) {
-		this.z = z;
+		position.z = z;
 	}
 	public Vector getVelocity()
 	{
-		return this.velocity;
+		return velocity;
 	}
 
 	
