@@ -2,6 +2,7 @@ package com.golf2k18.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.golf2k18.GameStates.*;
@@ -12,13 +13,16 @@ public class golf_2k18 extends ApplicationAdapter {
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 600;
 	public static final String TITLE = "Golf2k18";
-	
+	public static Music music;
 	@Override
 	public void create () {
 	    gsm = new GameStateManager();
 		batch = new SpriteBatch();
 		gsm.push(new Menu(gsm, batch));
         Gdx.gl.glClearColor(1, 1, 1, 1);
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Ludovico Einaudi - divenire.mp3"));
+        music.setVolume(0.5f);
+        music.play();
 	}
 
 	@Override
@@ -30,5 +34,6 @@ public class golf_2k18 extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		music.dispose();
 		}
 }
