@@ -110,6 +110,57 @@ public class Function
 		}
 	}
 	
+	Node xDerive(Node root)
+	{
+		if(!isOperator(root.value))
+		{
+			if(root.value.equals("x"))
+			{
+				root.value = "1";
+				return root;
+			}
+			root.value = "0";
+			return root;		
+		}
+		
+		Node tempLeft = xDerive(root.left);
+		Node tempRight = xDerive(root.right);
+		
+		if(root.value.equals("+"))
+			return leftValue + rightValue;
+		
+		if(root.value.equals("-"))
+			return leftValue - rightValue;
+		
+		if(root.value.equals("*"))
+			return leftValue * rightValue;
+		
+		if(root.value.equals("/"))
+			return leftValue / rightValue;
+		
+		if(root.value.equals("^"))
+			return Math.pow(leftValue, rightValue);
+		
+		if(root.value.equals("sin"))
+			if(leftValue == null)
+			{
+				return Math.sin(rightValue);
+			}
+			else
+			{
+				return Math.sin(leftValue);					
+			}
+
+		if(leftValue == null)
+		{
+			return Math.cos(rightValue);
+		}
+		else
+		{
+			return Math.cos(leftValue);					
+		}
+	}
+	
 	double xPartial(Node root, double xValue, double yValue, double delta)
 	{
 		double startPoint = evaluate(root, xValue - delta, yValue);
