@@ -31,12 +31,7 @@ public class IOMenu extends GameState
         createStage();
     }
 
-    @Override
-    public void create() {
-
-    }
-
-    private void createStage()
+   private void createStage()
     {
         stage = new Stage(new ScreenViewport(),batch);
         Table table = new Table();
@@ -86,7 +81,20 @@ public class IOMenu extends GameState
         stage.addActor(table);
     }
 
+    @Override
+    public void create() {
 
+    }
+
+    @Override
+    protected void handleInput() {
+
+    }
+
+    @Override
+    public void update(float dt) {
+
+    }
 
     @Override
     public void render(SpriteBatch sb)

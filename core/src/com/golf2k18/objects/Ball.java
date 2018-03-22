@@ -1,35 +1,24 @@
 package com.golf2k18.objects;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector3;
 
 public class Ball
 {
-	private double mass;
+	private final double MASS = 0.45;
 	private Vector velocity;
 
-	private Vector3 position;
+	private Vector position;
 	private Texture ball;
 
-	public Ball(int x, int y, Vector v, double mass){
+	public Ball(double x, double y, Vector v){
 		velocity = v;
-        position = new Vector3(x,y,0);
-        ball = new Texture("golfBall.png");
-		this.mass = mass;
-		
-	}
-	
-	public Ball(double mass) {
-		velocity = new Vector(0,0,0);
-        position = new Vector3(0,0,0);
-		this.mass = mass;
+        position = new Vector(x,y,0);
         ball = new Texture("golfBall.png");
     }
 
     public Ball(){
-        velocity = new Vector(0,0,0);
-        position = new Vector3(0,0,0);
-        this.mass = 0.45;
+        velocity = new Vector(1,1,0);
+        position = new Vector(0,0,0);
         ball = new Texture("golfBall.png");
     }
 
@@ -39,7 +28,6 @@ public class Ball
 
     public void hit(Vector vector) {
 		this.velocity = vector;
-		
 	}
 	
 	public void updateVelocityX(double x) {
@@ -51,35 +39,35 @@ public class Ball
     }
 	public void updateLocation(double x, double y)
 	{
-		position.x = (float) x;
-		position.y = (float) y;
+        position.x = x;
+		position.y = y;
 	}
 	
 	public double getMass() {
-		return mass;
+		return MASS;
 	}
 	
 	public double getX() {
-		return (double)position.x;
+		return position.x;
 	}
 	public double getY() {
-		return (double)position.y;
+		return position.y;
 	}
 	public double getZ() {
-		return (double)position.z;
+		return position.z;
 	}
 	public void setX(double x) {
-		position.x = (float)x;
+		position.x = x;
 	}
 	public void setY(double y) {
-		position.y = (float)y;
+		position.y = y;
 	}
 	public void setZ(double z) {
-		position.z = (float)z;
+		position.z = z;
 	}
 	public Vector getVelocity()
 	{
-		return this.velocity;
+		return velocity;
 	}
 
 	

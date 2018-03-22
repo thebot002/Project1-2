@@ -2,9 +2,9 @@ package com.golf2k18.objects;
 
 public class Vector
 {
-    private double x;
-    private double y;
-    private double z;
+    public double x;
+    public double y;
+    public double z;
 
     public void setX(double x) {
         this.x = x;

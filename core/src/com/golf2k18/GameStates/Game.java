@@ -14,7 +14,7 @@ public class Game extends GameState
 {
     private Texture grass;
     private OrthographicCamera camera;
-    private Texture ball;
+    private Ball ball;
     private Sprite course;
 
     protected Game(GameStateManager gsm)
@@ -25,10 +25,9 @@ public class Game extends GameState
     @Override
     public void create()
     {
-        perspective.setToOrtho(false,golf_2k18.WIDTH,golf_2k18.HEIGHT);
+        perspective.setToOrtho(false,golf_2k18.WIDTH*2,golf_2k18.HEIGHT*2);
         grass = new Texture("1200px-Grass-JW.jpg");
-        Ball b = new Ball();
-        ball = b.getTexture();
+        ball = new Ball();
     }
 
     @Override
@@ -42,19 +41,24 @@ public class Game extends GameState
 
     @Override
     public void update(float dt) {
-
+        handleInput();
+        Engine vroom = new Engine();
+        vroom.updateBall(ball);
     }
 
     @Override
     public void render(SpriteBatch sb)
     {
+        Gdx.gl.glClearColor(.58f, .839f, 0f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         sb.setProjectionMatrix(perspective.combined);
 
         sb.begin();
-        sb.draw(grass,0,0, golf_2k18.HEIGHT, golf_2k18.WIDTH);
-        sb.draw(ball,50,50);
+        //sb.draw(new Texture(),0,0);
+        //sb.draw(grass,0,0, golf_2k18.HEIGHT, golf_2k18.WIDTH);
+        sb.draw(ball.getTexture(),(int)(ball.getX()/0.025),(int)(ball.getY()/0.025)); //to be updated
         sb.end();
-        Engine vroom = new Engine();
     }
 
     @Override
