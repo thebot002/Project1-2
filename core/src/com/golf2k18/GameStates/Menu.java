@@ -27,8 +27,8 @@ public class Menu extends GameState
 		super(gsm);
 		backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
 		this.batch = batch;
-        skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
-        //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
+        //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
+        skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         createStage();
 	}
 

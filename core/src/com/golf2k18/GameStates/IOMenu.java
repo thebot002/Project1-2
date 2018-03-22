@@ -19,7 +19,8 @@ public class IOMenu extends GameState
     public IOMenu(GameStateManager gsm, SpriteBatch batch)
     {
         super(gsm);
-        skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
+        //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
+        skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         this.batch = batch;
         saves = new Array<String>();
         this.gsm = gsm;
