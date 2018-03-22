@@ -5,21 +5,21 @@ public class function
 	//For generating nodes in a binary tree
 	class Node
 	{
-		String value;
-		Node left, right;
+		String value; //Each node has a value (either a number or an operator)
+		Node left, right; //Each node has 2 children
 		
 		Node(String value)
 		{
 			this.value = value;
 			left = right = null;
 		}		
-	
+	}
 	
 	public class functionTree
 	{
 		boolean isOperator(String s)
 		{
-			if(s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "sin" || s == "cos" || s == "sqrt")
+			if(s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "sqrt" || s == "sin" || s == "cos") //sqrt = ^0.5, is it needed?
 			{
 				return true;
 			}
@@ -50,7 +50,14 @@ public class function
 				return Math.pow(leftValue, rightValue);
 			
 			if(node.value == "sqrt")
-				return Math.sqrt(rightValue);
+				if(leftValue == null)
+				{
+					return Math.sqrt(rightValue);
+				}
+				else
+				{
+					return Math.sqrt(leftValue);					
+				}
 			
 			if(node.value == "sin")
 				if(leftValue == null)
@@ -73,14 +80,15 @@ public class function
 		}
 	}
 	
-	public void main(String[] args)
+	public static void main(String[] args)
 	{
 		function test = new function();
-		Node root = new Node("+");
-		root.left = new Node("5");
-		root.right = new Node("4");
-		functionTree ft = new functionTree();
+		Node root = test.new Node("*");
+		root.left = test.new Node("^");
+		root.left.left = test.new Node("2");
+		root.left.right = test.new Node("3");
+		root.right = test.new Node("4");
+		functionTree ft = test.new functionTree();
 		System.out.println(ft.evaluate(root));
-	}
 	}
 }
