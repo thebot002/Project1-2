@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.golf2k18.game.golf_2k18;
 import com.golf2k18.objects.Ball;
+import com.golf2k18.objects.Engine;
 
 public class Game extends GameState
 {
@@ -53,6 +54,7 @@ public class Game extends GameState
         sb.draw(grass,0,0, golf_2k18.HEIGHT, golf_2k18.WIDTH);
         sb.draw(ball,50,50);
         sb.end();
+        Engine vroom = new Engine();
     }
 
     @Override

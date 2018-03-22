@@ -42,33 +42,40 @@ public class Ball
 		
 	}
 	
-	private void update() {
-		position.x = velocity.getX();
-		position.y = velocity.getY();
-		
+	public void updateVelocityX(double x) {
+		velocity.setX(x);
+	}
+	public void updateVelocityY(double y)
+    {
+        velocity.setY(y);
+    }
+	public void updateLocation(double x, double y)
+	{
+		position.x = (float) x;
+		position.y = (float) y;
 	}
 	
 	public double getMass() {
 		return mass;
 	}
 	
-	public int getX() {
-		return (int)position.x;
+	public double getX() {
+		return (double)position.x;
 	}
-	public int getY() {
-		return (int)position.y;
+	public double getY() {
+		return (double)position.y;
 	}
-	public int getZ() {
-		return (int)position.z;
+	public double getZ() {
+		return (double)position.z;
 	}
-	public void setX(int x) {
-		position.x = x;
+	public void setX(double x) {
+		position.x = (float)x;
 	}
-	public void setY(int y) {
-		position.y = y;
+	public void setY(double y) {
+		position.y = (float)y;
 	}
-	public void setZ(int z) {
-		position.z = z;
+	public void setZ(double z) {
+		position.z = (float)z;
 	}
 	public Vector getVelocity()
 	{

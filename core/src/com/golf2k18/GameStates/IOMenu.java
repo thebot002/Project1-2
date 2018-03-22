@@ -86,17 +86,7 @@ public class IOMenu extends GameState
         stage.addActor(table);
     }
 
-    @Override
-    protected void handleInput()
-    {
 
-    }
-
-    @Override
-    public void update(float dt)
-    {
-
-    }
 
     @Override
     public void render(SpriteBatch sb)
