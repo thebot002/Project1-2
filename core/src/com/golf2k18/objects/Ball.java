@@ -4,11 +4,11 @@ public class Ball
 {
 	private double mass;
 	private Vector velocity;
-	private int x;
-	private int y;
-	private int z;
+	private double x;
+	private double y;
+	private double z;
 	
-	public Ball(int x, int y, Vector v, double mass){
+	public Ball(double x, double y, Vector v, double mass){
 		velocity = v;
 		this.x = x;
 		this.y = y; 
@@ -29,12 +29,14 @@ public class Ball
 		
 	}
 	
-	private void updateVelocity() {
-		this.x = velocity.getX();
-		this.y = velocity.getY();
-		
+	public void updateVelocityX(double x) {
+		velocity.setX(x);
 	}
-	public void updateLoctation(int x, int y)
+	public void updateVelocityY(double y)
+    {
+        velocity.setY(y);
+    }
+	public void updateLocation(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
@@ -44,22 +46,22 @@ public class Ball
 		return mass;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
-	public int getZ() {
+	public double getZ() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
-	public void setZ(int z) {
+	public void setZ(double z) {
 		this.z = z;
 	}
 	public Vector getVelocity()
