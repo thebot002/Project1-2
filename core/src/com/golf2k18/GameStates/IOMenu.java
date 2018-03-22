@@ -31,6 +31,11 @@ public class IOMenu extends GameState
         createStage();
     }
 
+    @Override
+    public void create() {
+
+    }
+
     private void createStage()
     {
         stage = new Stage(new ScreenViewport(),batch);
