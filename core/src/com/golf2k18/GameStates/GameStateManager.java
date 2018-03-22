@@ -11,19 +11,23 @@ public class GameStateManager
 
 	public GameStateManager()
 	{
-		states = new Stack<GameState>();
+		states = new Stack<>();
 	}
 	public void push(GameState state)
 	{
+	    state.create();
 		states.push(state);
 	}
 	public void pop()
 	{
+	    states.peek().dispose();
 		states.pop();
 	}
 	public void set(GameState state)
 	{
+	    states.peek().dispose();
 		states.pop();
+		state.create();
 		states.push(state);
 	}
 

@@ -32,7 +32,12 @@ public class Menu extends GameState
         createStage();
 	}
 
-	public void handleInput()
+    @Override
+    public void create() {
+
+    }
+
+    public void handleInput()
 	{
 
 	}
