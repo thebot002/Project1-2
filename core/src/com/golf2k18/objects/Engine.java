@@ -7,9 +7,11 @@ public class Engine
     private Course course;
     private Function function;
     private Function.Node root;
-    private final double GRAVITY = 9.81;
+    private final double GRAVITY = -9.81;
     public Engine()
     {
+        //String[] str = {"0"};
+
         String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
         course = new Course(100,100,str);
         function = new Function();

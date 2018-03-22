@@ -36,6 +36,16 @@ public class IOMenu extends GameState
 
     }
 
+    @Override
+    protected void handleInput() {
+
+    }
+
+    @Override
+    public void update(float dt) {
+
+    }
+
     private void createStage()
     {
         stage = new Stage(new ScreenViewport(),batch);
