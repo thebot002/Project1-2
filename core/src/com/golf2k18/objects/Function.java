@@ -123,42 +123,115 @@ public class Function
 			return root;		
 		}
 		
-		Node tempLeft = xDerive(root.left);
-		Node tempRight = xDerive(root.right);
-		
 		if(root.value.equals("+"))
-			return leftValue + rightValue;
+		{
+			root.left = xDerive(root.left);
+			root.right = xDerive(root.right);
+			return root;
+		}
 		
 		if(root.value.equals("-"))
-			return leftValue - rightValue;
+		{
+			root.left = xDerive(root.left);
+			root.right = xDerive(root.right);
+			return root;
+		}
 		
 		if(root.value.equals("*"))
-			return leftValue * rightValue;
+		{
+			Node tempLeft = new Node("*");
+			Node tempRight = new Node("*");
+			
+			tempLeft.left = root.left;
+			tempLeft.right = xDerive(root.right);
+			tempRight.left = xDerive(root.left);
+			tempRight.right = root.right;
+			
+			root.value = "+";
+			root.left = tempLeft;
+			root.right = tempRight;
+			return root;
+		}
 		
 		if(root.value.equals("/"))
-			return leftValue / rightValue;
+		{
+			Node tempLeft = new Node("-");
+			Node tempRight = new Node("^");
+			tempLeft.left = new Node("*");
+			tempLeft.right = new Node("*");
+			tempRight.right = new Node("^");
+			tempRight.right.right = new Node("2");
+			
+			tempLeft.left.left = root.right;
+			tempLeft.left.right = xDerive(root.left);
+			tempLeft.right.left = root.left;
+			tempLeft.right.right = xDerive(root.right);
+			tempRight.right.left = root.right;
+			
+			root.left = tempLeft;
+			root.right = tempRight;
+			return root;
+		}
 		
 		if(root.value.equals("^"))
-			return Math.pow(leftValue, rightValue);
+		{
+			Node tempRight = new Node("^");
+			tempRight.right = new Node("-");
+			tempRight.right.right = new Node("1");
+			 
+			Node tempLeft = root.right;
+			tempRight.left = root.left;
+			tempRight.right.left = root.right;
+			
+			root.left = tempLeft;
+			root.right = tempRight;
+			root.value = "*";
+			return root;
+		}
 		
 		if(root.value.equals("sin"))
-			if(leftValue == null)
+		{
+			Node tempRight = new Node("cos");
+			
+			Node tempLeft;
+			
+			if(root.left.value == null)
 			{
-				return Math.sin(rightValue);
+				tempLeft = xDerive(root.right);
+				tempRight.right = root.right;
 			}
 			else
 			{
-				return Math.sin(leftValue);					
+				tempLeft = xDerive(root.left);	
+				tempRight.right = root.left;
 			}
+			
+			root.left = tempLeft;
+			root.right = tempRight.right;
+			root.value = "*";
+			return root;
+		}
 
-		if(leftValue == null)
+		Node tempLeft;
+		Node tempRight = new Node("*");		
+		tempRight.left = new Node("-1");
+		tempRight.right = new Node("sin");
+		
+		if(root.left.value == null)
 		{
-			return Math.cos(rightValue);
+			tempLeft = xDerive(root.right);
+			tempRight.right.right = root.right;
 		}
 		else
 		{
-			return Math.cos(leftValue);					
+			tempLeft = xDerive(root.left);	
+			tempRight.right.right = root.left;
 		}
+		
+		root.left = tempLeft;
+		root.right = tempRight;
+		root.value = "*";
+		return root;
 	}
 	
 	double xPartial(Node root, double xValue, double yValue, double delta)
