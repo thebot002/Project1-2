@@ -45,7 +45,7 @@ public class Ball
 	public int getY() {
 		return y;
 	}
-	public int getz() {
+	public int getZ() {
 		return x;
 	}
 	public void setX(int x) {
@@ -57,6 +57,11 @@ public class Ball
 	public void setZ(int z) {
 		this.z = z;
 	}
+	public Vector getVelocity()
+	{
+		return this.velocity;
+	}
+
 	
 	
 	
