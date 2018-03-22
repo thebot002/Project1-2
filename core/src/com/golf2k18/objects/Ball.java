@@ -29,10 +29,15 @@ public class Ball
 		
 	}
 	
-	private void update() {
+	private void updateVelocity() {
 		this.x = velocity.getX();
 		this.y = velocity.getY();
 		
+	}
+	public void updateLoctation(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
 	}
 	
 	public double getMass() {

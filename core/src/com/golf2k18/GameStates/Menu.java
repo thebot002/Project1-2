@@ -32,14 +32,6 @@ public class Menu extends GameState
         createStage();
 	}
 
-	public void handleInput()
-	{
-
-	}
-	public void update(float dt)
-	{
-
-	}
 	public void render(SpriteBatch sb)
 	{
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
