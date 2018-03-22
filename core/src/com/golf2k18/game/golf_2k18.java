@@ -20,9 +20,8 @@ public class golf_2k18 extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gsm.push(new Menu(gsm, batch));
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Ludovico Einaudi - divenire.mp3"));
-        music.setVolume(0.5f);
-        music.play();
+		music.setVolume(0.5f);
+
 	}
 
 	@Override

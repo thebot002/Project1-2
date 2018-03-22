@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class CreatorMenu extends GameState
 {
-private Skin skin;
+    private Skin skin;
 private Stage stage;
 private SpriteBatch batch;
 
@@ -117,7 +117,20 @@ private SpriteBatch batch;
                 gsm.pop();
             }
         });
+    }
 
+    @Override
+    public void create() {
+
+    }
+
+    @Override
+    protected void handleInput() {
+
+    }
+
+    @Override
+    public void update(float dt) {
 
     }
 

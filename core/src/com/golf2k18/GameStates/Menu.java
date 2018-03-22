@@ -1,6 +1,7 @@
 package com.golf2k18.GameStates;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
+import com.golf2k18.game.golf_2k18;
 
 
 public class Menu extends GameState
@@ -22,15 +23,16 @@ public class Menu extends GameState
     private TextField path;
     private SpriteBatch batch;
     private Stage stage;
-    public Menu(GameStateManager gsm, SpriteBatch batch)
-	{
-		super(gsm);
-		backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
-		this.batch = batch;
+    public Menu(GameStateManager gsm, SpriteBatch batch) {
+        super(gsm);
+        backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
+        this.batch = batch;
         //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         createStage();
-	}
+        golf_2k18.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Red Army Choir  Kalinka..mp3"));
+        golf_2k18.music.play();
+    }
 
     @Override
     public void create() {
