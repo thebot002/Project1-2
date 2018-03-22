@@ -109,4 +109,12 @@ public class Function
 			return Math.cos(leftValue);					
 		}
 	}
+	
+	public static void main(String[] args)
+	{
+		Function test = new Function();
+		String[] string = {"5","x","/"};
+		Node root = test.constructTree(string);
+		System.out.println(test.evaluate(root,0.1,0));
+	}
 }
