@@ -52,10 +52,6 @@ public class Menu extends GameState
         stage = new Stage(new ScreenViewport(), batch);
         Table table = new Table();
         table.setFillParent(true);
-        Image img = new Image(backgroundMenu);
-        img.setFillParent(true);
-        //stage.addActor(img);
-
 
         //label title
         Label label = new Label("GOLF2K18", skin, "title");
@@ -126,6 +122,17 @@ public class Menu extends GameState
             }
         });
         table.add(importBtn).center().fillX().pad(10f);
+        table.row();
+
+        //Third textButton
+        TextButton createCourse = new TextButton("Create new course", skin, "default");
+        createCourse.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gsm.push(new CreatorMenu(gsm,batch));
+            }
+        });
+        table.add(createCourse).center().fillX().pad(10f);
         table.row();
 
         //Second TextButton
