@@ -20,7 +20,7 @@ public class Function
 	
 	boolean isOperator(String s)
 	{
-		if(s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "sin" || s == "cos")
+		if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("sin") || s.equals("cos"))
 		{
 			return true;
 		}
@@ -129,6 +129,4 @@ public class Function
 		
 		return ySlope;
 	}
-	
-
 }
