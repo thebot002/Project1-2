@@ -57,40 +57,40 @@ public class Function
 	}
 	
 	
-	double evaluate(Node node, double xValue, double yValue)
+	double evaluate(Node root, double xValue, double yValue)
 	{
-		if(!isOperator(node.value))
+		if(!isOperator(root.value))
 		{
-			if(node.value.equals("x"))
+			if(root.value.equals("x"))
 			{
 				return xValue;
 			}
-			else if(node.value.equals("y"))
+			else if(root.value.equals("y"))
 			{
 				return yValue;
 			}
-			return Double.parseDouble(node.value);			
+			return Double.parseDouble(root.value);			
 		}
 		
-		Double leftValue = evaluate(node.left, xValue, yValue);
-		Double rightValue = evaluate(node.right, xValue, yValue);
+		Double leftValue = evaluate(root.left, xValue, yValue);
+		Double rightValue = evaluate(root.right, xValue, yValue);
 		
-		if(node.value.equals("+"))
+		if(root.value.equals("+"))
 			return leftValue + rightValue;
 		
-		if(node.value.equals("-"))
+		if(root.value.equals("-"))
 			return leftValue - rightValue;
 		
-		if(node.value.equals("*"))
+		if(root.value.equals("*"))
 			return leftValue * rightValue;
 		
-		if(node.value.equals("/"))
+		if(root.value.equals("/"))
 			return leftValue / rightValue;
 		
-		if(node.value.equals("^"))
+		if(root.value.equals("^"))
 			return Math.pow(leftValue, rightValue);
 		
-		if(node.value.equals("sin"))
+		if(root.value.equals("sin"))
 			if(leftValue == null)
 			{
 				return Math.sin(rightValue);
@@ -110,11 +110,32 @@ public class Function
 		}
 	}
 	
+	double xPartial(Node root, double xValue, double yValue, double delta)
+	{
+		double startPoint = evaluate(root, xValue - delta, yValue);
+		double endPoint = evaluate(root, xValue + delta, yValue);
+		
+		double xSlope = (endPoint - startPoint) / (2 * delta);
+		
+		return xSlope;
+	}
+	
+	double yPartial(Node root, double xValue, double yValue, double delta)
+	{
+		double startPoint = evaluate(root, xValue, yValue - delta);
+		double endPoint = evaluate(root, xValue, yValue + delta);
+		
+		double ySlope = (endPoint - startPoint) / (2 * delta);
+		
+		return ySlope;
+	}
+	
 	public static void main(String[] args)
 	{
+		double x, y = 1;
 		Function test = new Function();
-		String[] string = {"5","x","/"};
+		String[] string = {"0.2","y","*","0.1","x","*","+","0.03","x","2","^","*","+"};
 		Node root = test.constructTree(string);
-		System.out.println(test.evaluate(root,0.1,0));
+		System.out.println(test.evaluate(root,x,y));
 	}
 }
