@@ -7,15 +7,16 @@ public class Course {
     private static int courseWidth;
     private static int courseHeight;
 
+
     //default constructor
     public Course(int width, int height) {
         courseWidth = width;
         courseHeight = height;
-        grid = new Point[width*UNIT][height*UNIT]; //default size 100:100
+        grid = new Point[width*UNIT][height*UNIT];
 
         for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                grid[i][j] = new Point(Math.random()*10,Math.random()*2); //random heights & friction value
+            for (int j = 0; j < grid[i].length; j++) {
+                grid[i][j] = new Point(0,Math.random()*2); //random heights & friction value //The height will be determined by solving the equation
             }
         }
     }
