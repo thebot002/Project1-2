@@ -1,12 +1,17 @@
 package com.golf2k18.objects;
 
 public class Course {
-    Point[][] grid;
-    Function f;
+    private Point[][] grid;
+    private Function f;
+    public static final int UNIT = 1;
+    private static int courseWidth;
+    private static int courseHeight;
 
     //default constructor
-    public Course() {
-        grid = new Point[100][100]; //default size 100:100
+    public Course(int width, int height) {
+        courseWidth = width;
+        courseHeight = height;
+        grid = new Point[width*UNIT][height*UNIT]; //default size 100:100
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
