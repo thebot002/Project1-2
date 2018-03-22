@@ -17,14 +17,13 @@ public class golf_2k18 extends ApplicationAdapter {
 	public void create () {
 	    gsm = new GameStateManager();
 		batch = new SpriteBatch();
-		gsm.push(new Menu(gsm));
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+		gsm.push(new Menu(gsm, batch));
+        Gdx.gl.glClearColor(1, 1, 1, 1);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
 	}
 	

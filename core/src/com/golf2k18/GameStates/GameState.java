@@ -10,6 +10,7 @@ public abstract class GameState
 	protected OrthographicCamera perspective;
 	protected Vector3 cursor;
 	protected GameStateManager gsm;
+	protected SpriteBatch batch;
 	
 	protected GameState(GameStateManager gsm)
 	{
@@ -17,6 +18,14 @@ public abstract class GameState
 		perspective = new OrthographicCamera();
 		cursor = new Vector3();
 	}
+	protected GameState(GameStateManager gsm, SpriteBatch batch)
+	{
+		this.gsm = gsm;
+		perspective = new OrthographicCamera();
+		cursor = new Vector3();
+		this.batch = batch;
+	}
+
 	
 	protected abstract void handleInput();
 	public abstract void update(float dt);

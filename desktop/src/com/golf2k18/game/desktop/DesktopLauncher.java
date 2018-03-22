@@ -8,6 +8,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = golf_2k18.TITLE;
+		config.height = golf_2k18.HEIGHT;
+		config.width = golf_2k18.WIDTH;
 		new LwjglApplication(new golf_2k18(), config);
 	}
 }

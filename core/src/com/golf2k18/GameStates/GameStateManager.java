@@ -3,6 +3,7 @@ package com.golf2k18.GameStates;
 import java.util.Stack;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sun.media.jfxmediaimpl.MediaDisposer;
 
 public class GameStateManager
 {
@@ -25,12 +26,10 @@ public class GameStateManager
 		states.pop();
 		states.push(state);
 	}
-	public void update(float dt)
-	{
-		states.peek().update(dt);
-	}
+
 	public void render(SpriteBatch sb)
 	{
 		states.peek().render(sb);
 	}
+
 }
