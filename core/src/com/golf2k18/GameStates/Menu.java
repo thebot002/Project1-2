@@ -30,8 +30,9 @@ public class Menu extends GameState
         //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         createStage();
-        golf_2k18.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Red Army Choir  Kalinka..mp3"));
+        golf_2k18.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Wii Sports - Wii Sports Theme.mp3"));
         golf_2k18.music.play();
+        golf_2k18.music.setVolume(0.5f);
     }
 
     @Override
