@@ -5,8 +5,6 @@ import com.badlogic.gdx.Gdx;
 public class Engine
 {
     private Course course;
-    private Function function;
-    private Function.Node root;
     private final double GRAVITY = -9.81;
     private final double STOP_TOLERANCE = 0.2;
 
@@ -18,15 +16,12 @@ public class Engine
         //String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
 
         course = new Course(100,100,str);
-        function = new Function();
-
-        root = function.constructTree(course.formula);
     }
     private Vector calcGravity(Ball ball)
     {
         Vector Fz = new Vector();
-        Fz.setX((-ball.getMass()*GRAVITY*function.xPartial(root,ball.getX(), ball.getY(), 0.0001)));
-        Fz.setY((-ball.getMass()*GRAVITY*function.yPartial(root,ball.getX(),ball.getY(),0.0001)));
+        Fz.setX((-ball.getMass()*GRAVITY*course.getFunction().evaluateXDeriv(ball.getX(), ball.getY())));
+        Fz.setY((-ball.getMass()*GRAVITY*course.getFunction().evaluateYDeriv(ball.getX(),ball.getY())));
         return Fz;
     }
     private Vector calcFriction(Ball ball)

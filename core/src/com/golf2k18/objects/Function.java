@@ -2,11 +2,47 @@ package com.golf2k18.objects;
 
 import java.util.Stack;
 
-public class Function 
-	{
-	
-	//For generating nodes in a binary tree
-	class Node
+public class Function {
+
+    private Node root;
+    private Node xDeriv;
+    private Node yDeriv;
+
+    public Function(String[] postFix)
+    {
+        Stack<Node> nodeStack = new Stack();
+        Node tempRoot, tempLeft, tempRight;
+
+        for(int i = 0; i < postFix.length; i++)
+        {
+            tempRoot = new Node(postFix[i]);
+
+            if(!isOperator(postFix[i]))
+            {
+                nodeStack.push(tempRoot);
+            }
+            else
+            {
+                tempRight = nodeStack.pop();
+                tempRoot.right = tempRight;
+
+                if(postFix[i] != "sin" && postFix[i] != "cos")
+                {
+                    tempLeft = nodeStack.pop();
+                    tempRoot.left = tempLeft;
+                }
+
+                nodeStack.push(tempRoot);
+            }
+        }
+        root = nodeStack.peek();
+
+       xDeriv = xDerive(root);
+       yDeriv = yDerive(root);
+    }
+
+    //For generating nodes in a binary tree
+	private class Node
 	{
 		String value; //Each node has a value (either a number or an operator)
 		Node left, right; //Each node has 2 children
@@ -15,10 +51,10 @@ public class Function
 		{
 			this.value = value;
 			left = right = null;
-		}		
+        }
 	}
 	
-	boolean isOperator(String s)
+	private boolean isOperator(String s)
 	{
 		if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("sin") || s.equals("cos"))
 		{
@@ -26,41 +62,18 @@ public class Function
 		}
 		return false;
 	}
-	
-	Node constructTree(String[] postFix)
-	{
-		Stack<Node> nodeStack = new Stack();
-		Node tempRoot, tempLeft, tempRight;
-		
-		for(int i = 0; i < postFix.length; i++)
-		{
-			tempRoot = new Node(postFix[i]);
-			
-			if(!isOperator(postFix[i]))
-			{
-				nodeStack.push(tempRoot);
-			}
-			else
-			{
-				tempRight = nodeStack.pop();
-				tempRoot.right = tempRight;
-				
-				if(postFix[i] != "sin" && postFix[i] != "cos")
-				{					
-					tempLeft = nodeStack.pop();
-					tempRoot.left = tempLeft;
-				}
-				
-				nodeStack.push(tempRoot);
-			}
-		}
-		
-		tempRoot = nodeStack.peek();
-		return tempRoot;
-	}
-	
-	
-	double evaluate(Node root, double xValue, double yValue)
+
+	public double evaluateF(double x,double y){
+        return evaluate(root,x,y);
+    }
+    public double evaluateXDeriv(double x,double y){
+        return evaluate(xDeriv,x,y);
+    }
+    public double evaluateYDeriv(double x,double y){
+        return evaluate(yDeriv,x,y);
+    }
+
+    private double evaluate(Node root, double xValue, double yValue)
 	{
 		if(!isOperator(root.value))
 		{
@@ -118,7 +131,7 @@ public class Function
 		}
 	}
 	
-	Node xDerive(Node root)
+	private Node xDerive(Node root)
 	{
 		if(!isOperator(root.value))
 		{
@@ -128,7 +141,7 @@ public class Function
 				return tempNode;
 			}
 			Node tempNode = new Node("0");
-			return tempNode;		
+			return tempNode;
 		}
 		
 		if(root.value.equals("+"))
@@ -232,7 +245,7 @@ public class Function
 		return tempNode;
 	}
 	
-	Node yDerive(Node root)
+	private Node yDerive(Node root)
 	{
 		if(!isOperator(root.value))
 		{
@@ -345,7 +358,7 @@ public class Function
 		
 		return tempNode;
 	}
-	
+	/*
 	double xPartial(Node root, double xValue, double yValue, double delta)
 	{
 		double startPoint = evaluate(root, xValue - delta, yValue);
@@ -364,9 +377,9 @@ public class Function
 		double ySlope = (endPoint - startPoint) / (2 * delta);
 		
 		return ySlope;
-	}
+	}*/
 	
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		Function f = new Function();
 		Node N = f.constructTree(new String[] {"0.2", "y", "*", "sin", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"});
@@ -374,5 +387,5 @@ public class Function
 		Node xD = f.xDerive(N);
 		Node yD = f.yDerive(N);
 		System.out.println(f.evaluate(yD, 0, 1));
-	}
+	}*/
 }
