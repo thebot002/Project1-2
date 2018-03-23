@@ -3,6 +3,7 @@ package com.golf2k18.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -43,6 +44,23 @@ public class IO
          }
             out.close();
         }catch(IOException e){e.printStackTrace();}
+    }
+    public static void importCourse(Course course, String path)
+    {
+        FileHandle importStream = Gdx.files.internal(path);
+        BufferedReader in;
+        try{
+            in = new BufferedReader(importStream.reader());
+            course.courseWidth = Integer.parseInt(in.readLine());
+            course.courseHeight = Integer.parseInt(in.readLine());
+            course.MU = Double.parseDouble(in.readLine());
+
+
+
+
+
+            in.close();
+        }catch(IOException e){ e.printStackTrace();}
     }
 }
 
