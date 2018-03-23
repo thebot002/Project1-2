@@ -16,21 +16,31 @@ public class IO
         BufferedWriter out;
         try{
          out = new BufferedWriter((path.writer(true)));
-         out.write(course.courseWidth);
+         out.write(Integer.toString(course.courseWidth));
          out.newLine();
-         out.write(course.courseHeight);
+         out.write(Integer.toString(course.courseHeight));
          out.newLine();
          out.write(Double.toString(course.MU));
          out.newLine();
-         out.write(course.goal.toString());
+         for(int i = 0; i < course.start.length; i++) {
+             out.write(Double.toString(course.start[i]));
+             if(i<course.start.length-1){out.write(" ");}
+         }
          out.newLine();
-         out.write(course.goal.toString());
+         for(int i = 0; i < course.goal.length; i++){
+             out.write(Double.toString(course.goal[i]));
+             if(i<course.goal.length-1){out.write(" ");}
+         }
          out.newLine();
          out.write(Double.toString(course.tolerance));
          out.newLine();
          out.write(Double.toString(course.vMax));
          out.newLine();
-         out.write(course.formula.toString());
+         for(int i = 0; i < course.formula.length; i++)
+         {
+             out.write(course.formula[i]);
+             out.write(" ");
+         }
             out.close();
         }catch(IOException e){e.printStackTrace();}
     }

@@ -11,7 +11,7 @@ public class GameStateManager
 
 	public GameStateManager()
 	{
-		states = new Stack<>();
+		states = new Stack<GameState>();
 	}
 	public void push(GameState state)
 	{
