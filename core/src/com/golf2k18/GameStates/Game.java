@@ -2,9 +2,7 @@ package com.golf2k18.GameStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.golf2k18.game.golf_2k18;
 import com.golf2k18.objects.Ball;
@@ -13,9 +11,9 @@ import com.golf2k18.objects.Engine;
 public class Game extends GameState
 {
     private Texture grass;
-    private OrthographicCamera camera;
     private Ball ball;
-    private Sprite course;
+
+    private Engine vroom;
 
     protected Game(GameStateManager gsm)
     {
@@ -26,8 +24,9 @@ public class Game extends GameState
     public void create()
     {
         perspective.setToOrtho(false,golf_2k18.WIDTH*2,golf_2k18.HEIGHT*2);
-        grass = new Texture("1200px-Grass-JW.jpg");
+        //grass = new Texture("1200px-Grass-JW.jpg");
         ball = new Ball();
+        vroom = new Engine();
     }
 
     @Override
@@ -42,8 +41,7 @@ public class Game extends GameState
     @Override
     public void update(float dt) {
         handleInput();
-        Engine vroom = new Engine();
-        vroom.updateBall(ball);
+        if(ball.getVelocity().x != 0.0 || ball.getVelocity().y != 0.0 || ball.getVelocity().z != 0.0) vroom.updateBall(ball);
     }
 
     @Override
@@ -64,6 +62,7 @@ public class Game extends GameState
     @Override
     public void dispose()
     {
-        grass.dispose();
+        ball.getTexture().dispose();
+        //grass.dispose();
     }
 }

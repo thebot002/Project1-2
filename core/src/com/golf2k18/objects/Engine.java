@@ -10,9 +10,11 @@ public class Engine
     private final double GRAVITY = -9.81;
     public Engine()
     {
-        //String[] str = {"0"};
+        String[] str = {"0"};
 
-        String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
+        //String[] str = {"y","x","*"};
+
+        //String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
         course = new Course(100,100,str);
         function = new Function();
 
@@ -29,7 +31,8 @@ public class Engine
     {
         Vector v = ball.getVelocity();
         v.scale(-course.MU*ball.getMass()*GRAVITY);
-        v.scale(1/v.magnitude());
+        if(v.magnitude() != 0.0) v.scale(1/v.magnitude());
+        v.inverse();
         return v;
     }
     public Vector getAcceleration(Ball ball)
