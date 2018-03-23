@@ -15,7 +15,7 @@ public class GameStateManager
 	}
 	public void push(GameState state)
 	{
-	    //state.create();
+	    state.create();
 		states.push(state);
 	}
 	public void pop()
@@ -27,13 +27,13 @@ public class GameStateManager
 	{
 	    //states.peek().dispose();
 		states.pop();
-		//state.create();
+		state.create();
 		states.push(state);
 	}
 
 	public void render(SpriteBatch sb)
 	{
-        //states.peek().update(1);
+        states.peek().update(1);
         states.peek().render(sb);
 	}
 
