@@ -37,11 +37,12 @@ public class Vector
         this.z += vector.getZ();
     }
 
-    public void scale(double a)
+    public Vector scale(double a)
     {
         this.x *= a;
         this.y *= a;
         this.z *= a;
+        return this;
     }
     public Vector()
     {

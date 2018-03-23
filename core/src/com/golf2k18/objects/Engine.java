@@ -8,13 +8,15 @@ public class Engine
     private Function function;
     private Function.Node root;
     private final double GRAVITY = -9.81;
+    private final double STOP_TOLERANCE = 0.2;
+
     public Engine()
     {
         String[] str = {"0"};
-
+        //String[] str = {"x","sin"};
         //String[] str = {"y","x","*"};
-
         //String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
+
         course = new Course(100,100,str);
         function = new Function();
 
@@ -30,9 +32,8 @@ public class Engine
     private Vector calcFriction(Ball ball)
     {
         Vector v = ball.getVelocity();
-        v.scale(-course.MU*ball.getMass()*GRAVITY);
         if(v.magnitude() != 0.0) v.scale(1/v.magnitude());
-        v.inverse();
+        v.scale(course.MU*ball.getMass()*GRAVITY);
         return v;
     }
     public Vector getAcceleration(Ball ball)
@@ -68,6 +69,8 @@ public class Engine
     public void updateBall(Ball ball)
     {
         ball.updateLocation(eulerX(ball,(double)Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
+
+        if(ball.getVelocity().magnitude() <= STOP_TOLERANCE && (calcGravity(ball).magnitude() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         eulerVx(ball,Gdx.graphics.getDeltaTime());
         eulerVy(ball,Gdx.graphics.getDeltaTime());
     }

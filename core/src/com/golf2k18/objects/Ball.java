@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Ball
 {
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
 
 	private final double MASS = 0.45;
 	private Vector velocity;
@@ -12,7 +12,7 @@ public class Ball
 	private Vector position;
 	private Texture ball;
 
-	private final double STOP_TOLERANCE = 0.2;
+	private boolean stopped;
 
 	public Ball(double x, double y, Vector v){
 		velocity = v;
@@ -22,6 +22,7 @@ public class Ball
 
     public Ball(){
         velocity = new Vector(10,10,0);
+        stopped = false;
         position = new Vector(0,0,0);
         ball = new Texture("golfBall.png");
     }
@@ -31,18 +32,15 @@ public class Ball
     }
 
     public void hit(Vector vector) {
+	    stopped = false;
 		this.velocity = vector.copy();
 	}
 	
 	public void updateVelocityX(double x) {
 	    if(DEBUG) System.out.println("x: " + x);
-        if(x<=STOP_TOLERANCE) x = 0.0;
-
         velocity.setX(x);
 	}
 	public void updateVelocityY(double y) {
-	    if(y<=STOP_TOLERANCE) y = 0.0;
-
         if(DEBUG) System.out.println("y: " + y);
         velocity.setY(y);
     }
@@ -79,9 +77,13 @@ public class Ball
 		return velocity.copy();
 	}
 
-	
-	
-	
-	
+    public void setStopped() {
+	    velocity = new Vector(0,0,0);
+        this.stopped = true;
+    }
+
+    public boolean isStopped(){
+	    return stopped;
+    }
 }
 
