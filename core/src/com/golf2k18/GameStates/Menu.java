@@ -24,6 +24,7 @@ public class Menu extends GameState
     private TextField path;
     private SpriteBatch batch;
     private Stage stage;
+    public static boolean mute;
     public Menu(GameStateManager gsm, SpriteBatch batch) {
         super(gsm);
         backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
@@ -35,6 +36,7 @@ public class Menu extends GameState
         golf_2k18.music.play();
         golf_2k18.music.setLooping(true);
         golf_2k18.music.setVolume(0.5f);
+        mute = false;
     }
 
     @Override
@@ -166,10 +168,26 @@ public class Menu extends GameState
                 gsm.push(new Game(gsm));
             }
         });
-        table.add(button).bottom().center().fillX().pad(10f).padBottom(200f);;
+        table.add(button).center().fillX().pad(10f);
         table.row();
 
-
+        //MuteButton
+        TextButton mute = new TextButton("Mute/unmute music", skin);
+        mute.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(!Menu.mute){
+                    golf_2k18.music.setVolume(0f);
+                    Menu.mute = true;
+                }
+                else
+                {
+                 golf_2k18.music.setVolume(.5f);
+                 Menu.mute = false;
+                }
+            }
+        });
+        table.add(mute).bottom().center().fillX().pad(10f).padBottom(200f);
        // table.debug();
         stage.addActor(table);
     }

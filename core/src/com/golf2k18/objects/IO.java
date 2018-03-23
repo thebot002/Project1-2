@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class IO
 {
+    //TODO
     public static void exportCourse(Course course, String name)
     {
         String fileName = name + ".txt";
@@ -46,8 +47,10 @@ public class IO
             out.close();
         }catch(IOException e){e.printStackTrace();}
     }
-    public static void importCourse(Course course, String path)
+    public static Course importCourse(String path)
     {
+        String[] str = {""};
+        Course course = new Course(1,1,str);
         FileHandle importStream = Gdx.files.internal(path);
         BufferedReader in;
         try{
@@ -85,6 +88,7 @@ public class IO
         }catch(IOException e){ e.printStackTrace();}
         catch(NumberFormatException ex){ex.printStackTrace();}
         catch(Exception exc){exc.printStackTrace();}
+        return course;
     }
 }
 
