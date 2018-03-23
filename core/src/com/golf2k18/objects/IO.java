@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Scanner;
 
 public class IO
 {
@@ -54,15 +55,32 @@ public class IO
             course.courseWidth = Integer.parseInt(in.readLine());
             course.courseHeight = Integer.parseInt(in.readLine());
             course.MU = Double.parseDouble(in.readLine());
-            in.readLine();
-            in.readLine();
+            String start = in.readLine();
+            Scanner scan = new Scanner(start);
+            int i = 0;
+            while (scan.hasNext())
+            {
+                course.start[i] = Double.parseDouble(scan.next());
+                i++;
+            }
+            String goal = in.readLine();
+            scan = new Scanner(goal);
+            i = 0;
+            while (scan.hasNext())
+            {
+                course.goal[i] = Double.parseDouble(scan.next());
+                i++;
+            }
             course.tolerance = Double.parseDouble(in.readLine());
             course.vMax = Double.parseDouble(in.readLine());
-            in.readLine();
-
-
-
-
+            i = 0;
+            String formula = in.readLine();
+            scan = new Scanner(formula);
+            while (scan.hasNext())
+            {
+                course.formula[i] = scan.next();
+                i++;
+            }
             in.close();
         }catch(IOException e){ e.printStackTrace();}
         catch(NumberFormatException ex){ex.printStackTrace();}
