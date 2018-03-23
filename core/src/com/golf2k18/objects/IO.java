@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class IO
 {
-    //TODO
+    //TODO internal memory
     public static void exportCourse(Course course, String name)
     {
         String fileName = name + ".txt";
