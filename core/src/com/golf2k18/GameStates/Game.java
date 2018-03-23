@@ -23,7 +23,7 @@ public class Game extends GameState
     @Override
     public void create()
     {
-        perspective.setToOrtho(false,golf_2k18.WIDTH*2,golf_2k18.HEIGHT*2);
+        perspective.setToOrtho(false,golf_2k18.WIDTH*5,golf_2k18.HEIGHT*5);
         //grass = new Texture("1200px-Grass-JW.jpg");
         ball = new Ball();
         vroom = new Engine();
@@ -41,7 +41,7 @@ public class Game extends GameState
     @Override
     public void update(float dt) {
         handleInput();
-        if(ball.getVelocity().x != 0.0 || ball.getVelocity().y != 0.0 || ball.getVelocity().z != 0.0) vroom.updateBall(ball);
+        if(!ball.isStopped()) vroom.updateBall(ball);
     }
 
     @Override
