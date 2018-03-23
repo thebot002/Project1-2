@@ -54,13 +54,19 @@ public class IO
             course.courseWidth = Integer.parseInt(in.readLine());
             course.courseHeight = Integer.parseInt(in.readLine());
             course.MU = Double.parseDouble(in.readLine());
-
+            in.readLine();
+            in.readLine();
+            course.tolerance = Double.parseDouble(in.readLine());
+            course.vMax = Double.parseDouble(in.readLine());
+            in.readLine();
 
 
 
 
             in.close();
         }catch(IOException e){ e.printStackTrace();}
+        catch(NumberFormatException ex){ex.printStackTrace();}
+        catch(Exception exc){exc.printStackTrace();}
     }
 }
 
