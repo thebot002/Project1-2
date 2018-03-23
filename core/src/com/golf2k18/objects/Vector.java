@@ -29,13 +29,12 @@ public class Vector
     public double getZ() {
         return z;
     }
-    public Vector add(Vector vector)
+
+    public void add(Vector vector)
     {
-        Vector v = vector;
-        v.setX(this.x + v.getX());
-        v.setY(this.y + v.getY());
-        v.setZ(this.z + v.getZ());
-        return v;
+        this.x += vector.getX();
+        this.y += vector.getY();
+        this.z += vector.getZ();
     }
 
     public void scale(double a)
@@ -60,6 +59,16 @@ public class Vector
     public double magnitude()
     {
         return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2));
+    }
+
+    public Vector copy(){
+        return new Vector(x,y,z);
+    }
+
+    public void inverse(){
+        x = -x;
+        y = -y;
+        z = -z;
     }
 
 }
