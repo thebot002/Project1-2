@@ -33,6 +33,7 @@ public class Menu extends GameState
         createStage();
         golf_2k18.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Wii Sports - Wii Sports Theme.mp3"));
         golf_2k18.music.play();
+        golf_2k18.music.setLooping(true);
         golf_2k18.music.setVolume(0.5f);
     }
 

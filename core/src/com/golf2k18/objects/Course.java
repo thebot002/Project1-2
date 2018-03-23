@@ -1,8 +1,8 @@
 package com.golf2k18.objects;
 
 public class Course {
-    public static int courseWidth;
-    public static int courseHeight;
+    public int courseWidth;
+    public int courseHeight;
     public String[] formula;
     public final double MU = 0.5;
     public double[] start = {0,0,0};
