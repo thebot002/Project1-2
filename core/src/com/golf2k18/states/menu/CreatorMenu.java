@@ -1,4 +1,4 @@
-package com.golf2k18.GameStates;
+package com.golf2k18.states.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -7,16 +7,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.golf2k18.states.State;
+import com.golf2k18.states.StateManager;
 
-public class CreatorMenu extends GameState
+public class CreatorMenu extends MenuState
 {
+    private SpriteBatch batch;
     private Skin skin;
-private Stage stage;
-private SpriteBatch batch;
+    private Stage stage;
 
-    protected CreatorMenu(GameStateManager gsm, SpriteBatch batch)
+    protected CreatorMenu(StateManager manager, SpriteBatch batch)
     {
-        super(gsm, batch);
+        super(manager);
         this.batch = batch;
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         createStage();
@@ -114,23 +116,13 @@ private SpriteBatch batch;
         back.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.pop();
+                manager.pop();
             }
         });
     }
 
     @Override
     public void create() {
-
-    }
-
-    @Override
-    protected void handleInput() {
-
-    }
-
-    @Override
-    public void update(float dt) {
 
     }
 

@@ -1,5 +1,7 @@
 package com.golf2k18.objects;
 
+import com.badlogic.gdx.math.Vector3;
+
 public class Vector
 {
     public double x;
@@ -66,10 +68,23 @@ public class Vector
         return new Vector(x,y,z);
     }
 
+    @Override
+    public String toString() {
+        return "Vector{" +
+                x +
+                "," + y +
+                "," + z +
+                '}';
+    }
+
     public void inverse(){
         x = -x;
         y = -y;
         z = -z;
+    }
+
+    public Vector3 toVector3(){
+        return new Vector3((float)x,(float)y,(float)z);
     }
 
 }

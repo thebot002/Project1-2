@@ -5,13 +5,14 @@ import com.badlogic.gdx.Gdx;
 public class Engine
 {
     private Course course;
-    private final double GRAVITY = -9.81;
+    private final double GRAVITY = 9.81;
     private final double STOP_TOLERANCE = 0.2;
 
     public Engine()
     {
-        String[] str = {"0"};
         //String[] str = {"x","sin"};
+        //String[] str = {"0"};
+        String[] str = {"0","0.5","x","5","-","2","^","^","-"};
         //String[] str = {"y","x","*"};
         //String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
 
@@ -28,7 +29,7 @@ public class Engine
     {
         Vector v = ball.getVelocity();
         if(v.magnitude() != 0.0) v.scale(1/v.magnitude());
-        v.scale(course.MU*ball.getMass()*GRAVITY);
+        v.scale(-course.MU*ball.getMass()*GRAVITY);
         return v;
     }
     public Vector getAcceleration(Ball ball)
@@ -64,11 +65,14 @@ public class Engine
     public void updateBall(Ball ball)
     {
         ball.updateLocation(eulerX(ball,(double)Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
+        ball.updateZ(course.getFunction().evaluateF(ball.getX(),ball.getY()));
 
         if(ball.getVelocity().magnitude() <= STOP_TOLERANCE && (calcGravity(ball).magnitude() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         eulerVx(ball,Gdx.graphics.getDeltaTime());
         eulerVy(ball,Gdx.graphics.getDeltaTime());
     }
 
-
+    public Course getCourse() {
+        return course;
+    }
 }

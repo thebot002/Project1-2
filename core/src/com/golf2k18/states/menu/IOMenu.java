@@ -1,4 +1,4 @@
-package com.golf2k18.GameStates;
+package com.golf2k18.states.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,22 +10,24 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.golf2k18.objects.Course;
 import com.golf2k18.objects.IO;
+import com.golf2k18.states.State;
+import com.golf2k18.states.StateManager;
 
 
-public class IOMenu extends GameState
+public class IOMenu extends MenuState
 {
     private SpriteBatch batch;
     private Stage stage;
     private Skin skin;
     private Array<String> saves;
-    public IOMenu(GameStateManager gsm, SpriteBatch batch)
+    public IOMenu(StateManager manager, SpriteBatch batch)
     {
-        super(gsm);
+        super(manager);
         //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         this.batch = batch;
         saves = new Array<String>();
-        this.gsm = gsm;
+        this.manager = manager;
        //temp
         saves.add("Under");
         saves.add("Construction");
@@ -76,7 +78,7 @@ public class IOMenu extends GameState
         {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.pop();
+                manager.pop();
             }
         });
 
@@ -94,16 +96,6 @@ public class IOMenu extends GameState
 
     @Override
     public void create() {
-
-    }
-
-    @Override
-    protected void handleInput() {
-
-    }
-
-    @Override
-    public void update(float dt) {
 
     }
 

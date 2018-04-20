@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Ball
 {
-    private final boolean DEBUG = false;
+    private final boolean DEBUG = true;
 
 	private final double MASS = 0.45;
 	private Vector velocity;
@@ -21,7 +21,7 @@ public class Ball
     }
 
     public Ball(){
-        velocity = new Vector(10,10,0);
+        velocity = new Vector(8,8,0);
         stopped = false;
         position = new Vector(0,0,0);
         ball = new Texture("golfBall.png");
@@ -49,6 +49,10 @@ public class Ball
         position.x = x;
 		position.y = y;
 	}
+
+	public void updateZ(double z){
+	    position.z = z;
+    }
 	
 	public double getMass() {
 		return MASS;

@@ -1,14 +1,14 @@
 package com.golf2k18.objects;
 
 public class Course {
-    public int courseWidth;
-    public int courseHeight;
-    public String[] formula;
-    public double MU = 0.5;
-    public double[] start = {0,0,0};
-    public double[] goal = {0.0,1.0,0.0};
-    public double tolerance = 0.02;
-    public double vMax = 3;
+    protected int courseWidth;
+    protected int courseHeight;
+    protected String[] formula;
+    protected double MU = 0.5;
+    protected double[] start = {0,0,0};
+    protected double[] goal = {0.0,1.0,0.0};
+    protected double tolerance = 0.02;
+    protected double vMax = 3;
 
     private Function function;
 
@@ -22,8 +22,5 @@ public class Course {
         courseHeight = height;
 
         function = new Function(formula);
-
     }
-
-
 }

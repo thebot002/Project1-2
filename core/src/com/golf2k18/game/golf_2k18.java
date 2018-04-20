@@ -5,23 +5,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.golf2k18.GameStates.*;
+import com.golf2k18.states.*;
+import com.golf2k18.states.menu.Menu;
 
 public class golf_2k18 extends ApplicationAdapter {
 	private SpriteBatch batch;
-	private GameStateManager gsm;
+	private StateManager gsm;
 	public static final int HEIGHT = 800;
 	public static final int WIDTH = 600;
 	public static final String TITLE = "Golf2k18";
 	public static Music music;
 	@Override
 	public void create () {
-	    gsm = new GameStateManager();
+	    gsm = new StateManager();
 		batch = new SpriteBatch();
 		gsm.push(new Menu(gsm, batch));
         Gdx.gl.glClearColor(1, 1, 1, 1);
-
-
 	}
 
 	@Override
