@@ -39,7 +39,7 @@ public class Menu extends MenuState
         golf_2k18.music.play();
         golf_2k18.music.setLooping(true);
         golf_2k18.music.setVolume(0.5f);
-        mute = false;
+        mute = true;
     }
 
     @Override

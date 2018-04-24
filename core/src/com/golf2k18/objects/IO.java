@@ -19,9 +19,9 @@ public class IO
         BufferedWriter out;
         try{
          out = new BufferedWriter((path.writer(true)));
-         out.write(Integer.toString(course.courseWidth));
+         out.write(Integer.toString(course.width));
          out.newLine();
-         out.write(Integer.toString(course.courseHeight));
+         out.write(Integer.toString(course.height));
          out.newLine();
          out.write(Double.toString(course.MU));
          out.newLine();
@@ -55,8 +55,8 @@ public class IO
         BufferedReader in;
         try{
             in = new BufferedReader(importStream.reader());
-            course.courseWidth = Integer.parseInt(in.readLine());
-            course.courseHeight = Integer.parseInt(in.readLine());
+            course.width = Integer.parseInt(in.readLine());
+            course.height = Integer.parseInt(in.readLine());
             course.MU = Double.parseDouble(in.readLine());
             String start = in.readLine();
             Scanner scan = new Scanner(start);

@@ -10,13 +10,13 @@ public class Engine
 
     public Engine()
     {
-        //String[] str = {"x","sin"};
+        String[] str = {"x","cos"};
         //String[] str = {"0"};
-        String[] str = {"0","0.5","x","5","-","2","^","^","-"};
+        //String[] str = {"0","0.5","x","5","-","2","^","^","-"};
         //String[] str = {"y","x","*"};
         //String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
 
-        course = new Course(100,100,str);
+        course = new Course(50,50,str);
     }
     private Vector calcGravity(Ball ball)
     {

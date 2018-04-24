@@ -7,15 +7,14 @@ public class Face {
 
     private int id;
 
-    static int amount;
+    private static int amount = 0;
 
     public Face(Vector p1, Vector p2, Vector p3) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
 
-        this.id = amount;
-        amount++;
+        this.id = ++amount;
     }
 
     public Vector p1() {

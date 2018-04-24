@@ -19,7 +19,7 @@ public abstract class GameState extends State {
     private PerspectiveCamera camera;
     private CameraInputController controller;
     private ModelBatch batch;
-    private Array<ModelInstance> instances = new Array<ModelInstance>();
+    private Array<ModelInstance> instances = new Array<>();
 
 
     private Color bgColor = new Color(.8f,.8f,.8f,1f);
@@ -36,8 +36,8 @@ public abstract class GameState extends State {
         batch = new ModelBatch();
 
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(0f, 0f, 10f);
-        camera.lookAt(0, 0, 0);
+        camera.position.set(10f, 10f, 10f);
+        camera.lookAt(10, 10, 0);
         camera.near = 0.1f;
         camera.far = 1000f;
         camera.update();
@@ -53,18 +53,19 @@ public abstract class GameState extends State {
 
     public void render (final Array<ModelInstance> instances) {
         batch.begin(camera);
-        if (instances != null) render(batch, instances);
+        //if (instances != null)
+            render(batch, instances);
         batch.end();
     }
 
     @Override
     public void render() {
-        update(1);
         controller.update();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 
+        update(Gdx.graphics.getDeltaTime());
         render(instances);
     }
 
@@ -74,6 +75,7 @@ public abstract class GameState extends State {
     }
 
     public abstract void handleInput();
-    public abstract void update(float dt);
-
+    public void update(float dt){
+        handleInput();
+    }
 }
