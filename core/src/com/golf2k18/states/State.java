@@ -1,11 +1,12 @@
 package com.golf2k18.states;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-public abstract class State implements ApplicationListener {
+public abstract class State extends InputAdapter implements ApplicationListener {
 	protected Vector3 cursor;
 	protected StateManager manager;
 

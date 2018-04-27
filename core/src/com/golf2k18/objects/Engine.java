@@ -16,7 +16,7 @@ public class Engine
         //String[] str = {"y","x","*"};
         //String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
 
-        course = new Course(50,50,str);
+        course = new Course(20,20,str);
     }
     private Vector calcGravity(Ball ball)
     {

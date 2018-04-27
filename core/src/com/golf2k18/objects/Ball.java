@@ -31,8 +31,8 @@ public class Ball
     }
 
     public Ball(){
-        velocity = new Vector(8,8,0);
-        stopped = false;
+        velocity = new Vector(2,2,0);
+        stopped = true;
         position = new Vector(10,10,0);
         ballTexture = new Texture("8wzgvr.jpg");
 
@@ -52,9 +52,11 @@ public class Ball
         if(DEBUG) System.out.println("y: " + y);
         velocity.setY(y);
     }
+
     public void updateLocation(double x, double y) {
         position.x = x;
-		position.y = y;
+        position.y = y;
+        updateInstance();
 	}
 	public void updateZ(double z){
 	    position.z = z;
@@ -110,7 +112,7 @@ public class Ball
 
         Model tempSphere;
         tempSphere = builder.createSphere(DIAMETER, DIAMETER, DIAMETER,
-                10,10,
+                50,50,
                 new Material(TextureAttribute.createDiffuse(ballTexture)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
@@ -120,6 +122,10 @@ public class Ball
 
     private void updateInstance(){
         model.transform.setTranslation((float)(position.x),(float)(position.y),(float)(position.z+(DIAMETER/2)));
+    }
+
+    public void stopped(boolean stopped){
+	    this.stopped = stopped;
     }
 }
 

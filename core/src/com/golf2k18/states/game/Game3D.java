@@ -11,7 +11,7 @@ import com.golf2k18.objects.Course;
 import com.golf2k18.objects.Engine;
 import com.golf2k18.states.StateManager;
 
-public class Game3D extends GameState {
+public class Game3D extends GameHUD {
 
     //variables
     private Engine engine;
@@ -68,25 +68,28 @@ public class Game3D extends GameState {
     }
 
     @Override
-    public void handleInput() {
-        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
-            ball.setX(ball.getX()+0.1);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
-            ball.setX(ball.getX()-0.1);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
-            ball.setY(ball.getY()+0.1);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
-            ball.setY(ball.getY()-0.1);
-        }
-
+    public void update(float dt) {
+        super.update(dt);
+        if(!ball.isStopped()) engine.updateBall(ball);
+        ball.setZ(course.getFunction().evaluateF(ball.getX(),ball.getY()));
     }
 
     @Override
-    public void update(float dt) {
-        super.update(dt);
-        ball.setZ(course.getFunction().evaluateF(ball.getX(),ball.getY()));
+    public void handleInput() {
+        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
+            ball.setX(ball.getX()+0.15);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
+            ball.setX(ball.getX()-0.15);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
+            ball.setY(ball.getY()+0.15);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
+            ball.setY(ball.getY()-0.15);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            ball.stopped(!ball.isStopped());
+        }
     }
 }

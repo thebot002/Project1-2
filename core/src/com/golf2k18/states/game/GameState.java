@@ -14,10 +14,8 @@ import com.golf2k18.states.StateManager;
 
 public abstract class GameState extends State {
 
-    private AssetManager assets;
-
     private PerspectiveCamera camera;
-    private CameraInputController controller;
+    protected CameraInputController controller;
     private ModelBatch batch;
     private Array<ModelInstance> instances = new Array<>();
 
@@ -31,12 +29,10 @@ public abstract class GameState extends State {
 
     @Override
     public void create () {
-        if (assets == null) assets = new AssetManager();
-
         batch = new ModelBatch();
 
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(10f, 10f, 10f);
+        camera.position.set(10f, 10f, 30f);
         camera.lookAt(10, 10, 0);
         camera.near = 0.1f;
         camera.far = 1000f;

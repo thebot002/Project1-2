@@ -12,7 +12,7 @@ import com.golf2k18.states.menu.Menu;
 public class golf_2k18 extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private StateManager gsm;
-	public static final int HEIGHT = 2000;
+	public static final int HEIGHT = 1500;
 	public static final int WIDTH = 3000;
 	public static final String TITLE = "Golf2k18";
 	public static Music music;
