@@ -11,13 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.golf2k18.game.golf_2k18;
 import com.golf2k18.objects.Engine;
-import com.golf2k18.states.game.Game3D;
-import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
-import com.golf2k18.states.game.GameState;
+import com.golf2k18.states.game.Game;
 
 
 public class Menu extends MenuState
@@ -69,7 +69,8 @@ public class Menu extends MenuState
     }
     public void createStage()
     {
-        stage = new Stage(new ScreenViewport(), batch);
+        stage = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()), batch);
+
         Table table = new Table();
         table.setFillParent(true);
 
@@ -162,7 +163,7 @@ public class Menu extends MenuState
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                manager.push(new GameState(manager,new Engine().getCourse()));
+                manager.push(new Game(manager,new Engine().getCourse()));
             }
         });
         table.add(button).center().fillX().pad(10f);

@@ -12,7 +12,7 @@ public class golf_2k18 extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private StateManager gsm;
 	public static final int HEIGHT = 800;
-	public static final int WIDTH = 600;
+	public static final int WIDTH = 1200;
 	public static final String TITLE = "Golf2k18";
 	public static Music music;
 	@Override
@@ -20,7 +20,7 @@ public class golf_2k18 extends ApplicationAdapter {
 	    gsm = new StateManager();
 		batch = new SpriteBatch();
 		gsm.push(new Menu(gsm,batch));
-        //gsm.push(new GameState(gsm,new Engine().getCourse()));
+        //gsm.push(new Game(gsm,new Engine().getCourse()));
         Gdx.gl.glClearColor(1, 1, 1, 1);
 	}
 	@Override

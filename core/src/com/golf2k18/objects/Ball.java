@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 
 public class Ball
 {
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
 
     //private final float DIAMETER = 2f; //test diameter
     private final float DIAMETER = .42f;
@@ -48,23 +48,27 @@ public class Ball
 	    if(DEBUG) System.out.println("x: " + x);
         velocity.setX(x);
 	}
+
     public void updateVelocityY(double y) {
         if(DEBUG) System.out.println("y: " + y);
         velocity.setY(y);
     }
-
     public void updateLocation(double x, double y) {
         position.x = x;
         position.y = y;
         updateInstance();
 	}
-	public void updateZ(double z){
+
+    public void updateZ(double z){
 	    position.z = z;
     }
-
 	public double getMass() {
 		return MASS;
 	}
+
+    public Vector getPosition() {
+        return position;
+    }
 
 	public double getX() {
 		return position.x;

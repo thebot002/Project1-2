@@ -10,8 +10,7 @@ public class DesktopLauncher {
 		config.title = golf_2k18.TITLE;
 		config.height = golf_2k18.HEIGHT;
 		config.width = golf_2k18.WIDTH;
-		config.resizable = true;
+		config.resizable = false;
 		new LwjglApplication(new golf_2k18(), config);
-
 	}
 }

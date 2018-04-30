@@ -29,7 +29,6 @@ public class Course {
     private Function function;
     public ModelInstance world;
 
-    private final double CHUNCK_SIZE = 100;
     private final double DIV_SIZE = .5;
 
     public Function getFunction() {

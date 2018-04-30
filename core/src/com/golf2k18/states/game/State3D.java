@@ -11,12 +11,13 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
+import com.golf2k18.game.golf_2k18;
 import com.golf2k18.objects.Course;
 import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
 
 public abstract class State3D extends State {
-    private PerspectiveCamera camera;
+    protected PerspectiveCamera camera;
     protected CameraInputController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
@@ -51,7 +52,7 @@ public abstract class State3D extends State {
 
         environment = new Environment();
         environment.clear();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1.f));
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1.f));
         environment.add(light);
 
         //add the terrain to the list of models to display
@@ -85,7 +86,7 @@ public abstract class State3D extends State {
 
     public abstract void handleInput();
     public void update(float dt){
+        camera.update();
         handleInput();
     }
-
 }
