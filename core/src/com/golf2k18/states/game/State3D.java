@@ -18,7 +18,8 @@ import com.golf2k18.states.StateManager;
 
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
-    protected CameraInputController controller;
+    protected CameraController controller;
+    //protected CameraInputController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
 
@@ -44,7 +45,7 @@ public abstract class State3D extends State {
         camera.far = 1000f;
         camera.update();
 
-        Gdx.input.setInputProcessor(controller = new CameraInputController(camera));
+        Gdx.input.setInputProcessor(controller = new CameraController(camera));
 
         //environment setup
         DirectionalLight light = new DirectionalLight();

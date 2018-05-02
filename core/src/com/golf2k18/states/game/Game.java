@@ -18,6 +18,8 @@ import com.golf2k18.objects.Engine;
 import com.golf2k18.objects.Vector;
 import com.golf2k18.states.StateManager;
 
+import java.util.HashMap;
+
 public class Game extends State3D {
 
     private Engine engine;
@@ -35,6 +37,8 @@ public class Game extends State3D {
 
     private Slider directionInput;
     private Slider intensityInput;
+
+    private HashMap<String,Label> labels;
 
     public Game(StateManager manager, Course course) {
         super(manager, course);
@@ -57,49 +61,50 @@ public class Game extends State3D {
         hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
 
+        //creation of labels
+        labels = new HashMap<>();
+        labels.put("score",new Label("Score",skin));
+        labels.put("par", new Label("Par: ", skin));
+        labels.put("title", new Label("Hole #", skin,"title"));
+        labels.put("focus", new Label("",skin));
+        labels.put("distance", new Label("Distance to hole:",skin));
+        labels.put("speed", new Label("Speed:",skin));
+
         //used to organise the different input elements
         Table table = new Table();
         table.setFillParent(true);
 
         VerticalGroup scoreGroup = new VerticalGroup();
-        Label score = new Label("Score: ",skin);
-        scoreGroup.addActor(score);
-        Label par = new Label("Par: ", skin);
-        scoreGroup.addActor(par);
-        table.add(scoreGroup).top().left();//.pad(10f);
+        scoreGroup.addActor(labels.get("score"));
+        scoreGroup.addActor(labels.get("par"));
+        table.add(scoreGroup).top().left().uniform();//.pad(10f);
 
-        Label title = new Label("Hole #",skin,"title");
-        table.add(title).center().expand().top();
+        table.add(labels.get("title")).center().expand().top();
 
         Image windrose = new Image(new Texture("windrose.png"));
-        table.add(windrose).top().right();
+        table.add(windrose).top().right().uniform();
 
         table.row();
 
-        Label focus = new Label("Ball focus: off",skin);
-        table.add(focus).right().bottom();
+        table.add(labels.get("focus")).right().bottom();
 
         VerticalGroup inputGroup = new VerticalGroup();
 
         //direction field
         HorizontalGroup directionGroup = new HorizontalGroup();
-
         Label directionText = new Label("Direction: ",skin);
+        directionGroup.addActor(directionText);
         directionInput = new Slider(-180f,180f,1,false,skin);
         directionInput.setValue(0);
-
-        directionGroup.addActor(directionText);
         directionGroup.addActor(directionInput);
         inputGroup.addActor(directionGroup);
 
         //intensity field
         HorizontalGroup intensityGroup = new HorizontalGroup();
         Label intensityText = new Label("Intensity: ",skin);
-        intensityInput = new Slider(1f,20f,1,false,skin);
-
         intensityGroup.addActor(intensityText);
+        intensityInput = new Slider(1f,20f,1,false,skin);
         intensityGroup.addActor(intensityInput);
-
         inputGroup.addActor(intensityGroup);
 
         //hit button
@@ -114,7 +119,6 @@ public class Game extends State3D {
             }
         });
         inputGroup.addActor(hitButton);
-
         table.add(inputGroup).center().bottom();
 
         VerticalGroup ballInfo = new VerticalGroup();
@@ -125,7 +129,7 @@ public class Game extends State3D {
         ballInfo.addActor(speed);
 
         table.add(ballInfo).bottom().right();
-        //table.debug();
+        table.debug();
 
         hud.addActor(table);
     }
@@ -214,6 +218,8 @@ public class Game extends State3D {
             camera.position.set(newPos);
         }
         ball.setZ(engine.getCourse().getFunction().evaluateF(ball.getX(),ball.getY()));
+
+        ball.getModel();
     }
 
     @Override
@@ -233,15 +239,19 @@ public class Game extends State3D {
         if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
             followBall = !followBall;
             if(followBall){
-                updateCamBallDistance();
-                lookAtBall();
-                setProcessors();
+                labels.get("focus").setText("Ball focus ON");
+                //updateCamBallDistance();
+                //lookAtBall();
+                controller.focus(ball.getPosition().toVector3());
+                //setProcessors();
             }
             else{
-                setProcessors();
+                controller.unfocus();
+                labels.get("focus").setText("");
+                //setProcessors();
             }
         }
-        if(followBall){
+        /*if(followBall){
             if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
                 camera.rotateAround(ball.getPosition().toVector3(),camera.up,1f);
             }
@@ -259,7 +269,7 @@ public class Game extends State3D {
                 camera.rotateAround(ball.getPosition().toVector3(),normal,-1f);
             }
             updateCamBallDistance();
-        }
+        }*/
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             double dir = directionInput.getValue();
             double intensity = intensityInput.getValue();
