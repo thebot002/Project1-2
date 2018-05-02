@@ -39,7 +39,7 @@ public abstract class State3D extends State {
 
         //camera setup
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(10f, 10f, 30f);
+        camera.position.set(10f, 0f, 10f);
         camera.lookAt(10, 10, 0);
         camera.near = 0.1f;
         camera.far = 1000f;

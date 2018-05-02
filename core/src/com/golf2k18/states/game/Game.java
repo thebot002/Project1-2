@@ -77,16 +77,16 @@ public class Game extends State3D {
         VerticalGroup scoreGroup = new VerticalGroup();
         scoreGroup.addActor(labels.get("score"));
         scoreGroup.addActor(labels.get("par"));
-        table.add(scoreGroup).top().left().uniform();//.pad(10f);
+        table.add(scoreGroup).top().left().uniform().pad(10f);
 
-        table.add(labels.get("title")).center().expand().top();
+        table.add(labels.get("title")).center().expand().top().pad(10f);
 
         Image windrose = new Image(new Texture("windrose.png"));
-        table.add(windrose).top().right().uniform();
+        table.add(windrose).top().right().uniform().pad(10f);
 
         table.row();
 
-        table.add(labels.get("focus")).right().bottom();
+        table.add(labels.get("focus")).left().bottom().pad(10f);
 
         VerticalGroup inputGroup = new VerticalGroup();
 
@@ -119,7 +119,7 @@ public class Game extends State3D {
             }
         });
         inputGroup.addActor(hitButton);
-        table.add(inputGroup).center().bottom();
+        table.add(inputGroup).center().bottom().pad(10f);
 
         VerticalGroup ballInfo = new VerticalGroup();
         Label distance = new Label("Distance to hole: ",skin);
@@ -128,8 +128,7 @@ public class Game extends State3D {
         Label speed = new Label("Ball speed: ",skin);
         ballInfo.addActor(speed);
 
-        table.add(ballInfo).bottom().right();
-        table.debug();
+        table.add(ballInfo).bottom().right().pad(10f);
 
         hud.addActor(table);
     }
@@ -212,11 +211,11 @@ public class Game extends State3D {
     public void update(float dt) {
         super.update(dt);
         if(!ball.isStopped()) engine.updateBall(ball);
-        if(followBall){
+        /*if(followBall){
             Vector3 newPos = ball.getPosition().toVector3();
             newPos.add(distanceCamBall);
             camera.position.set(newPos);
-        }
+        }*/
         ball.setZ(engine.getCourse().getFunction().evaluateF(ball.getX(),ball.getY()));
 
         ball.getModel();
