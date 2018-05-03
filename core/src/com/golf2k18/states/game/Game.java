@@ -30,9 +30,6 @@ public class Game extends State3D {
     private Stage pause;
     private boolean paused = false;
 
-    private Vector3 distanceCamBall = new Vector3();
-
-    private boolean followBall = false;
     private boolean manualMovement = false;
 
     private Slider directionInput;
@@ -62,7 +59,7 @@ public class Game extends State3D {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
 
         //creation of labels
-        labels = new HashMap<>();
+        labels = new HashMap<String, Label>();
         labels.put("score",new Label("Score",skin));
         labels.put("par", new Label("Par: ", skin));
         labels.put("title", new Label("Hole #", skin,"title"));
@@ -211,14 +208,9 @@ public class Game extends State3D {
     public void update(float dt) {
         super.update(dt);
         if(!ball.isStopped()) engine.updateBall(ball);
-        /*if(followBall){
-            Vector3 newPos = ball.getPosition().toVector3();
-            newPos.add(distanceCamBall);
-            camera.position.set(newPos);
-        }*/
+        if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
+        else labels.get("focus").setText("");
         ball.setZ(engine.getCourse().getFunction().evaluateF(ball.getX(),ball.getY()));
-
-        ball.getModel();
     }
 
     @Override
@@ -236,39 +228,13 @@ public class Game extends State3D {
             ball.setY(ball.getY()-0.15);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
-            followBall = !followBall;
-            if(followBall){
-                labels.get("focus").setText("Ball focus ON");
-                //updateCamBallDistance();
-                //lookAtBall();
+            if(!controller.isFocused()){
                 controller.focus(ball.getPosition().toVector3());
-                //setProcessors();
             }
             else{
                 controller.unfocus();
-                labels.get("focus").setText("");
-                //setProcessors();
             }
         }
-        /*if(followBall){
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
-                camera.rotateAround(ball.getPosition().toVector3(),camera.up,1f);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
-                camera.rotateAround(ball.getPosition().toVector3(),camera.up,-1f);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
-                Vector3 normal = new Vector3(camera.up.x,camera.up.y,camera.up.z);
-                normal.rotate(camera.direction,90);
-                camera.rotateAround(ball.getPosition().toVector3(),normal,1f);
-            }
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
-                Vector3 normal = new Vector3(camera.up.x,camera.up.y,camera.up.z);
-                normal.rotate(camera.direction,90);
-                camera.rotateAround(ball.getPosition().toVector3(),normal,-1f);
-            }
-            updateCamBallDistance();
-        }*/
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             double dir = directionInput.getValue();
             double intensity = intensityInput.getValue();
@@ -279,24 +245,15 @@ public class Game extends State3D {
             if(!paused) pause();
             else resume();
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
+            if(controller.isFocused()){
+                labels.get("focus").setText("");
+            }
+        }
     }
 
     private void setProcessors(){
-        if(followBall){
-            Gdx.input.setInputProcessor(hud);
-        }
-        else{
-            Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
-        }
-    }
-
-    private void lookAtBall(){
-        camera.lookAt(ball.getPosition().toVector3());
-    }
-
-    private void updateCamBallDistance(){
-        Vector3 posBall = ball.getPosition().toVector3().scl(-1f);
-        distanceCamBall.set(posBall.add(camera.position));
+        Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
     }
 
     @Override

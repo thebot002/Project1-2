@@ -59,9 +59,6 @@ public class Ball
         updateInstance();
 	}
 
-    public void updateZ(double z){
-	    position.z = z;
-    }
 	public double getMass() {
 		return MASS;
 	}

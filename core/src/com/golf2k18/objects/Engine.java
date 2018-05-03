@@ -65,7 +65,7 @@ public class Engine
     public void updateBall(Ball ball)
     {
         ball.updateLocation(eulerX(ball,(double)Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
-        ball.updateZ(course.getFunction().evaluateF(ball.getX(),ball.getY()));
+        ball.setZ(course.getFunction().evaluateF(ball.getX(),ball.getY()));
 
         if(ball.getVelocity().magnitude() <= STOP_TOLERANCE && (calcGravity(ball).magnitude() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         eulerVx(ball,Gdx.graphics.getDeltaTime());
