@@ -30,6 +30,8 @@ public class CameraController extends InputAdapter {
     private Vector3 tmpV2 = new Vector3();
     private float startX, startY;
 
+    private Vector3 distanceCamFocus = new Vector3();
+
     private final float rotateUnit = 2f;
     private final float translateUnits = 0.5f;
     private int bottom = 1;
@@ -42,6 +44,7 @@ public class CameraController extends InputAdapter {
     public CameraController(Camera camera) {
         this.camera = camera;
         focus = camera.position;
+        updateDistanceCamFocus();
     }
 
     public void focus(Vector3 focus){
@@ -50,6 +53,7 @@ public class CameraController extends InputAdapter {
         camera.lookAt(focus);
         focused = true;
         this.focus = focus;
+        updateDistanceCamFocus();
     }
 
     public void unfocus(){
@@ -106,6 +110,7 @@ public class CameraController extends InputAdapter {
             if(camera.up.z > 0 || deltaY > 0)
                 camera.rotateAround(focus,normal,(90*rotateUnit*deltaY));
         }
+        updateDistanceCamFocus();
         return false;
     }
 
@@ -122,10 +127,14 @@ public class CameraController extends InputAdapter {
     public boolean scrolled(int amount) {
         if(amount<0 || camera.position.z>bottom)
             camera.translate(tmpV1.set(camera.direction).scl(amount*0.8f));
+        updateDistanceCamFocus();
         return false;
     }
 
     public void update(){
+        if(focused){
+            camera.position.set(distanceCamFocus).add(focus);
+        }
         if(keyPressed.contains(lArrow)){
             if(!focused){
                 camera.translate(tmpV1.set(camera.direction).crs(camera.up).nor().scl(-translateUnits));
@@ -160,6 +169,11 @@ public class CameraController extends InputAdapter {
                 camera.rotateAround(focus,normal,rotateUnit);
             }
         }
+        updateDistanceCamFocus();
         camera.update();
+    }
+
+    private void updateDistanceCamFocus(){
+        distanceCamFocus.set(camera.position).sub(focus);
     }
 }
