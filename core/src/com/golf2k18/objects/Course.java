@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -62,7 +63,7 @@ public class Course {
                     //new Material(TextureAttribute.createDiffuse(myTexture)))
                     new Material(ColorAttribute.createDiffuse(0.2f, 0.8f, 0.2f, 1f))) //green
                     //new Material(ColorAttribute.createDiffuse(r.nextFloat(),r.nextFloat(),r.nextFloat(),1))) //random colors
-                    .triangle(face.p1().toVector3(), face.p2().toVector3(), face.p3().toVector3());
+                    .triangle(face.p1(), face.p2(), face.p3());
         }
 
         world = new ModelInstance(modelBuilder.end(), 0, 0, 0);
@@ -71,7 +72,7 @@ public class Course {
     //quiet fast
     private ArrayList<Face> createFaces(){
         ArrayList<Face> faces = new ArrayList<>(); //face list
-        ArrayList<Vector> vectors = createPoints(); //vector list
+        ArrayList<Vector3> vectors = createPoints(); //vector list
 
         //calculates the amount of x and y coordinates according to the size of the terrain and the division size
         int xAmount = ((int)(width / DIV_SIZE))+1;
@@ -90,12 +91,12 @@ public class Course {
     }
 
     //quiet fast
-    private ArrayList<Vector> createPoints(){
-        ArrayList<Vector> vectors = new ArrayList<>(); //vector list
+    private ArrayList<Vector3> createPoints(){
+        ArrayList<Vector3> vectors = new ArrayList<Vector3>(); //vector list
         //creates the vectors of the terrain, terrain centered at 0,0
-        for (double i = 0; i <= width ; i+=DIV_SIZE) {
-            for (double j= 0; j <= height ; j+=DIV_SIZE) {
-                vectors.add(new Vector(i,j,function.evaluateF(i ,j)));
+        for (float i = 0; i <= width ; i+=DIV_SIZE) {
+            for (float j= 0; j <= height ; j+=DIV_SIZE) {
+                vectors.add(new Vector3(i,j,(float)function.evaluateF(i ,j)));
             }
         }
         return vectors;

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
 
 public class Ball
 {
@@ -15,47 +16,47 @@ public class Ball
     //private final float DIAMETER = 2f; //test diameter
     private final float DIAMETER = .42f;
 	private final double MASS = 0.45;
-	private Vector velocity;
+	private Vector3 velocity;
 
-	private Vector position;
+	private Vector3 position;
 	private Texture ballTexture;
 
 	private boolean stopped;
 
     private ModelInstance model;
 
-	public Ball(double x, double y, Vector v){
+	public Ball(double x, double y, Vector3 v){
 		velocity = v;
-        position = new Vector(x,y,0);
+        position = new Vector3((float)x,(float)y,0);
         ballTexture = new Texture("8wzgvr.jpg");
     }
 
     public Ball(){
-        velocity = new Vector(2,2,0);
+        velocity = new Vector3(2,2,0);
         stopped = true;
-        position = new Vector(10,10,0);
+        position = new Vector3(10,10,0);
         ballTexture = new Texture("8wzgvr.jpg");
 
         createModel();
     }
 
-    public void hit(Vector vector) {
+    public void hit(Vector3 vector) {
 	    stopped = false;
-		this.velocity = vector.copy();
+		this.velocity = vector.cpy();
 	}
 
 	public void updateVelocityX(double x) {
 	    if(DEBUG) System.out.println("x: " + x);
-        velocity.setX(x);
+        velocity.x = (float) x;
 	}
 
     public void updateVelocityY(double y) {
         if(DEBUG) System.out.println("y: " + y);
-        velocity.setY(y);
+        velocity.y = (float)y;
     }
     public void updateLocation(double x, double y) {
-        position.x = x;
-        position.y = y;
+        position.x = (float)x;
+        position.y = (float)y;
         updateInstance();
 	}
 
@@ -63,7 +64,7 @@ public class Ball
 		return MASS;
 	}
 
-    public Vector getPosition() {
+    public Vector3 getPosition() {
         return position;
     }
 
@@ -78,25 +79,25 @@ public class Ball
 	}
 
     public void setX(double x) {
-		position.x = x;
+		position.x = (float)x;
 		updateInstance();
 	}
     public void setY(double y) {
-		position.y = y;
+		position.y = (float)y;
 		updateInstance();
 	}
     public void setZ(double z) {
-		position.z = z;
+		position.z = (float)z;
 		updateInstance();
 	}
 
-    public Vector getVelocity()
+    public Vector3 getVelocity()
 	{
-		return velocity.copy();
+		return velocity.cpy();
 	}
 
     public void setStopped() {
-	    velocity = new Vector(0,0,0);
+	    velocity = new Vector3(0,0,0);
         this.stopped = true;
     }
 

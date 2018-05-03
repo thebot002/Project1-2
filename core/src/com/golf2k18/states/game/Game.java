@@ -3,7 +3,6 @@ package com.golf2k18.states.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Course;
 import com.golf2k18.objects.Engine;
-import com.golf2k18.objects.Vector;
 import com.golf2k18.states.StateManager;
 
 import java.util.HashMap;
@@ -112,7 +110,7 @@ public class Game extends State3D {
                 double dir = directionInput.getValue();
                 double intensity = intensityInput.getValue();
 
-                ball.hit(new Vector(Math.cos(Math.toRadians(dir))*intensity , Math.sin(Math.toRadians(dir))*intensity , 0));
+                ball.hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
             }
         });
         inputGroup.addActor(hitButton);
@@ -229,7 +227,7 @@ public class Game extends State3D {
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
             if(!controller.isFocused()){
-                controller.focus(ball.getPosition().toVector3());
+                controller.focus(ball.getPosition());
             }
             else{
                 controller.unfocus();
@@ -239,7 +237,7 @@ public class Game extends State3D {
             double dir = directionInput.getValue();
             double intensity = intensityInput.getValue();
 
-            ball.hit(new Vector(Math.cos(Math.toRadians(dir))*intensity , Math.sin(Math.toRadians(dir))*intensity , 0));
+            ball.hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             if(!paused) pause();

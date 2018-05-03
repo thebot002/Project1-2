@@ -1,15 +1,17 @@
 package com.golf2k18.objects;
 
+import com.badlogic.gdx.math.Vector3;
+
 public class Face {
-    private Vector p1;
-    private Vector p2;
-    private Vector p3;
+    private Vector3 p1;
+    private Vector3 p2;
+    private Vector3 p3;
 
     private int id;
 
     private static int amount = 0;
 
-    public Face(Vector p1, Vector p2, Vector p3) {
+    public Face(Vector3 p1, Vector3 p2, Vector3 p3) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -17,15 +19,15 @@ public class Face {
         this.id = ++amount;
     }
 
-    public Vector p1() {
+    public Vector3 p1() {
         return p1;
     }
 
-    public Vector p2() {
+    public Vector3 p2() {
         return p2;
     }
 
-    public Vector p3() {
+    public Vector3 p3() {
         return p3;
     }
 

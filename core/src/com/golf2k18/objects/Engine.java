@@ -1,6 +1,7 @@
 package com.golf2k18.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
 
 public class Engine
 {
@@ -18,56 +19,56 @@ public class Engine
 
         course = new Course(20,20,str);
     }
-    private Vector calcGravity(Ball ball)
+    private Vector3 calcGravity(Ball ball)
     {
-        Vector Fz = new Vector();
-        Fz.setX((-ball.getMass()*GRAVITY*course.getFunction().evaluateXDeriv(ball.getX(), ball.getY())));
-        Fz.setY((-ball.getMass()*GRAVITY*course.getFunction().evaluateYDeriv(ball.getX(),ball.getY())));
+        Vector3 Fz = new Vector3();
+        Fz.x = (float)((-ball.getMass()*GRAVITY*course.getFunction().evaluateXDeriv(ball.getX(), ball.getY())));
+        Fz.y = (float)((-ball.getMass()*GRAVITY*course.getFunction().evaluateYDeriv(ball.getX(),ball.getY())));
         return Fz;
     }
-    private Vector calcFriction(Ball ball)
+    private Vector3 calcFriction(Ball ball)
     {
-        Vector v = ball.getVelocity();
-        if(v.magnitude() != 0.0) v.scale(1/v.magnitude());
-        v.scale(-course.MU*ball.getMass()*GRAVITY);
+        Vector3 v = ball.getVelocity();
+        if(v.len() != 0.0) v.scl(1/v.len());
+        v.scl((float)(-course.MU*ball.getMass()*GRAVITY));
         return v;
     }
-    public Vector getAcceleration(Ball ball)
+    public Vector3 getAcceleration(Ball ball)
     {
-        Vector v = calcGravity(ball);
+        Vector3 v = calcGravity(ball);
         v.add(calcFriction(ball));
-        v.scale(1/ball.getMass());
+        v.scl((float)(1/ball.getMass()));
         return v;
     }
     private double eulerX(Ball ball, double dt)
     {
-        double vX = ball.getVelocity().getX();
+        double vX = ball.getVelocity().x;
         return ball.getX() + dt*vX;
 
     }
     private void eulerVx(Ball ball, double dt)
     {
-        double aX = getAcceleration(ball).getX();
-        ball.updateVelocityX(ball.getVelocity().getX() + dt*aX);
+        double aX = getAcceleration(ball).x;
+        ball.updateVelocityX(ball.getVelocity().x + dt*aX);
     }
     private double eulerY(Ball ball, double dt)
     {
-        double vY = ball.getVelocity().getY();
+        double vY = ball.getVelocity().y;
         return ball.getY() + dt*vY;
 
     }
     private void eulerVy(Ball ball, double dt)
     {
-        double aY = getAcceleration(ball).getY();
-        ball.updateVelocityY(ball.getVelocity().getY() + dt*aY);
+        double aY = getAcceleration(ball).y;
+        ball.updateVelocityY(ball.getVelocity().y + dt*aY);
     }
 
     public void updateBall(Ball ball)
     {
-        ball.updateLocation(eulerX(ball,(double)Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
+        ball.updateLocation(eulerX(ball,Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
         ball.setZ(course.getFunction().evaluateF(ball.getX(),ball.getY()));
 
-        if(ball.getVelocity().magnitude() <= STOP_TOLERANCE && (calcGravity(ball).magnitude() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
+        if(ball.getVelocity().len() <= STOP_TOLERANCE && (calcGravity(ball).len() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         eulerVx(ball,Gdx.graphics.getDeltaTime());
         eulerVy(ball,Gdx.graphics.getDeltaTime());
     }
