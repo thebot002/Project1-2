@@ -1,27 +1,35 @@
 package com.golf2k18.states.menu;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
 
 public abstract class MenuState extends State {
 
-    private OrthographicCamera camera;
-    private SpriteBatch batch;
-
-    public MenuState(StateManager manager) {
+    MenuState(StateManager manager) {
         super(manager);
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
     }
 
     @Override
-    public void render() {
-        render(batch);
+    public void create() {
+        createStage();
     }
 
-    public abstract void render(SpriteBatch batch);
+    @Override
+    public void render(){
+        Gdx.gl.glClearColor(1f, 1f, 1f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        Stage stage = getStage();
+        if(stage != null){
+            stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+            Gdx.input.setInputProcessor(stage);
+            stage.act();
+            stage.draw();
+        }
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -37,4 +45,12 @@ public abstract class MenuState extends State {
     public void resume() {
 
     }
+
+    @Override
+    public void dispose() {
+        getStage().dispose();
+    }
+
+    protected abstract Stage getStage();
+    protected abstract void createStage();
 }

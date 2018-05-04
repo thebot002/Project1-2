@@ -1,78 +1,73 @@
 package com.golf2k18.states.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.objects.Course;
 import com.golf2k18.objects.IO;
-import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
 
 
-public class IOMenu extends MenuState
-{
-    private SpriteBatch batch;
+public class IOMenu extends MenuState {
     private Stage stage;
-    private Skin skin;
     private Array<String> saves;
-    public IOMenu(StateManager manager, SpriteBatch batch)
-    {
+
+    public IOMenu(StateManager manager) {
         super(manager);
-        //skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/flat-earth/skin/flat-earth-ui.json"));
-        skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
-        this.batch = batch;
+    }
+
+    @Override
+    public void create() {
         saves = new Array<String>();
-        this.manager = manager;
-       //temp
+        //temp
         saves.add("Under");
         saves.add("Construction");
         //temp
-        createStage();
+        super.create();
     }
 
-   private void createStage()
-    {
-        stage = new Stage(new ScreenViewport(),batch);
+    protected void createStage() {
+        stage = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()));
         Table table = new Table();
         table.setFillParent(true);
         //Title
-        Label ioMenu = new Label("IO-MENU", skin, "title");
+        Label ioMenu = new Label("IO-MENU", StateManager.skin, "title");
         table.add(ioMenu).center().pad(100f);
         table.row();
 
         //ImportLabel
-        Label importLabel = new Label("Enter path for import file:", skin);
+        Label importLabel = new Label("Enter path for import file:", StateManager.skin);
         table.add(importLabel).center().padTop(10f);
         table.row();
 
         //ImportTextField
-        TextField path = new TextField("C:", skin);
+        TextField path = new TextField("C:", StateManager.skin);
         table.add(path).center().fillX().pad(10f);
         table.row();
 
         //ImportButton
-        TextButton importBtn = new TextButton("Import", skin);
+        TextButton importBtn = new TextButton("Import", StateManager.skin);
         table.add(importBtn).center().pad(10f);
         table.row();
 
         //Export table
-        List<String> list = new List<String>(skin);
+        List<String> list = new List<String>(StateManager.skin);
         list.setItems(saves);
         table.add(list).center().fillX().pad(10f);
         table.row();
 
         //ExportButton
-        TextButton exportBtn = new TextButton("Export", skin);
+        TextButton exportBtn = new TextButton("Export", StateManager.skin);
         table.add(exportBtn).center().pad(10f);
         table.row();
 
         //Return button
-        TextButton returnBtn = new TextButton("Return", skin);
+        TextButton returnBtn = new TextButton("Return", StateManager.skin);
         table.add(returnBtn).expand().right().bottom().pad(20f);
         returnBtn.addListener(new ClickListener()
         {
@@ -95,26 +90,10 @@ public class IOMenu extends MenuState
     }
 
     @Override
-    public void create() {
-
+    protected Stage getStage() {
+        return stage;
     }
 
-    @Override
-    public void render(SpriteBatch sb)
-    {
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        Gdx.input.setInputProcessor(stage);
-        stage.act();
-        stage.draw();
-    }
-
-    @Override
-    public void dispose()
-    {
-        skin.dispose();
-        stage.dispose();
-        batch.dispose();
-    }
     public void addCourse(String path)
     {
         saves.add(path);

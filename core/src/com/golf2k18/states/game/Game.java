@@ -23,7 +23,6 @@ public class Game extends State3D {
     private Engine engine;
     private Ball ball;
     private Stage hud;
-    private Skin skin;
 
     private Stage pause;
     private boolean paused = false;
@@ -54,16 +53,15 @@ public class Game extends State3D {
 
     private void createHUD(){
         hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
 
         //creation of labels
         labels = new HashMap<String, Label>();
-        labels.put("score",new Label("Score",skin));
-        labels.put("par", new Label("Par: ", skin));
-        labels.put("title", new Label("Hole #", skin,"title"));
-        labels.put("focus", new Label("",skin));
-        labels.put("distance", new Label("Distance to hole:",skin));
-        labels.put("speed", new Label("Speed:",skin));
+        labels.put("score",new Label("Score",StateManager.skin));
+        labels.put("par", new Label("Par: ", StateManager.skin));
+        labels.put("title", new Label("Hole #", StateManager.skin,"title"));
+        labels.put("focus", new Label("",StateManager.skin));
+        labels.put("distance", new Label("Distance to hole:",StateManager.skin));
+        labels.put("speed", new Label("Speed:",StateManager.skin));
 
         //used to organise the different input elements
         Table table = new Table();
@@ -87,23 +85,23 @@ public class Game extends State3D {
 
         //direction field
         HorizontalGroup directionGroup = new HorizontalGroup();
-        Label directionText = new Label("Direction: ",skin);
+        Label directionText = new Label("Direction: ",StateManager.skin);
         directionGroup.addActor(directionText);
-        directionInput = new Slider(-180f,180f,1,false,skin);
+        directionInput = new Slider(-180f,180f,1,false,StateManager.skin);
         directionInput.setValue(0);
         directionGroup.addActor(directionInput);
         inputGroup.addActor(directionGroup);
 
         //intensity field
         HorizontalGroup intensityGroup = new HorizontalGroup();
-        Label intensityText = new Label("Intensity: ",skin);
+        Label intensityText = new Label("Intensity: ",StateManager.skin);
         intensityGroup.addActor(intensityText);
-        intensityInput = new Slider(1f,20f,1,false,skin);
+        intensityInput = new Slider(1f,20f,1,false,StateManager.skin);
         intensityGroup.addActor(intensityInput);
         inputGroup.addActor(intensityGroup);
 
         //hit button
-        TextButton hitButton = new TextButton("Hit",skin);
+        TextButton hitButton = new TextButton("Hit",StateManager.skin);
         hitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -117,10 +115,10 @@ public class Game extends State3D {
         table.add(inputGroup).center().bottom().pad(10f);
 
         VerticalGroup ballInfo = new VerticalGroup();
-        Label distance = new Label("Distance to hole: ",skin);
+        Label distance = new Label("Distance to hole: ",StateManager.skin);
         ballInfo.addActor(distance);
 
-        Label speed = new Label("Ball speed: ",skin);
+        Label speed = new Label("Ball speed: ",StateManager.skin);
         ballInfo.addActor(speed);
 
         table.add(ballInfo).bottom().right().pad(10f);
@@ -134,10 +132,10 @@ public class Game extends State3D {
         Table organizer = new Table();
         organizer.setFillParent(true);
 
-        Label pauseText = new Label("Paused",skin,"title");
+        Label pauseText = new Label("Paused",StateManager.skin,"title");
         organizer.add(pauseText).center().pad(20f);
 
-        TextButton settings = new TextButton("Settings",skin);
+        TextButton settings = new TextButton("Settings",StateManager.skin);
         settings.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -146,7 +144,7 @@ public class Game extends State3D {
         organizer.row();
         organizer.add(settings).top().pad(10f);
 
-        TextButton menu = new TextButton("Menu", skin);
+        TextButton menu = new TextButton("Menu", StateManager.skin);
         menu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -156,7 +154,7 @@ public class Game extends State3D {
         organizer.row();
         organizer.add(menu).top().pad(10f);
 
-        TextButton resume = new TextButton("Resume", skin);
+        TextButton resume = new TextButton("Resume", StateManager.skin);
         resume.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -257,6 +255,5 @@ public class Game extends State3D {
     @Override
     public void dispose() {
         super.dispose();
-        skin.dispose();
     }
 }

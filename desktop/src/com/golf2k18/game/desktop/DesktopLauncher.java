@@ -2,15 +2,17 @@ package com.golf2k18.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.golf2k18.game.golf_2k18;
+import com.golf2k18.states.StateManager;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
+    public static final String TITLE = "Golf2k18";
+
+    public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = golf_2k18.TITLE;
-		config.height = golf_2k18.HEIGHT;
-		config.width = golf_2k18.WIDTH;
+		config.title = TITLE;
+		config.height = StateManager.HEIGHT;
+		config.width = StateManager.WIDTH;
 		config.resizable = false;
-		new LwjglApplication(new golf_2k18(), config);
+		new LwjglApplication(new StateManager(), config);
 	}
 }
