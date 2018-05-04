@@ -107,7 +107,7 @@ public class CameraController extends InputAdapter {
         else if(button == rotateButton && focused){
             camera.rotateAround(focus,new Vector3(0,0,1),-(90*rotateUnit*deltaX));
             Vector3 normal = new Vector3(camera.up).rotate(camera.direction,90);
-            if(camera.up.z > 0 || deltaY > 0)
+            if((camera.up.z > 0 || deltaY > 0) && (camera.position.z > bottom || deltaY < 0))
                 camera.rotateAround(focus,normal,(90*rotateUnit*deltaY));
         }
         updateDistanceCamFocus();
@@ -132,7 +132,7 @@ public class CameraController extends InputAdapter {
     }
 
     public void update(){
-        if(focused){
+        if(focused && !Gdx.input.isKeyPressed(ctrl)){
             camera.position.set(distanceCamFocus).add(focus);
         }
         if(keyPressed.contains(lArrow)){
