@@ -1,8 +1,9 @@
 package com.golf2k18.objects;
 
+import java.io.Serializable;
 import java.util.Stack;
 
-public class Function {
+public class Function implements Serializable {
 
     private Node root;
     private Node xDeriv;
@@ -42,7 +43,7 @@ public class Function {
     }
 
     //For generating nodes in a binary tree
-	private class Node
+	private class Node implements Serializable
 	{
 		String value; //Each node has a value (either a number or an operator)
 		Node left, right; //Each node has 2 children

@@ -119,11 +119,11 @@ public class Ball
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
 
-        model = new ModelInstance(tempSphere,(float)(position.x),(float)(position.y),(float)(position.z+(DIAMETER/2)));
+        model = new ModelInstance(tempSphere,position.x,position.y,position.z+(DIAMETER/2));
     }
 
     private void updateInstance(){
-        model.transform.setTranslation((float)(position.x),(float)(position.y),(float)(position.z+(DIAMETER/2)));
+        model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
     }
 
     public void stopped(boolean stopped){

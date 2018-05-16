@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.objects.Ball;
-import com.golf2k18.objects.Course;
+import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.Engine;
 import com.golf2k18.states.StateManager;
 
@@ -34,8 +34,8 @@ public class Game extends State3D {
 
     private HashMap<String,Label> labels;
 
-    public Game(StateManager manager, Course course) {
-        super(manager, course);
+    public Game(StateManager manager, Terrain terrain) {
+        super(manager, terrain);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Game extends State3D {
         ball = new Ball();
         instances.add(ball.getModel());
 
-        engine = new Engine();
+        engine = new Engine(terrain);
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
@@ -206,7 +206,7 @@ public class Game extends State3D {
         if(!ball.isStopped()) engine.updateBall(ball);
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
-        ball.setZ(engine.getCourse().getFunction().evaluateF(ball.getX(),ball.getY()));
+        ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
     }
 
     @Override

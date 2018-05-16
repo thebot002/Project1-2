@@ -10,7 +10,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Array;
-import com.golf2k18.objects.Course;
+import com.golf2k18.objects.Terrain;
+import com.golf2k18.objects.TerrainModel;
 import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
 
@@ -24,11 +25,11 @@ public abstract class State3D extends State {
     private Color bgColor = new Color(.8f,.8f,.8f,1f);
     private Environment environment;
 
-    private Course course;
+    protected Terrain terrain;
 
-    State3D(StateManager manager, Course course) {
+    State3D(StateManager manager, Terrain terrain) {
         super(manager);
-        this.course = course;
+        this.terrain = terrain;
     }
 
     @Override
@@ -54,8 +55,12 @@ public abstract class State3D extends State {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1.f));
         environment.add(light);
 
+        TerrainModel terrainModel = new TerrainModel(terrain);
+
         //add the terrain to the list of models to display
-        instances.add(course.world);
+        for (ModelInstance m: terrainModel.world) {
+            instances.add(m);
+        }
     }
 
     public abstract void pause();

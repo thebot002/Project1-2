@@ -8,8 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.golf2k18.objects.Course;
-import com.golf2k18.objects.IO;
 import com.golf2k18.states.StateManager;
 
 
@@ -83,8 +81,8 @@ public class IOMenu extends MenuState {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 String[] str = {"0.2", "y", "*", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"};
-                Course course = new Course(100,100,str);
-                IO.exportCourse(course,"New");
+                /*Terrain terrain = new Terrain(100,100,str);
+                IO.exportCourse(terrain,"New");*/
             }
         });
     }

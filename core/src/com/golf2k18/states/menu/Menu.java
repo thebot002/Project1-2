@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.golf2k18.objects.Engine;
+import com.golf2k18.objects.CourseIO;
 import com.golf2k18.states.StateManager;
 import com.golf2k18.states.game.Game;
 
@@ -21,6 +21,7 @@ public class Menu extends MenuState
     private Texture backgroundMenu;
     private Label filePath;
     private TextField path;
+    private SelectBox<String> courseList;
     private Stage stage;
     public static boolean mute;
 
@@ -49,13 +50,13 @@ public class Menu extends MenuState
 
         //label title
         Label label = new Label("GOLF2K18", StateManager.skin, "title");
-        table.add(label).expand().center().top().padTop(100f);
+        table.add(label).expand().center().top().padTop(100f).colspan(3);
         table.row();
 
         //Label input-type
         Label inputType = new Label("Select input source:", StateManager.skin);
         table.add(inputType).center().pad(10f);
-        table.row();
+        //table.row();
 
         //Drowpdown inputSource
         final SelectBox<String> inputSource = new SelectBox<String>(StateManager.skin);
@@ -76,25 +77,25 @@ public class Menu extends MenuState
                 }
             }
         });
-        table.add(inputSource).center().fillX().pad(10f);
+        table.add(inputSource).center().fillX().pad(10f).colspan(2);
         table.row();
 
         //Label filePath
         filePath = new Label("Path:", StateManager.skin);
-        table.add(filePath).center().fillX().pad(10f);
+        table.add(filePath).center().pad(10f);
         filePath.setVisible(false);
-        table.row();
+        //table.row();
 
         //TextField path
         path = new TextField("C:/", StateManager.skin);
-        table.add(path).center().fillX().pad(10f);
+        table.add(path).center().fillX().pad(10f).colspan(2);
         path.setVisible(false);
         table.row();
 
         //Label playerChoice
         Label playerChoice = new Label("Select mode:", StateManager.skin);
         table.add(playerChoice).center().pad(10f);
-        table.row();
+        //table.row();
 
         //DropDown PlayerMenu
         SelectBox<String> dropDown = new SelectBox<String>(StateManager.skin);
@@ -103,7 +104,7 @@ public class Menu extends MenuState
         input.add("Multiplayer");
         input.add("Bot");
         dropDown.setItems(input);
-        table.add(dropDown).center().fillX().pad(10f);
+        table.add(dropDown).center().fillX().pad(10f).colspan(2);
         table.row();
 
         //First textbuton
@@ -115,31 +116,38 @@ public class Menu extends MenuState
                 manager.push(new IOMenu(manager));
             }
         });
-        table.add(importBtn).center().fillX().pad(10f);
+        table.add(importBtn).center().fillX().pad(10f).colspan(3);
         table.row();
 
         //Third textButton
-        TextButton createCourse = new TextButton("Create new course", StateManager.skin, "default");
+        TextButton createCourse = new TextButton("Edit course", StateManager.skin, "default");
         createCourse.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                manager.push(new CreatorMenu(manager));
+                manager.push(new EditorMenu(manager));
             }
         });
-        table.add(createCourse).center().fillX().pad(10f);
+        table.add(createCourse).center().fillX().pad(10f).colspan(3);
         table.row();
 
+        Label course = new Label("Terrain",StateManager.skin,"default");
+        table.add(course).center().pad(10f);
+
+        courseList = new SelectBox<String>(StateManager.skin);
+        table.add(courseList).center().fillX().pad(10f);
+
         //Second TextButton
-        Button button = new TextButton("Start", StateManager.skin, "default");
-        button.addListener(new ClickListener()
+        Button start = new TextButton("Start", StateManager.skin, "default");
+        start.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                manager.push(new Game(manager,new Engine().getCourse()));
+                manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
+                //manager.push(new Game(manager,new Engine().getTerrain()));
             }
         });
-        table.add(button).center().fillX().pad(10f);
+        table.add(start).center().fillX().pad(10f);
         table.row();
 
         //MuteButton
@@ -158,8 +166,14 @@ public class Menu extends MenuState
                 }
             }
         });
-        table.add(mute).bottom().center().fillX().pad(10f).padBottom(200f);
+        table.add(mute).bottom().center().fillX().pad(10f).padBottom(200f).colspan(3);
         stage.addActor(table);
+    }
+
+    @Override
+    public void render() {
+        super.render();
+        courseList.setItems(CourseIO.getCoursesNames());
     }
 
     private void setVisPath(boolean bool) {
