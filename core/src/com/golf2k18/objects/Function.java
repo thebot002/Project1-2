@@ -64,17 +64,18 @@ public class Function implements Serializable {
 		return false;
 	}
 
-	public double evaluateF(double x,double y){
+	public float evaluateF(float x,float y){
         return evaluate(root,x,y);
     }
-    public double evaluateXDeriv(double x,double y){
+
+    public float evaluateXDeriv(float x,float y){
         return evaluate(xDeriv,x,y);
     }
-    public double evaluateYDeriv(double x,double y){
+    public float evaluateYDeriv(float x,float y){
         return evaluate(yDeriv,x,y);
     }
 
-    private double evaluate(Node root, double xValue, double yValue)
+    private float evaluate(Node root, float xValue, float yValue)
 	{
 		if(!isOperator(root.value))
 		{
@@ -86,11 +87,11 @@ public class Function implements Serializable {
 			{
 				return yValue;
 			}
-			return Double.parseDouble(root.value);			
+			return Float.parseFloat(root.value);
 		}
 		
-		Double leftValue = null;
-		Double rightValue = null;
+		Float leftValue = null;
+		Float rightValue = null;
 		
 		if(root.left != null)
 			leftValue = evaluate(root.left, xValue, yValue);
@@ -110,25 +111,25 @@ public class Function implements Serializable {
 			return leftValue / rightValue;
 		
 		if(root.value.equals("^"))
-			return Math.pow(leftValue, rightValue);
+			return (float)Math.pow(leftValue, rightValue);
 		
 		if(root.value.equals("sin"))
 			if(leftValue == null)
 			{
-				return Math.sin(rightValue);
+				return (float)Math.sin(rightValue);
 			}
 			else
 			{
-				return Math.sin(leftValue);					
+				return (float)Math.sin(leftValue);
 			}
 
 		if(leftValue == null)
 		{
-			return Math.cos(rightValue);
+			return (float)Math.cos(rightValue);
 		}
 		else
 		{
-			return Math.cos(leftValue);					
+			return (float)Math.cos(leftValue);
 		}
 	}
 	
@@ -360,22 +361,22 @@ public class Function implements Serializable {
 		return tempNode;
 	}
 	/*
-	double xPartial(Node root, double xValue, double yValue, double delta)
+	float xPartial(Node root, float xValue, float yValue, float delta)
 	{
-		double startPoint = evaluate(root, xValue - delta, yValue);
-		double endPoint = evaluate(root, xValue + delta, yValue);
+		float startPoint = evaluate(root, xValue - delta, yValue);
+		float endPoint = evaluate(root, xValue + delta, yValue);
 		
-		double xSlope = (endPoint - startPoint) / (2 * delta);
+		float xSlope = (endPoint - startPoint) / (2 * delta);
 		
 		return xSlope;
 	}
 	
-	double yPartial(Node root, double xValue, double yValue, double delta)
+	float yPartial(Node root, float xValue, float yValue, float delta)
 	{
-		double startPoint = evaluate(root, xValue, yValue - delta);
-		double endPoint = evaluate(root, xValue, yValue + delta);
+		float startPoint = evaluate(root, xValue, yValue - delta);
+		float endPoint = evaluate(root, xValue, yValue + delta);
 		
-		double ySlope = (endPoint - startPoint) / (2 * delta);
+		float ySlope = (endPoint - startPoint) / (2 * delta);
 		
 		return ySlope;
 	}*/

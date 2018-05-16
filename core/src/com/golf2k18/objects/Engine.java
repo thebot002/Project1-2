@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Engine
 {
     private Terrain terrain;
-    private final double GRAVITY = 9.81;
+    private final float GRAVITY = 9.81f;
     private final double STOP_TOLERANCE = 0.2;
 
     public Engine(Terrain terrain)
@@ -30,36 +30,36 @@ public class Engine
     {
         Vector3 v = ball.getVelocity();
         if(v.len() != 0.0) v.scl(1/v.len());
-        v.scl((float)(-terrain.getMU()*ball.getMass()*GRAVITY));
+        v.scl(-terrain.getMU()*ball.getMass()*GRAVITY);
         return v;
     }
     public Vector3 getAcceleration(Ball ball)
     {
         Vector3 v = calcGravity(ball);
         v.add(calcFriction(ball));
-        v.scl((float)(1/ball.getMass()));
+        v.scl(1/ball.getMass());
         return v;
     }
-    private double eulerX(Ball ball, double dt)
+    private float eulerX(Ball ball, float dt)
     {
-        double vX = ball.getVelocity().x;
+        float vX = ball.getVelocity().x;
         return ball.getX() + dt*vX;
 
     }
-    private void eulerVx(Ball ball, double dt)
+    private void eulerVx(Ball ball, float dt)
     {
-        double aX = getAcceleration(ball).x;
+        float aX = getAcceleration(ball).x;
         ball.updateVelocityX(ball.getVelocity().x + dt*aX);
     }
-    private double eulerY(Ball ball, double dt)
+    private float eulerY(Ball ball, float dt)
     {
-        double vY = ball.getVelocity().y;
+        float vY = ball.getVelocity().y;
         return ball.getY() + dt*vY;
 
     }
-    private void eulerVy(Ball ball, double dt)
+    private void eulerVy(Ball ball, float dt)
     {
-        double aY = getAcceleration(ball).y;
+        float aY = getAcceleration(ball).y;
         ball.updateVelocityY(ball.getVelocity().y + dt*aY);
     }
 

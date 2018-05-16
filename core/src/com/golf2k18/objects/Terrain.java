@@ -5,20 +5,18 @@ import com.badlogic.gdx.math.Vector3;
 import java.io.Serializable;
 
 public class Terrain implements Serializable {
+
     private int width;
     private int height;
-
     private Vector3 start;
     private Vector3 goal;
 
-    private double scale = 1; //function unit to world unit
+    private float scale = 1; //function unit to world unit
+    private Vector3 offset;
 
-    private String name = "cosinus";
-    private String[] formula;
-    private double MU = 0.5;
+    private String name;
+    private float MU = 0.5f;
 
-    private double tolerance = 0.02;
-    private double vMax = 3;
     private Function function;
 
     public Terrain(int width, int height, Vector3 start, Vector3 goal, String[] formula, String name) {
@@ -26,8 +24,8 @@ public class Terrain implements Serializable {
         this.height = height;
         this.start = start;
         this.goal = goal;
-        this.formula = formula;
         this.name = name;
+        offset = new Vector3(0,0,0);
 
         function = new Function(formula);
     }
@@ -48,7 +46,15 @@ public class Terrain implements Serializable {
         return height;
     }
 
-    public double getMU() {
+    public float getMU() {
         return MU;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    public void setOffset(Vector3 offset){
+        this.offset.set(offset);
     }
 }

@@ -28,11 +28,11 @@ public abstract class SubMenu extends MenuState{
 
         //title field
         Label title = new Label(getTitle(),StateManager.skin,"title");
-        table.add(title).center().top().pad(10f).padTop(100f).padBottom(150f).expandX();
+        table.add(title).center().top().pad(10f).padTop(100f).padBottom(100f).expandX();
         table.row();
 
         //content field
-        table.add(createContent()).fillX();
+        table.add(createContent()).expandX().fillX();
         table.row();
 
         //back button

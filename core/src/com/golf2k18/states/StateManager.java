@@ -29,16 +29,18 @@ public class StateManager extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
     }
 
-    public void push(State state)
+    public StateManager push(State state)
 	{
         //states.peek().dispose();
         state.create();
 		states.push(state);
+		return this;
 	}
-	public void pop()
+	public StateManager pop()
 	{
 	    states.peek().dispose();
 		states.pop();
+		return this;
 	}
 	public void set(State state)
 	{

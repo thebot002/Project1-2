@@ -15,7 +15,7 @@ public class Ball
 
     //private final float DIAMETER = 2f; //test diameter
     private final float DIAMETER = .42f;
-	private final double MASS = 0.45;
+	private final float MASS = 0.45f;
 	private Vector3 velocity;
 
 	private Vector3 position;
@@ -25,9 +25,9 @@ public class Ball
 
     private ModelInstance model;
 
-	public Ball(double x, double y, Vector3 v){
+	public Ball(float x, float y, Vector3 v){
 		velocity = v;
-        position = new Vector3((float)x,(float)y,0);
+        position = new Vector3(x,y,0);
         ballTexture = new Texture("8wzgvr.jpg");
     }
 
@@ -45,22 +45,22 @@ public class Ball
 		this.velocity = vector.cpy();
 	}
 
-	public void updateVelocityX(double x) {
+	public void updateVelocityX(float x) {
 	    if(DEBUG) System.out.println("x: " + x);
-        velocity.x = (float) x;
+        velocity.x = x;
 	}
 
-    public void updateVelocityY(double y) {
+    public void updateVelocityY(float y) {
         if(DEBUG) System.out.println("y: " + y);
-        velocity.y = (float)y;
+        velocity.y = y;
     }
-    public void updateLocation(double x, double y) {
-        position.x = (float)x;
-        position.y = (float)y;
+    public void updateLocation(float x, float y) {
+        position.x = x;
+        position.y = y;
         updateInstance();
 	}
 
-	public double getMass() {
+	public float getMass() {
 		return MASS;
 	}
 
@@ -68,13 +68,13 @@ public class Ball
         return position;
     }
 
-	public double getX() {
+	public float getX() {
 		return position.x;
 	}
-    public double getY() {
+    public float getY() {
 		return position.y;
 	}
-    public double getZ() {
+    public float getZ() {
 		return position.z;
 	}
 
