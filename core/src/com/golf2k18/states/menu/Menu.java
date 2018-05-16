@@ -28,11 +28,15 @@ public class Menu extends MenuState
     public Menu(StateManager manager) {
         super(manager);
         backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
+        createMusic(false);
+    }
+
+    private void createMusic(boolean activated){
         StateManager.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Wii Sports - Wii Sports Theme.mp3"));
         StateManager.music.play();
         StateManager.music.setLooping(true);
-        StateManager.music.setVolume(0.5f);
-        mute = true;
+        StateManager.music.setVolume(activated?0.5f:0f);
+        mute = activated;
     }
 
 

@@ -19,24 +19,14 @@ public class Ball
 	private Vector3 velocity;
 
 	private Vector3 position;
-	private Texture ballTexture;
+	private Texture ballTexture = new Texture("8wzgvr.jpg");
 
-	private boolean stopped;
+	private boolean stopped = true;
 
     private ModelInstance model;
 
-	public Ball(float x, float y, Vector3 v){
-		velocity = v;
-        position = new Vector3(x,y,0);
-        ballTexture = new Texture("8wzgvr.jpg");
-    }
-
-    public Ball(){
-        velocity = new Vector3(2,2,0);
-        stopped = true;
-        position = new Vector3(10,10,0);
-        ballTexture = new Texture("8wzgvr.jpg");
-
+    public Ball(Vector3 position) {
+        this.position = position;
         createModel();
     }
 

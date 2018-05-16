@@ -42,7 +42,7 @@ public class Game extends State3D {
     public void create() {
         super.create();
 
-        ball = new Ball();
+        ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
 
         engine = new Engine(terrain);

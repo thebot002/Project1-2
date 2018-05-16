@@ -26,7 +26,6 @@ public class Terrain implements Serializable {
         this.goal = goal;
         this.name = name;
         offset = new Vector3(0,0,0);
-
         function = new Function(formula);
     }
 
@@ -44,6 +43,10 @@ public class Terrain implements Serializable {
 
     public int getHeight() {
         return height;
+    }
+
+    public Vector3 getStart() {
+        return start;
     }
 
     public float getMU() {
