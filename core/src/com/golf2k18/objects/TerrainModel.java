@@ -1,18 +1,15 @@
 package com.golf2k18.objects;
 
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class TerrainModel {
 
@@ -22,7 +19,7 @@ public class TerrainModel {
     private float max = 1f;
     private Terrain terrain;
 
-    private boolean debug = false;
+    public HeightField field;
 
     public TerrainModel(Terrain terrain){
         this.terrain = terrain;
@@ -36,23 +33,28 @@ public class TerrainModel {
 
         int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
 
-        ModelBuilder modelBuilder = new ModelBuilder();
-        modelBuilder.begin();
-        //modelBuilder.manage(myTexture); //make modelbuilder responsible for disposing the texture resource
+        field = new HeightField(true,createHeights(),terrain.getWidth(),terrain.getHeight(),true,attr);
+        field.corner00.set(0, 0, 0);
+        field.corner01.set(terrain.getWidth(), 0, 0);
+        field.corner10.set(0, terrain.getHeight(), 0);
+        field.corner11.set(terrain.getWidth(), terrain.getHeight(),0);
+        field.color00.set(0, 0, 1, 1);
+        field.color01.set(0, 1, 1, 1);
+        field.color10.set(1, 0, 1, 1);
+        field.color11.set(1, 1, 1, 1);
+        field.magnitude.set(0,0,1f);
+        field.update();
 
-        Random r = new Random();
-        long begin = 0;
-        if(debug) begin = System.currentTimeMillis();
+        ModelBuilder modelBuilder = new ModelBuilder();
+        /*modelBuilder.begin();
+
         for(Face face : faces) {
             modelBuilder.part("face"+face.id(), GL20.GL_TRIANGLES, attr,
-                    //new Material(TextureAttribute.createDiffuse(myTexture)))
                     new Material(ColorAttribute.createDiffuse(0.2f, 0.8f, 0.2f, 1f))) //green
-                    //new Material(ColorAttribute.createDiffuse(r.nextFloat(),r.nextFloat(),r.nextFloat(),1))) //random colors
                     .triangle(face.p1(), face.p2(), face.p3());
         }
 
-        if(debug) System.out.println(((System.currentTimeMillis()-begin)));
-        world.add(new ModelInstance(modelBuilder.end(), 0, 0, 0));
+        world.add(new ModelInstance(modelBuilder.end(), 0, 0, 0));*/
 
         Model water = modelBuilder.createRect(0,0,0,
                 20,0,0,
@@ -106,5 +108,16 @@ public class TerrainModel {
         }
         return vectors;
     }
+
+    private float[] createHeights(){
+        float[] heights = new float[terrain.getWidth()*terrain.getHeight()];
+        for (int i = 0; i < terrain.getWidth() ; i++) {
+            for (int j = 0; j < terrain.getHeight() ; j++) {
+                heights[(i*terrain.getHeight()) + j] =  terrain.getFunction().evaluateF(i ,j);
+            }
+        }
+        return heights;
+    }
+
 
 }

@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Array;
+import com.golf2k18.objects.HeightField;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.TerrainModel;
 import com.golf2k18.states.State;
@@ -18,7 +19,6 @@ import com.golf2k18.states.StateManager;
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
     protected CameraController controller;
-    //protected CameraInputController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
 
@@ -26,6 +26,7 @@ public abstract class State3D extends State {
     private Environment environment;
 
     protected Terrain terrain;
+    private Renderable field;
 
     State3D(StateManager manager, Terrain terrain) {
         super(manager);
@@ -56,6 +57,16 @@ public abstract class State3D extends State {
         environment.add(light);
 
         TerrainModel terrainModel = new TerrainModel(terrain);
+        HeightField hf = terrainModel.field;
+
+        field = new Renderable();
+        field.environment = environment;
+        field.meshPart.mesh = hf.mesh;
+        field.meshPart.primitiveType = GL20.GL_TRIANGLES;
+        field.meshPart.offset = 0;
+        field.meshPart.size = hf.mesh.getNumIndices();
+        field.meshPart.update();
+        field.material = new Material(TextureAttribute.createDiffuse(new Texture("1200px-Grass-JW.jpg")));
 
         //add the terrain to the list of models to display
         for (ModelInstance m: terrainModel.world) {
@@ -69,6 +80,7 @@ public abstract class State3D extends State {
     public void render (final Array<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
+        batch.render(field);
         batch.end();
     }
 

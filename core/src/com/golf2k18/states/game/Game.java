@@ -180,6 +180,7 @@ public class Game extends State3D {
             pause.act();
             pause.draw();
         }
+
     }
 
     @Override
