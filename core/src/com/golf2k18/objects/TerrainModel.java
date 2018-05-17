@@ -18,7 +18,8 @@ public class TerrainModel {
 
     public ArrayList<ModelInstance> world;
 
-    private final double DIV_SIZE = 1;
+    private final float DIV_SIZE = 1f;
+    private float max = 1f;
     private Terrain terrain;
 
     private boolean debug = false;
@@ -26,6 +27,7 @@ public class TerrainModel {
     public TerrainModel(Terrain terrain){
         this.terrain = terrain;
         world = new ArrayList<ModelInstance>();
+
         createWorld();
     }
 
@@ -33,7 +35,6 @@ public class TerrainModel {
         ArrayList<Face> faces = createFaces();
 
         int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
-        //Texture myTexture = new Texture("badlogic.jpg");
 
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
@@ -53,10 +54,26 @@ public class TerrainModel {
         if(debug) System.out.println(((System.currentTimeMillis()-begin)));
         world.add(new ModelInstance(modelBuilder.end(), 0, 0, 0));
 
-        Model water = modelBuilder.createRect(0,0,0,10,0,0,0,0,0.1f,0,10,0,
-                1,1,1,
+        Model water = modelBuilder.createRect(0,0,0,
+                20,0,0,
+                20,20,0,
+                0, 20,0,
+                0,0,1,
                 new Material(TextureAttribute.createDiffuse(new Texture("water.png"))),attr);
         world.add(new ModelInstance(water,0,0,0));
+
+        float height_border = 20;
+
+        Model border_w = modelBuilder.createBox(terrain.getWidth() + (2 * DIV_SIZE), DIV_SIZE,height_border,
+                new Material(TextureAttribute.createDiffuse(new Texture("wood_texture.jpg"))), attr);
+        world.add(new ModelInstance(border_w,terrain.getWidth()/2,-DIV_SIZE/2,(-height_border/2)+max));
+        world.add(new ModelInstance(border_w,terrain.getWidth()/2,terrain.getHeight()+DIV_SIZE/2,(-height_border/2)+max));
+
+        Model border_d = modelBuilder.createBox(DIV_SIZE, terrain.getHeight(),height_border,
+                new Material(TextureAttribute.createDiffuse(new Texture("wood_texture.jpg"))), attr);
+        world.add(new ModelInstance(border_d,-(DIV_SIZE/2),terrain.getHeight()/2,(-height_border/2)+max));
+        world.add(new ModelInstance(border_d,terrain.getHeight() + (DIV_SIZE/2),terrain.getHeight()/2,(-height_border/2)+max));
+
     }
 
     private ArrayList<Face> createFaces(){
