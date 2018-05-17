@@ -66,7 +66,7 @@ public abstract class State3D extends State {
         field.meshPart.offset = 0;
         field.meshPart.size = hf.mesh.getNumIndices();
         field.meshPart.update();
-        field.material = new Material(TextureAttribute.createDiffuse(new Texture("1200px-Grass-JW.jpg")));
+        field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture.jpg")));
 
         //add the terrain to the list of models to display
         for (ModelInstance m: terrainModel.world) {

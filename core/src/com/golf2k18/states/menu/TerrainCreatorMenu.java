@@ -194,7 +194,6 @@ public class TerrainCreatorMenu extends SubMenu {
                 catch (NumberFormatException e){
                     JOptionPane.showMessageDialog(null,"Please fill in with appropriate values","Error",JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
 

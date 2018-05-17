@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
@@ -45,31 +44,33 @@ public class TerrainModel {
         ModelBuilder modelBuilder = new ModelBuilder();
 
         Model water = modelBuilder.createRect(0,0,0,
-                20,0,0,
-                20,20,0,
-                0, 20,0,
+                terrain.getWidth(),0,0,
+                terrain.getWidth(),terrain.getHeight(),0,
+                0, terrain.getHeight(),0,
                 0,0,1,
-                new Material(TextureAttribute.createDiffuse(new Texture("water.png"))),attr);
+                new Material(TextureAttribute.createDiffuse(new Texture("Textures/water.png"))),attr);
         world.add(new ModelInstance(water,0,0,0));
 
-        float height_border = 20;
+        float height_border = 20f;
+        float width_border = 0.5f;
 
-        Model border_w = modelBuilder.createBox(terrain.getWidth() + (2 * DIV_SIZE), DIV_SIZE,height_border,
-                new Material(TextureAttribute.createDiffuse(new Texture("wood_texture.jpg"))), attr);
-        world.add(new ModelInstance(border_w,terrain.getWidth()/2,-DIV_SIZE/2,(-height_border/2)+max));
-        world.add(new ModelInstance(border_w,terrain.getWidth()/2,terrain.getHeight()+DIV_SIZE/2,(-height_border/2)+max));
+        Texture wood = new Texture("Textures/wood_texture.jpg");
+        Model border_w = modelBuilder.createBox(terrain.getWidth() + (2 * width_border), width_border,height_border,
+                new Material(TextureAttribute.createDiffuse(wood)), attr);
+        world.add(new ModelInstance(border_w,terrain.getWidth()/2,-width_border/2,(-height_border/2)+max));
+        world.add(new ModelInstance(border_w,terrain.getWidth()/2,terrain.getHeight()+width_border/2,(-height_border/2)+max));
 
-        Model border_d = modelBuilder.createBox(DIV_SIZE, terrain.getHeight(),height_border,
-                new Material(TextureAttribute.createDiffuse(new Texture("wood_texture.jpg"))), attr);
-        world.add(new ModelInstance(border_d,-(DIV_SIZE/2),terrain.getHeight()/2,(-height_border/2)+max));
-        world.add(new ModelInstance(border_d,terrain.getHeight() + (DIV_SIZE/2),terrain.getHeight()/2,(-height_border/2)+max));
+        Model border_d = modelBuilder.createBox(width_border, terrain.getHeight(),height_border,
+                new Material(TextureAttribute.createDiffuse(wood)), attr);
+        world.add(new ModelInstance(border_d,-(width_border/2),terrain.getHeight()/2,(-height_border/2)+max));
+        world.add(new ModelInstance(border_d,terrain.getHeight() + (width_border/2),terrain.getHeight()/2,(-height_border/2)+max));
     }
 
     private float[] createHeights(){
         float[] heights = new float[terrain.getWidth()*terrain.getHeight()*DIV_SIZE*DIV_SIZE];
         for (float i = 0; i < terrain.getWidth() ; i+=1/(DIV_SIZE*1.0f)) {
             for (float j = 0; j < terrain.getHeight() ; j+=(1/(DIV_SIZE*1.0f))) {
-                heights[(int)(((i*terrain.getHeight()*DIV_SIZE) + j)*DIV_SIZE)] =  terrain.getFunction().evaluateF(i ,j);
+                heights[(int)(((i*terrain.getHeight()*DIV_SIZE) + j)*DIV_SIZE)] =  terrain.getFormula().evaluateF(i ,j);
             }
         }
         return heights;

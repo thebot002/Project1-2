@@ -19,7 +19,8 @@ public class Ball
 	private Vector3 velocity;
 
 	private Vector3 position;
-	private Texture ballTexture = new Texture("8wzgvr.jpg");
+
+    private Texture ballTexture = new Texture("Textures/ball_texture.jpg");
 
 	private boolean stopped = true;
 
@@ -44,12 +45,12 @@ public class Ball
         if(DEBUG) System.out.println("y: " + y);
         velocity.y = y;
     }
+
     public void updateLocation(float x, float y) {
         position.x = x;
         position.y = y;
         updateInstance();
 	}
-
 	public float getMass() {
 		return MASS;
 	}
@@ -61,17 +62,18 @@ public class Ball
 	public float getX() {
 		return position.x;
 	}
+
     public float getY() {
 		return position.y;
 	}
     public float getZ() {
 		return position.z;
 	}
-
     public void setX(double x) {
 		position.x = (float)x;
 		updateInstance();
 	}
+
     public void setY(double y) {
 		position.y = (float)y;
 		updateInstance();
@@ -80,7 +82,6 @@ public class Ball
 		position.z = (float)z;
 		updateInstance();
 	}
-
     public Vector3 getVelocity()
 	{
 		return velocity.cpy();
@@ -93,6 +94,10 @@ public class Ball
 
     public ModelInstance getModel() {
         return model;
+    }
+
+    public float getDiameter() {
+        return DIAMETER;
     }
 
     public boolean isStopped(){

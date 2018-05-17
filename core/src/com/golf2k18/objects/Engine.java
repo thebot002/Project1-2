@@ -22,8 +22,8 @@ public class Engine
     private Vector3 calcGravity(Ball ball)
     {
         Vector3 Fz = new Vector3();
-        Fz.x = (float)((-ball.getMass()*GRAVITY* terrain.getFunction().evaluateXDeriv(ball.getX(), ball.getY())));
-        Fz.y = (float)((-ball.getMass()*GRAVITY* terrain.getFunction().evaluateYDeriv(ball.getX(),ball.getY())));
+        Fz.x = (float)((-ball.getMass()*GRAVITY* terrain.getFormula().evaluateXDeriv(ball.getX(), ball.getY())));
+        Fz.y = (float)((-ball.getMass()*GRAVITY* terrain.getFormula().evaluateYDeriv(ball.getX(),ball.getY())));
         return Fz;
     }
     private Vector3 calcFriction(Ball ball)
@@ -66,7 +66,7 @@ public class Engine
     public void updateBall(Ball ball)
     {
         ball.updateLocation(eulerX(ball,Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
-        ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
+        ball.setZ(terrain.getFormula().evaluateF(ball.getX(),ball.getY()));
 
         if(ball.getVelocity().len() <= STOP_TOLERANCE && (calcGravity(ball).len() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         eulerVx(ball,Gdx.graphics.getDeltaTime());

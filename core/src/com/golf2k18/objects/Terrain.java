@@ -11,13 +11,13 @@ public class Terrain implements Serializable {
     private Vector3 start;
     private Vector3 goal;
 
-    private float scale = 1; //function unit to world unit
+    private float scale = 1; //formula unit to world unit
     private Vector3 offset;
 
     private String name;
     private float MU = 0.5f;
 
-    private Function function;
+    private Formula formula;
 
     public Terrain(int width, int height, Vector3 start, Vector3 goal, String[] formula, String name) {
         this.width = width;
@@ -26,11 +26,11 @@ public class Terrain implements Serializable {
         this.goal = goal;
         this.name = name;
         offset = new Vector3(0,0,0);
-        function = new Function(formula);
+        this.formula = new Formula(formula);
     }
 
-    public Function getFunction() {
-        return function;
+    public Formula getFormula() {
+        return formula;
     }
 
     public String getName() {
