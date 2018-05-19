@@ -70,7 +70,7 @@ public class TerrainModel {
         float[] heights = new float[terrain.getWidth()*terrain.getHeight()*DIV_SIZE*DIV_SIZE];
         for (float i = 0; i < terrain.getWidth() ; i+=1/(DIV_SIZE*1.0f)) {
             for (float j = 0; j < terrain.getHeight() ; j+=(1/(DIV_SIZE*1.0f))) {
-                heights[(int)(((i*terrain.getHeight()*DIV_SIZE) + j)*DIV_SIZE)] =  terrain.getFormula().evaluateF(i ,j);
+                heights[(int)(((i*terrain.getHeight()*DIV_SIZE) + j)*DIV_SIZE)] =  terrain.getFunction().evaluateF(i ,j);
             }
         }
         return heights;

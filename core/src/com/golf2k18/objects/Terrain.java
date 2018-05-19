@@ -17,20 +17,20 @@ public class Terrain implements Serializable {
     private String name;
     private float MU = 0.5f;
 
-    private Formula formula;
+    private Function function;
 
-    public Terrain(int width, int height, Vector3 start, Vector3 goal, String[] formula, String name) {
+    public Terrain(int width, int height, Vector3 start, Vector3 goal, Function function, String name) {
         this.width = width;
         this.height = height;
         this.start = start;
         this.goal = goal;
         this.name = name;
         offset = new Vector3(0,0,0);
-        this.formula = new Formula(formula);
+        this.function = function;
     }
 
-    public Formula getFormula() {
-        return formula;
+    public Function getFunction() {
+        return function;
     }
 
     public String getName() {

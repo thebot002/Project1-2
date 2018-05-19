@@ -49,7 +49,14 @@ public class Spline implements Function {
                         {yDeriv[i][j]},{yDeriv[i+1][j]},{yDeriv[i][j+1]},{yDeriv[i+1][j+1]},
                         {xyDeriv[i][j]},{xyDeriv[i+1][j]},{xyDeriv[i][j+1]},{xyDeriv[i+1][j+1]}};
                 Matrix x = new Matrix(xarray);
-                coefficients[i][j] = Matrix.multiplication(A,x);
+                Matrix tempCoefs = Matrix.multiplication(A,x);
+                float[][] coefs = new float[4][4];
+                for (int k = 0; k < coefs.length; k++) {
+                    for (int l = 0; l < coefs[0].length; l++) {
+                        coefs[k][l] = tempCoefs.get((l*4)+k,1);
+                    }
+                }
+                coefficients[i][j] = new Matrix(coefs);
             }
         }
         return coefficients;
@@ -61,26 +68,39 @@ public class Spline implements Function {
         Matrix xVector = new Matrix(tempx);
         float[][] tempy = {{1},{y},{(float)Math.pow(y,2)},{(float)Math.pow(y,3)}};
         Matrix yVector = new Matrix(tempy);
-
-        float[][] tempCoef = new float[4][4];
-        for (int i = 0; i < tempCoef.length; i++) {
-            for (int j = 0; j < tempCoef[0].length; j++) {
-                tempCoef[i][j] = coefficients[(int)x][(int)y].get(1,i+j);
-            }
-        }
-        Matrix coefs = new Matrix(tempCoef);
-
-        Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefs),yVector);
-        return result.get(0,0);
+        return evaluate(xVector,yVector,x,y);
     }
 
     @Override
     public float evaluateXDeriv(float x, float y) {
-        return 0;
+        float[][] tempx = {{0,1,2*x,(float)(3*Math.pow(x,2))}};
+        Matrix xVector = new Matrix(tempx);
+        float[][] tempy = {{1},{y},{(float)Math.pow(y,2)},{(float)Math.pow(y,3)}};
+        Matrix yVector = new Matrix(tempy);
+        return evaluate(xVector,yVector,x,y);
     }
 
     @Override
     public float evaluateYDeriv(float x, float y) {
-        return 0;
+        float[][] tempx = {{1,x,(float)Math.pow(x,2),(float)Math.pow(x,3)}};
+        Matrix xVector = new Matrix(tempx);
+        float[][] tempy = {{0},{1},{2*y},{(float)(3*Math.pow(y,2))}};
+        Matrix yVector = new Matrix(tempy);
+        return evaluate(xVector,yVector,x,y);
+    }
+
+    public float evaluateXYDeriv(float x, float y) {
+        float[][] tempx = {{0,1,2*x,(float)(3*Math.pow(x,2))}};
+        Matrix xVector = new Matrix(tempx);
+        float[][] tempy = {{0},{1},{2*y},{(float)(3*Math.pow(y,2))}};
+        Matrix yVector = new Matrix(tempy);
+        return evaluate(xVector,yVector,x,y);
+    }
+
+    private float evaluate(Matrix xVector, Matrix yVector, float x, float y){
+        if(x > coefficients.length) x = coefficients.length;
+        if(y > coefficients[0].length) y = coefficients[0].length;
+        Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefficients[(int)x][(int)y]),yVector);
+        return result.get(0,0);
     }
 }

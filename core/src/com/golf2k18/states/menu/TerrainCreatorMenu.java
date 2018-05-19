@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.golf2k18.objects.Formula;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.states.StateManager;
@@ -175,7 +176,7 @@ public class TerrainCreatorMenu extends SubMenu {
                             JOptionPane.showMessageDialog(null,"The goal point isn't on the field.\nPlease choose another point.","Error",JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-                        newC = new Terrain(width, height,start,goal,formula,name);
+                        newC = new Terrain(width, height,start,goal,new Formula(formula),name);
                         if(xOff.length() != 0 || yOff.length() != 0 || zOff.length() != 0){
                             newC.setOffset(new Vector3(xOff.length()!=0?Float.parseFloat(xOff):0,
                                     yOff.length()!=0?Float.parseFloat(yOff):0,

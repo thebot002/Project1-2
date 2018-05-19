@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.golf2k18.objects.CourseIO;
+import com.golf2k18.objects.Formula;
 import com.golf2k18.objects.Matrix;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.menu.Menu;
@@ -73,20 +74,23 @@ public class StateManager extends ApplicationAdapter {
 		Vector3 goal = new Vector3(15,15,0);
 
 		String[] cosx = {"x","cos"};
-		Terrain c1 = new Terrain(width,height,start,goal,cosx,"Cosinus");
+		Terrain c1 = new Terrain(width,height,start,goal,new Formula(cosx),"Cos");
 		CourseIO.writeFile(c1);
 
 		String[] sinx = {"x","sin"};
-		Terrain c2 = new Terrain(width,height,start,goal,sinx,"Sinus");
+		Terrain c2 = new Terrain(width,height,start,goal,new Formula(sinx),"Sin");
 		CourseIO.writeFile(c2);
 
 		String[] cosy = {"y","cos"};
-		Terrain c3 = new Terrain(width,height,start,goal,cosy,"CosinusY");
+		Terrain c3 = new Terrain(width,height,start,goal,new Formula(cosy),"CosY");
 		CourseIO.writeFile(c3);
 
 		String[] siny = {"y","sin"};
-		Terrain c4 = new Terrain(width,height,start,goal,siny,"SinusY");
+		Terrain c4 = new Terrain(width,height,start,goal,new Formula(siny),"SinY");
 		CourseIO.writeFile(c4);
 
-	}
+        String[] flat = {"1"};
+        Terrain c5 = new Terrain(width,height,start,goal,new Formula(flat),"Plane");
+        CourseIO.writeFile(c5);
+    }
 }

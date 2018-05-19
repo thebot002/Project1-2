@@ -174,7 +174,7 @@ public class Game extends State3D {
         hud.draw();
         if(paused){
             pause.getBatch().begin();
-            pause.getBatch().draw(new Texture("grey_background.png"),0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            pause.getBatch().draw(new Texture("Textures/grey_background.png"),0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             pause.getBatch().end();
 
             pause.act();
@@ -206,7 +206,7 @@ public class Game extends State3D {
         if(!ball.isStopped()) engine.updateBall(ball);
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
-        ball.setZ(engine.getTerrain().getFormula().evaluateF(ball.getX(),ball.getY()));
+        ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
         if(ball.getPosition().x + (ball.getDiameter()/2) < 0){
             return;
         }
