@@ -9,9 +9,11 @@ public class Terrain implements Serializable {
     private int width;
     private int height;
     private Vector3 start;
-    private Vector3 goal;
 
-    private float scale = 1; //formula unit to world unit
+    private Vector3 goal;
+    private boolean goalHit;
+
+        private float scale = 1; //formula unit to world unit
     private Vector3 offset;
 
     private String name;
@@ -49,6 +51,8 @@ public class Terrain implements Serializable {
         return start;
     }
 
+    public Vector3 getGoal() {return goal;}
+
     public float getMU() {
         return MU;
     }
@@ -60,4 +64,10 @@ public class Terrain implements Serializable {
     public void setOffset(Vector3 offset){
         this.offset.set(offset);
     }
+
+    public boolean isGoalHit() {return goalHit;}
+
+    public void setGoalHit(boolean goalHit) {this.goalHit = goalHit;}
+
 }
+
