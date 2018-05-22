@@ -1,10 +1,11 @@
 package com.golf2k18.objects;
 
-public class Spline implements Function {
+import java.io.Serializable;
+
+public class Spline implements Function, Serializable {
+    private float[][] data;
     private Matrix[][] coefficients;
 
-    private int div;
-    private float[][] data;
     private float[][] xDeriv;
     private float[][] yDeriv;
     private float[][] xyDeriv;
@@ -29,18 +30,38 @@ public class Spline implements Function {
             { 4,-4,-4, 4, 2, 2,-2,-2, 2,-2, 2,-2, 1, 1, 1, 1}
     };
 
-    public Spline(float[][] data, int div, float[][] xDeriv, float[][] yDeriv, float[][] xyDeriv) {
+    public Spline(float[][] data) {
         this.data = data;
-        this.div = div;
-        this.xDeriv = xDeriv;
-        this.yDeriv = yDeriv;
-        this.xyDeriv = xyDeriv;
+        coefficients = new Matrix[data.length-1][data[0].length-1];
 
-        coefficients = interpolate(data,xDeriv,yDeriv,xyDeriv);
+        xDeriv = new float[data.length][data[0].length];
+        yDeriv = new float[data.length][data[0].length];
+        xyDeriv = new float[data.length][data[0].length];
+
+        //init of derivatives
+        for (int i = 1; i < data.length - 1; i++) {
+            for (int j = 1; j < data[0].length-1; j++) {
+                if(i == 1) yDeriv[i][j] = (data[2][j] - data[0  ][j])/2;
+                if(i == data.length - 1) yDeriv[i][j] = (data[data.length-3][j] - data[data.length-1][j])/2;
+                yDeriv[i][j] = (data[i+1][j] - data[i-1][j])/2;
+
+                if(j == 1) xDeriv[i][j] = (data[i][2] - data[i][0])/2;
+                if(j == data[0].length - 1) xDeriv[i][j] = (data[i][data[0].length-3] - data[i][data[0].length-1])/2;
+                xDeriv[i][j] = (data[i][j+1] - data[i][j-1])/2;
+            }
+        }
+        for (int i = 1; i < data.length - 1; i++) {
+            for (int j = 1; j < data[0].length-1; j++) {
+                if(i == 1) xyDeriv[i][j] = (yDeriv[i][2] - yDeriv[i][0])/2;
+                if(i == data.length - 1) xyDeriv[i][j] = (yDeriv[data.length-3][j] - yDeriv[data.length-1][j])/2;
+                xyDeriv[i][j] = (yDeriv[i][j+1] - yDeriv[i][j-1])/2;
+            }
+        }
+
+        interpolate();
     }
 
-    private Matrix[][] interpolate(float[][] data, float[][] xDeriv, float[][] yDeriv, float[][] xyDeriv){
-        Matrix[][] coefficients = new Matrix[data.length-1][data[0].length-1];
+    private void interpolate(){
         Matrix A = new Matrix(this.A);
         for (int i = 0; i < data.length - 1; i++) {
             for (int j = 0; j < data[0].length - 1; j++) {
@@ -53,13 +74,12 @@ public class Spline implements Function {
                 float[][] coefs = new float[4][4];
                 for (int k = 0; k < coefs.length; k++) {
                     for (int l = 0; l < coefs[0].length; l++) {
-                        coefs[k][l] = tempCoefs.get((l*4)+k,1);
+                        coefs[k][l] = tempCoefs.get((k*4)+l,0);
                     }
                 }
                 coefficients[i][j] = new Matrix(coefs);
             }
         }
-        return coefficients;
     }
 
     @Override
@@ -98,9 +118,12 @@ public class Spline implements Function {
     }
 
     private float evaluate(Matrix xVector, Matrix yVector, float x, float y){
-        if(x > coefficients.length) x = coefficients.length;
-        if(y > coefficients[0].length) y = coefficients[0].length;
+        if(x > coefficients.length-1) x = coefficients.length-1;
+        if(y > coefficients[0].length-1) y = coefficients[0].length-1;
+        //coefficients[(int)x][(int)y].print();
+        //System.out.println();
         Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefficients[(int)x][(int)y]),yVector);
+        //System.out.println(result.get(0,0));
         return result.get(0,0);
     }
 }
