@@ -11,7 +11,12 @@ public class AI {
         this.ball = ball;
         this.terrain = terrain;
     }
-    public void findBestHit(){
+    public void play()
+    {
+        Vector3 tryBall = fitness();
+        ball.hit(tryBall);
+    }
+    public void holeInOne(){
         while(!terrain.isGoalHit())
         {
             Vector3 tryBall = fitness();
