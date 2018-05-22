@@ -32,9 +32,6 @@ public class StateManager extends ApplicationAdapter {
         states.push(start);
         Gdx.gl.glClearColor(1, 1, 1, 1);
 		if(reset)reset();
-		float[][] a = {{1,2},{3,4}};
-		float[][] b = {{2,0},{1,2}};
-		Matrix.multiplication(new Matrix(a),new Matrix(b)).print();
     }
 
     public StateManager push(State state)
@@ -73,7 +70,7 @@ public class StateManager extends ApplicationAdapter {
 		Vector3 start = new Vector3(10,10,0);
 		Vector3 goal = new Vector3(15,15,0);
 
-		String[] cosx = {"x","cos"};
+		/*String[] cosx = {"x","cos"};
 		Terrain c1 = new Terrain(width,height,start,goal,new Formula(cosx),"Cos");
 		CourseIO.writeFile(c1);
 
@@ -91,7 +88,7 @@ public class StateManager extends ApplicationAdapter {
 
         String[] flat = {"1"};
         Terrain c5 = new Terrain(width,height,start,goal,new Formula(flat),"Plane");
-        CourseIO.writeFile(c5);
+        CourseIO.writeFile(c5);*/
 
         float[][] flatinter = new float[width][height];
 		for (int i = 0; i < flatinter.length; i++) {
