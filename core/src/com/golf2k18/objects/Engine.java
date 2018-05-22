@@ -40,6 +40,7 @@ public class Engine
         v.scl(1/ball.getMass());
         return v;
     }
+    /*
     private float eulerX(Ball ball, float dt)
     {
         float vX = ball.getVelocity().x;
@@ -62,6 +63,65 @@ public class Engine
         float aY = getAcceleration(ball).y;
         ball.updateVelocityY(ball.getVelocity().y + dt*aY);
     }
+    */
+
+    public void rk4(Ball ball,float dt)
+    {
+        float xF_k1 = getAcceleration(ball).x;
+        float xV = ball.getVelocity().x;
+        float yF_k1 = getAcceleration(ball).y;
+        float yV = ball.getVelocity().y;
+
+        float x_k1 = ball.getX() + dt * xV;
+        float y_k1 = ball.getY() + dt * yV;
+        float xV_k1 = xV + dt + xF_k1;
+        float yV_k1 = yV + dt + yF_k1;
+
+        ball.updateVelocityX(xV_k1);
+        ball.updateVelocityY(yV_k1);
+        ball.updateLocation(x_k1, y_k1);
+
+        float xF_k2 = getAcceleration(ball).x;
+        float yF_k2 = getAcceleration(ball).y;
+        float x_k2 = ball.getX() +x_k1 * dt/2 + dt* xV_k1; //or current velocity? ,most likely current velocity
+        float y_k2 = ball.getY() +y_k1 * dt/2 + dt* yV_k1;
+        float xV_k2 = xV_k1 + dt/2 * xF_k2;
+        float yV_k2 = yV_k1 + dt/2 * yF_k2;
+
+        ball.updateVelocityX(xV_k2);
+        ball.updateVelocityY(yV_k2);
+        ball.updateLocation(x_k2, y_k2);
+
+        float xF_k3 = getAcceleration(ball).x;
+        float yF_k3 = getAcceleration(ball).y;
+        float x_k3 = ball.getX()+ x_k2 * dt/2 + dt * xV_k2;
+        float y_k3 = ball.getY()+ y_k2 * dt/2 + dt * yV_k2;
+        float xV_k3 = xV_k2 + dt/2 * xF_k3;
+        float yV_k3 = yV_k2 + dt/2 * yF_k3;
+
+        ball.updateVelocityX(xV_k3);
+        ball.updateVelocityY(yV_k3);
+        ball.updateLocation(x_k3, y_k3);
+
+        float xF_k4 = getAcceleration(ball).x;
+        float yF_k4 = getAcceleration(ball).y;
+        float x_k4 = ball.getX()+ x_k3 * dt + dt * xV_k3;
+        float y_k4 = ball.getY() + y_k3 * dt + dt * yV_k3;
+        float xV_k4 = xV_k3 + dt * xF_k4;
+        float yV_k4 = yV_k3 + dt * yF_k4;
+
+        ball.updateVelocityX(xV_k4);
+        ball.updateVelocityY(yV_k4);
+        ball.updateLocation(x_k4, y_k4);
+
+        xV = ball.getVelocity().x + dt * (dt/6)* xF_k1 + 2*xF_k2 + 2*xF_k3 + xF_k4);
+        yV = ball.getVelocity().y + dt * (dt/6) * yF_k1 + 2*yF_k2 + 2*yF_k3 + yF_k4);
+
+        float posX = ball.getX() + (dt/6)*(xV_k1 + 2*xV_k2 + 2* xV_k3 + xV_k4);
+        float posY = ball.getY() + (dt/6)*(yV_k1 + 2*yV_k2 + 2* yV_k3 + yV_k4);
+
+        ball.updateLocation(posX,posY);
+    }
 
     public void updateBall(Ball ball)
     {
@@ -71,6 +131,16 @@ public class Engine
         if(ball.getVelocity().len() <= STOP_TOLERANCE && (calcGravity(ball).len() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         eulerVx(ball,Gdx.graphics.getDeltaTime());
         eulerVy(ball,Gdx.graphics.getDeltaTime());
+    }
+
+    public void updateBallRK4(Ball ball)
+    {
+        rk4(ball,Gdx.graphics.getDeltaTime());
+        ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
+
+        if(ball.getVelocity().len() <= STOP_TOLERANCE && (calcGravity(ball).len() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
+        rk4(ball,Gdx.graphics.getDeltaTime());
+
     }
 
     public Terrain getTerrain() {

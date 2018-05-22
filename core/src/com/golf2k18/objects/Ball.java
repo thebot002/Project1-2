@@ -51,6 +51,7 @@ public class Ball
         position.y = y;
         updateInstance();
 	}
+
 	public float getMass() {
 		return MASS;
 	}
