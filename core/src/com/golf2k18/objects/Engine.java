@@ -114,8 +114,11 @@ public class Engine
         ball.updateVelocityY(yV_k4);
         ball.updateLocation(x_k4, y_k4);
 
-        xV = ball.getVelocity().x + dt * (dt/6)* xF_k1 + 2*xF_k2 + 2*xF_k3 + xF_k4);
-        yV = ball.getVelocity().y + dt * (dt/6) * yF_k1 + 2*yF_k2 + 2*yF_k3 + yF_k4);
+        xV = ball.getVelocity().x + dt * (dt/6)* xF_k1 + 2*xF_k2 + 2*xF_k3 + xF_k4;
+        yV = ball.getVelocity().y + dt * (dt/6) * yF_k1 + 2*yF_k2 + 2*yF_k3 + yF_k4;
+
+        ball.updateVelocityX(xV);
+        ball.updateVelocityY(yV);
 
         float posX = ball.getX() + (dt/6)*(xV_k1 + 2*xV_k2 + 2* xV_k3 + xV_k4);
         float posY = ball.getY() + (dt/6)*(yV_k1 + 2*yV_k2 + 2* yV_k3 + yV_k4);
@@ -123,6 +126,7 @@ public class Engine
         ball.updateLocation(posX,posY);
     }
 
+    /*
     public void updateBall(Ball ball)
     {
         ball.updateLocation(eulerX(ball,Gdx.graphics.getDeltaTime()),eulerY(ball,Gdx.graphics.getDeltaTime()));
@@ -132,7 +136,7 @@ public class Engine
         eulerVx(ball,Gdx.graphics.getDeltaTime());
         eulerVy(ball,Gdx.graphics.getDeltaTime());
     }
-
+*/
     public void updateBallRK4(Ball ball)
     {
         rk4(ball,Gdx.graphics.getDeltaTime());
@@ -140,7 +144,6 @@ public class Engine
 
         if(ball.getVelocity().len() <= STOP_TOLERANCE && (calcGravity(ball).len() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
         rk4(ball,Gdx.graphics.getDeltaTime());
-
     }
 
     public Terrain getTerrain() {

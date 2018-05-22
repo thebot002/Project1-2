@@ -203,7 +203,7 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(!ball.isStopped()) engine.updateBall(ball);
+        if(!ball.isStopped()) engine.updateBallRK4(ball);
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
         ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
