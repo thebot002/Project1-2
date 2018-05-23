@@ -31,48 +31,39 @@ public class RK4 extends Engine {
         float xV_k2 = xV_k1 + (dt/2 * force_k2.x);
         float yV_k2 = yV_k1 + (dt/2 * force_k2.y);
 
-        /*
-        float xF_k3 = getAcceleration(ball).x;
-        float yF_k3 = getAcceleration(ball).y;
-        float x_k3 = ball.getX()+ x_k2 * dt/2 + dt * xV_k2;
-        float y_k3 = ball.getY()+ y_k2 * dt/2 + dt * yV_k2;
-        float xV_k3 = xV_k2 + dt/2 * xF_k3;
-        float yV_k3 = yV_k2 + dt/2 * yF_k3;
+        Vector3 pos_k2 = new Vector3(x_k2,y_k2,0);
+        Vector3 vel_k2 = new Vector3(xV_k2,yV_k2,0);
 
-        ball.updateVelocityX(xV_k3);
-        ball.updateVelocityY(yV_k3);
-        ball.updateLocation(x_k3, y_k3);
+        Vector3 force_k3 = getAcceleration(pos_k2,vel_k2);
+        float x_k3 = position.x + (x_k2 * dt/2) + (dt * xV_k2);
+        float y_k3 = position.y + (y_k2 * dt/2) + (dt * yV_k2);
+        float xV_k3 = xV_k2 + (dt/2 * force_k3.x);
+        float yV_k3 = yV_k2 + (dt/2 * force_k3.y);
 
-        float xF_k4 = getAcceleration(ball).x;
-        float yF_k4 = getAcceleration(ball).y;
-        float x_k4 = ball.getX()+ x_k3 * dt + dt * xV_k3;
-        float y_k4 = ball.getY() + y_k3 * dt + dt * yV_k3;
-        float xV_k4 = xV_k3 + dt * xF_k4;
-        float yV_k4 = yV_k3 + dt * yF_k4;
+        Vector3 pos_k3 = new Vector3(x_k3,y_k3,0);
+        Vector3 vel_k3 = new Vector3(xV_k3,yV_k3,0);
 
-        ball.updateVelocityX(xV_k4);
-        ball.updateVelocityY(yV_k4);
-        ball.updateLocation(x_k4, y_k4);
+        Vector3 force_k4 = getAcceleration(pos_k3,vel_k3);
+        float x_k4 = position.x + (x_k3 * dt) + (dt * xV_k3);
+        float y_k4 = position.y + (y_k3 * dt) + (dt * yV_k3);
+        float xV_k4 = xV_k3 + (dt * force_k4.x);
+        float yV_k4 = yV_k3 + (dt * force_k4.y);
 
-        xV = ball.getVelocity().x + dt * (dt/6)* xF_k1 + 2*xF_k2 + 2*xF_k3 + xF_k4;
-        yV = ball.getVelocity().y + dt * (dt/6) * yF_k1 + 2*yF_k2 + 2*yF_k3 + yF_k4;
+        float xV = ball.getVelocity().x + (dt * (dt/6) * force_k1.x) + (2*force_k2.x) + (2*force_k3.x) + force_k4.x;
+        float yV = ball.getVelocity().y + (dt * (dt/6) * force_k1.y) + (2*force_k2.y) + (2*force_k3.y) + force_k4.y;
 
-        ball.updateVelocityX(xV);
-        ball.updateVelocityY(yV);
+        ball.updateVelocity(new Vector3(xV,yV,0));
 
-        float posX = ball.getX() + (dt/6)*(xV_k1 + 2*xV_k2 + 2* xV_k3 + xV_k4);
-        float posY = ball.getY() + (dt/6)*(yV_k1 + 2*yV_k2 + 2* yV_k3 + yV_k4);
+        float posX = position.x + ((dt/6)*(xV_k1 + (2*xV_k2) + (2* xV_k3) + xV_k4));
+        float posY = position.y + ((dt/6)*(yV_k1 + (2*yV_k2) + (2* yV_k3) + yV_k4));
 
-        ball.updateLocation(posX,posY);*/
+        ball.updateLocation(new Vector3(posX,posY,0));
     }
 
-    public void updateBall()
-    {
-        /*rk4(ball,Gdx.graphics.getDeltaTime());
+    public void updateBall() {
+        Vector3 position = ball.getPosition();
+        Vector3 velocity = ball.getVelocity();
+        rk4(position,velocity);
         ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
-
-        if(ball.getVelocity().len() <= STOP_TOLERANCE && (calcGravity(ball).len() / ball.getMass()) <= STOP_TOLERANCE) ball.setStopped();
-        rk4(ball,Gdx.graphics.getDeltaTime());*/
     }
-
 }
