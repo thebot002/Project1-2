@@ -77,16 +77,13 @@ public class TerrainModel {
     private float[] createHeights(int x0,int y0, int width, int height){
         float[] heights = new float[((width*DIV_SIZE)+1)*((height*DIV_SIZE)+1)]; //width and height +1 because we want to include the edge
         int ih = 0;
-        int test=0;
         float division = 1/(DIV_SIZE*1.0f);
         for (float i = 0; i <= width ; i+=division) {
-            test++;
             for (float j = 0; j <= height ; j+=division) {
                 heights[ih] =  terrain.getFunction().evaluateF(x0+i ,y0+j);
                 ih++;
             }
         }
-        System.out.println(test);
         return heights;
     }
 }
