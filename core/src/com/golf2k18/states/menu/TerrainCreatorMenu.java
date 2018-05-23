@@ -11,20 +11,28 @@ import com.golf2k18.states.StateManager;
 
 import javax.swing.*;
 
+/**
+ * Class that describes the user interface for the TerrainCreator menu.
+ */
 public class TerrainCreatorMenu extends SubMenu {
 
     private final String TITLE = "TERRAIN CREATOR";
 
-    //to have startpoint and Goal labels take the same amount of space
+    //to have start point and Goal labels take the same amount of space
     private final float widthLabel = 100f;
     private final float widthField = 30f;
 
     private boolean debug = false;
 
+    /**
+     * Constructor for the TerrainCreatorMenu class.
+     * @param manager object of the GameStateManager which is currently used.
+     */
     TerrainCreatorMenu(StateManager manager) {
         super(manager);
     }
 
+    //Creating every element of the TerrainCreatorMenu UI and then spacing them to look nice.
     @Override
     protected Table createContent() {
         Table table = new Table();
@@ -48,12 +56,12 @@ public class TerrainCreatorMenu extends SubMenu {
 
         Label wLabel = new Label("Width",StateManager.skin);
         sizeGroup.add(wLabel).pad(10f);
-        TextField wField = new TextField("",StateManager.skin);
+        final TextField wField = new TextField("",StateManager.skin);
         sizeGroup.add(wField).pad(10f).padRight(30f).width(widthField);
 
         Label dLabel = new Label("Depth",StateManager.skin);
         sizeGroup.add(dLabel).pad(10f);
-        TextField dField = new TextField("",StateManager.skin);
+        final TextField dField = new TextField("",StateManager.skin);
         sizeGroup.add(dField).pad(10f).width(widthField).expandX().left();
 
         table.add(sizeGroup).fillX();
@@ -67,17 +75,17 @@ public class TerrainCreatorMenu extends SubMenu {
 
         Label xOffLabel = new Label("X",StateManager.skin);
         offSetGroup.add(xOffLabel).pad(10f);
-        TextField xOffField = new TextField("",StateManager.skin);
+        final TextField xOffField = new TextField("",StateManager.skin);
         offSetGroup.add(xOffField).pad(10f).padRight(30f).width(widthField);
 
         Label yOffLabel = new Label("Y",StateManager.skin);
         offSetGroup.add(yOffLabel).pad(10f);
-        TextField yOffField = new TextField("",StateManager.skin);
+        final TextField yOffField = new TextField("",StateManager.skin);
         offSetGroup.add(yOffField).pad(10f).padRight(30f).width(widthField);
 
         Label zOffLabel = new Label("Z",StateManager.skin);
         offSetGroup.add(zOffLabel).pad(10f);
-        TextField zOffField = new TextField("",StateManager.skin);
+        final TextField zOffField = new TextField("",StateManager.skin);
         offSetGroup.add(zOffField).pad(10f).width(widthField).expandX().left();
 
         table.add(offSetGroup).fillX();
@@ -89,7 +97,7 @@ public class TerrainCreatorMenu extends SubMenu {
         Label scaleLabel = new Label("Scale:",StateManager.skin);
         scaleGroup.add(scaleLabel).pad(10f).prefWidth(widthLabel);
 
-        TextField scaleField = new TextField("1",StateManager.skin);
+        final TextField scaleField = new TextField("1",StateManager.skin);
         scaleGroup.add(scaleField).pad(10f).width(widthField).expandX().left();
         table.add(scaleGroup).fillX();
         table.row();
@@ -102,12 +110,12 @@ public class TerrainCreatorMenu extends SubMenu {
 
         Label xLabel = new Label("X",StateManager.skin);
         startGroup.add(xLabel).pad(10f);
-        TextField xStart = new TextField("",StateManager.skin);
+        final TextField xStart = new TextField("",StateManager.skin);
         startGroup.add(xStart).pad(10f).padRight(30f).width(widthField);
 
         Label yLabel = new Label("Y",StateManager.skin);
         startGroup.add(yLabel).pad(10f);
-        TextField yStart = new TextField("",StateManager.skin);
+        final TextField yStart = new TextField("",StateManager.skin);
         startGroup.add(yStart).pad(10f).width(widthField).expandX().left();
         table.add(startGroup).fillX();
         table.row();
@@ -119,12 +127,12 @@ public class TerrainCreatorMenu extends SubMenu {
 
         Label xEndLabel = new Label("X",StateManager.skin);
         endGroup.add(xEndLabel).pad(10f);
-        TextField xEnd = new TextField("",StateManager.skin);
+        final TextField xEnd = new TextField("",StateManager.skin);
         endGroup.add(xEnd).pad(10f).padRight(30f).width(widthField);
 
         Label yEndLabel = new Label("Y",StateManager.skin);
         endGroup.add(yEndLabel).pad(10f);
-        TextField yEnd = new TextField("",StateManager.skin);
+        final TextField yEnd = new TextField("",StateManager.skin);
         endGroup.add(yEnd).pad(10f).width(widthField).expandX().left();
         table.add(endGroup).fillX();
         table.row();
@@ -134,7 +142,7 @@ public class TerrainCreatorMenu extends SubMenu {
         Label nameLabel = new Label("Name*:",StateManager.skin);
         nameGroup.add(nameLabel).pad(10f).prefWidth(widthLabel);
 
-        TextField nameField = new TextField("", StateManager.skin);
+        final TextField nameField = new TextField("", StateManager.skin);
         nameGroup.add(nameField).expandX().fillX().pad(10f).left();
 
         table.add(nameGroup).fillX();
@@ -211,6 +219,7 @@ public class TerrainCreatorMenu extends SubMenu {
         return table;
     }
 
+    //Method that return the String that hold the title input for this terrain.
     @Override
     protected String getTitle() {
         return TITLE;

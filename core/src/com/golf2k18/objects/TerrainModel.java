@@ -11,6 +11,9 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 
+/**
+ * Class that includes all the information that is needed for the terrain of the course.
+ */
 public class TerrainModel {
 
     public ArrayList<ModelInstance> world;
@@ -22,13 +25,22 @@ public class TerrainModel {
 
     public Array<HeightField> map;
 
+    /**
+     * Constructor for the TerrainModel class, it takes a Terrain object and creates the "world".
+     * (This world is represented as an arrayList of ModelInstances)
+     * @param terrain Object of the Terrain class.
+     */
     public TerrainModel(Terrain terrain){
         this.terrain = terrain;
+        world = new ArrayList<>();
         map = new Array<HeightField>();
         world = new ArrayList<ModelInstance>();
         createWorld();
     }
 
+    /**
+     * Method which creates all the models that make up the "world" and joins them in one group.
+     */
     private void createWorld(){
         int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
 
@@ -74,7 +86,11 @@ public class TerrainModel {
         world.add(new ModelInstance(border_d,terrain.getHeight() + (width_border/2),terrain.getHeight()/2,(-height_border/2)+max));
     }
 
-    private float[] createHeights(int x0,int y0, int width, int height){
+    /**
+     * Method which calculates the height of the course according to the given function.
+     * @return float[] heights.
+     */
+   private float[] createHeights(int x0,int y0, int width, int height){
         float[] heights = new float[((width*DIV_SIZE)+1)*((height*DIV_SIZE)+1)]; //width and height +1 because we want to include the edge
         int ih = 0;
         float division = 1/(DIV_SIZE*1.0f);
