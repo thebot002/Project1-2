@@ -29,6 +29,8 @@ public class Terrain implements Serializable {
         this.function = function;
     }
 
+
+
     public Function getFunction() {
         return function;
     }
@@ -48,6 +50,8 @@ public class Terrain implements Serializable {
     public Vector3 getStart() {
         return start;
     }
+
+    public Vector3 getGoal() {return goal;}
 
     public float getMU() {
         return MU;
