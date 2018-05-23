@@ -68,7 +68,7 @@ public abstract class State3D extends State {
             field.meshPart.offset = 0;
             field.meshPart.size = hf.get(i).mesh.getNumIndices();
             field.meshPart.update();
-            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture.jpg")));
+            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
             fields.add(field);
         }
 

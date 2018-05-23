@@ -78,6 +78,9 @@ public class Spline implements Function, Serializable {
         float nx = x%1;
         float ny = y%1;
 
+        if(x > coefficients.length-1) nx = 1;
+        if(y > coefficients[0].length) ny = 1;
+
         float[][] xVector = {{1,nx,(float)Math.pow(nx,2),(float)Math.pow(nx,3)}};
         float[][] yVector = {{1},{ny},{(float)Math.pow(ny,2)},{(float)Math.pow(ny,3)}};
         return evaluate(new Matrix(xVector),new Matrix(yVector),x,y);
@@ -116,7 +119,6 @@ public class Spline implements Function, Serializable {
         if(x > coefficients.length-1) x = coefficients.length-1;
         if(y > coefficients[0].length-1) y = coefficients[0].length-1;
         Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefficients[(int)x][(int)y]),yVector);
-        if(result.get(0,0) > 1 ) System.out.println(" res:"+result.get(0,0));
         return result.get(0,0);
     }
 }

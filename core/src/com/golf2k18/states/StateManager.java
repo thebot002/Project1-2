@@ -70,7 +70,7 @@ public class StateManager extends ApplicationAdapter {
 		Vector3 start = new Vector3(10,10,0);
 		Vector3 goal = new Vector3(15,15,0);
 
-		/*String[] cosx = {"x","cos"};
+		String[] cosx = {"x","cos"};
 		Terrain c1 = new Terrain(width,height,start,goal,new Formula(cosx),"Cos");
 		CourseIO.writeFile(c1);
 
@@ -88,7 +88,7 @@ public class StateManager extends ApplicationAdapter {
 
         String[] flat = {"1"};
         Terrain c5 = new Terrain(width,height,start,goal,new Formula(flat),"Plane");
-        CourseIO.writeFile(c5);*/
+        CourseIO.writeFile(c5);
 
         float[][] flatinter = new float[width][height];
 		for (int i = 0; i < flatinter.length; i++) {
@@ -96,7 +96,11 @@ public class StateManager extends ApplicationAdapter {
 				flatinter[i][j] = 1;
 			}
 		}
-		flatinter[10][10] = 2;
+		flatinter[9][10] = 2;
+        flatinter[10][9] = 2;
+        flatinter[11][10] = 2;
+        flatinter[10][11] = 2;
+		flatinter[10][10] = 3;
         Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter),"PlaneSpline");
 		CourseIO.writeFile(c6);
     }
