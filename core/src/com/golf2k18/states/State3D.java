@@ -1,4 +1,4 @@
-package com.golf2k18.states.game;
+package com.golf2k18.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -15,6 +15,7 @@ import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.TerrainModel;
 import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
+import com.golf2k18.states.game.CameraController;
 
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
@@ -28,7 +29,7 @@ public abstract class State3D extends State {
     protected Terrain terrain;
     private Array<Renderable> fields;
 
-    State3D(StateManager manager, Terrain terrain) {
+    public State3D(StateManager manager, Terrain terrain) {
         super(manager);
         this.terrain = terrain;
     }
