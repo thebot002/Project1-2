@@ -11,7 +11,7 @@ public class Engine
 
     public Engine(Terrain terrain)
     {
-        String[] str = {"x","cos"};
+        //String[] str = {"x","cos"};
         //String[] str = {"0"};
         //String[] str = {"0","0.5","x","5","-","2","^","^","-"};
         //String[] str = {"y","x","*"};
