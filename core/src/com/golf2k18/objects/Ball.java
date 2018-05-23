@@ -13,7 +13,6 @@ public class Ball
 {
     private final boolean DEBUG = false;
 
-    //private final float DIAMETER = 2f; //test diameter
     private final float DIAMETER = .42f;
 	private final float MASS = 0.45f;
 	private Vector3 velocity;
@@ -36,21 +35,13 @@ public class Ball
 		this.velocity = vector.cpy();
 	}
 
-	public void updateVelocityX(float x) {
-	    if(DEBUG) System.out.println("x: " + x);
-        velocity.x = x;
-	}
-
-    public void updateVelocityY(float y) {
-        if(DEBUG) System.out.println("y: " + y);
-        velocity.y = y;
+	public void updateVelocity(Vector3 velocity){
+        this.velocity = velocity;
     }
 
-    public void updateLocation(float x, float y) {
-        position.x = x;
-        position.y = y;
-        updateInstance();
-	}
+    public void updateLocation(Vector3 position){
+        this.position = position;
+    }
 
 	public float getMass() {
 		return MASS;

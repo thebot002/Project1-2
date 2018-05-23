@@ -149,7 +149,7 @@ public class MainMenu extends MenuState
             public void clicked(InputEvent event, float x, float y)
             {
                 manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
-                //manager.push(new Game(manager,new Engine().getTerrain()));
+                //manager.push(new Game(manager,new Euler().getTerrain()));
             }
         });
         table.add(start).center().fillX().pad(10f);

@@ -2,6 +2,7 @@ package com.golf2k18.objects;
 
 import java.util.ArrayList;
 
+//TODO
 public class Course {
     ArrayList<Terrain> course;
 
