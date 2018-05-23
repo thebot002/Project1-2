@@ -1,8 +1,10 @@
 package com.golf2k18.objects;
 
-public class Matrix {
-    private int col_amount;
-    private int row_amount;
+import java.io.Serializable;
+
+public class Matrix implements Serializable {
+    private int col_amount; //x,j
+    private int row_amount; //y,i
 
     private float[][] matrix;
 
@@ -13,9 +15,9 @@ public class Matrix {
         this.col_amount = matrix[0].length;
     }
 
-    public Matrix(int col_amount, int row_amount) {
-        this.col_amount = col_amount;
+    public Matrix(int row_amount, int col_amount) {
         this.row_amount = row_amount;
+        this.col_amount = col_amount;
 
         matrix = new float[row_amount][col_amount];
         for (int i = 0; i < matrix.length; i++) {
@@ -50,12 +52,12 @@ public class Matrix {
         a.row_amount = temp[0].length;
     }
 
-    public float get(int x, int y){
-        return matrix[x][y];
+    public float get(int i, int j){
+        return matrix[i][j];
     }
 
-    public void add(int x, int y, float v){
-        matrix[x][y] += v;
+    public void add(int i, int j, float v){
+        matrix[i][j] += v;
     }
 
     public float[][] getMatrix() {
