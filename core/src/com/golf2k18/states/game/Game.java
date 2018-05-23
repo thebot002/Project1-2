@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.Engine;
+import com.golf2k18.states.State3D;
 import com.golf2k18.states.StateManager;
 
 import java.util.HashMap;
@@ -144,7 +145,7 @@ public class Game extends State3D {
         organizer.row();
         organizer.add(settings).top().pad(10f);
 
-        TextButton menu = new TextButton("Menu", StateManager.skin);
+        TextButton menu = new TextButton("MainMenu", StateManager.skin);
         menu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -215,16 +216,16 @@ public class Game extends State3D {
     @Override
     public void handleInput() {
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
-            ball.setX(ball.getX()+0.15);
+            ball.setX(ball.getX()+0.1);
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
-            ball.setX(ball.getX()-0.15);
+            ball.setX(ball.getX()-0.1);
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
-            ball.setY(ball.getY()+0.15);
+            ball.setY(ball.getY()+0.1);
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
-            ball.setY(ball.getY()-0.15);
+            ball.setY(ball.getY()-0.1);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
             if(!controller.isFocused()){
@@ -234,6 +235,12 @@ public class Game extends State3D {
                 controller.unfocus();
             }
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.M)){
+            if(manualMovement) setProcessors();
+            else Gdx.input.setInputProcessor(new InputMultiplexer(hud, this));
+            manualMovement = !manualMovement;
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             double dir = directionInput.getValue();
             double intensity = intensityInput.getValue();
@@ -259,4 +266,5 @@ public class Game extends State3D {
     public void dispose() {
         super.dispose();
     }
+
 }

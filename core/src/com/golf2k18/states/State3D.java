@@ -1,4 +1,4 @@
-package com.golf2k18.states.game;
+package com.golf2k18.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -15,6 +15,7 @@ import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.TerrainModel;
 import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
+import com.golf2k18.states.game.CameraController;
 
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
@@ -26,9 +27,9 @@ public abstract class State3D extends State {
     private Environment environment;
 
     protected Terrain terrain;
-    private Renderable field;
+    private Array<Renderable> fields;
 
-    State3D(StateManager manager, Terrain terrain) {
+    public State3D(StateManager manager, Terrain terrain) {
         super(manager);
         this.terrain = terrain;
     }
@@ -57,16 +58,20 @@ public abstract class State3D extends State {
         environment.add(light);
 
         TerrainModel terrainModel = new TerrainModel(terrain);
-        HeightField hf = terrainModel.field;
+        Array<HeightField> hf = terrainModel.map;
 
-        field = new Renderable();
-        field.environment = environment;
-        field.meshPart.mesh = hf.mesh;
-        field.meshPart.primitiveType = GL20.GL_TRIANGLES;
-        field.meshPart.offset = 0;
-        field.meshPart.size = hf.mesh.getNumIndices();
-        field.meshPart.update();
-        field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture.jpg")));
+        fields = new Array<Renderable>();
+        for (int i = 0; i < hf.size; i++) {
+            Renderable field = new Renderable();
+            field.environment = environment;
+            field.meshPart.mesh = hf.get(i).mesh;
+            field.meshPart.primitiveType = GL20.GL_TRIANGLES;
+            field.meshPart.offset = 0;
+            field.meshPart.size = hf.get(i).mesh.getNumIndices();
+            field.meshPart.update();
+            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
+            fields.add(field);
+        }
 
         //add the terrain to the list of models to display
         for (ModelInstance m: terrainModel.world) {
@@ -80,7 +85,9 @@ public abstract class State3D extends State {
     public void render (final Array<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
-        batch.render(field);
+        for (Renderable r: fields) {
+            batch.render(r);
+        }
         batch.end();
     }
 
