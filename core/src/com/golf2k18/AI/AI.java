@@ -11,12 +11,22 @@ public class AI {
         this.ball = ball;
         this.terrain = terrain;
     }
-    public void findBestHit(){
+    public Vector3 holeInOne(){
+        Vector3 addVectors = new Vector3();
         while(!terrain.isGoalHit())
         {
+            if(ball.getPosition().x < terrain.getGoal().x +5 || ball.getPosition().x > terrain.getGoal().x -5 ){
+                if(ball.getPosition().y < terrain.getGoal().y +5 || ball.getPosition().y> terrain.getGoal().y -5){
+                    if(ball.isStopped()){
+                        terrain.setGoalHit(true);
+                    }
+                }
+            }
             Vector3 tryBall = fitness();
-            ball.hit(tryBall);
+            addVectors = addVectors.add(tryBall);
+            ball.hit(addVectors);
         }
+        return addVectors;
     }
     private Vector3 fitness(){
         Vector3 coordinates = new Vector3();
@@ -25,5 +35,7 @@ public class AI {
         coordinates.y = goal.y - ball.getY();
         return coordinates;
     }
+
+
 
 }
