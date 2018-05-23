@@ -11,9 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.golf2k18.Engine.Engine;
+import com.golf2k18.Engine.RK4;
 import com.golf2k18.objects.Ball;
+import com.golf2k18.Engine.Euler;
 import com.golf2k18.objects.Terrain;
-import com.golf2k18.objects.Engine;
+import com.golf2k18.states.State3D;
 import com.golf2k18.states.StateManager;
 
 import java.util.HashMap;
@@ -45,7 +48,7 @@ public class Game extends State3D {
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
 
-        engine = new Engine(terrain);
+        engine = new RK4(terrain, ball);
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
@@ -55,7 +58,7 @@ public class Game extends State3D {
         hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
         //creation of labels
-        labels = new HashMap<String, Label>();
+        labels = new HashMap<>();
         labels.put("score",new Label("Score",StateManager.skin));
         labels.put("par", new Label("Par: ", StateManager.skin));
         labels.put("title", new Label("Hole #", StateManager.skin,"title"));
@@ -144,7 +147,7 @@ public class Game extends State3D {
         organizer.row();
         organizer.add(settings).top().pad(10f);
 
-        TextButton menu = new TextButton("Menu", StateManager.skin);
+        TextButton menu = new TextButton("MainMenu", StateManager.skin);
         menu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -203,7 +206,7 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(!ball.isStopped()) engine.updateBallRK4(ball);
+        if(!ball.isStopped()) engine.updateBall();
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
         ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
@@ -215,16 +218,16 @@ public class Game extends State3D {
     @Override
     public void handleInput() {
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
-            ball.setX(ball.getX()+0.15);
+            ball.setX(ball.getX()+0.1);
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
-            ball.setX(ball.getX()-0.15);
+            ball.setX(ball.getX()-0.1);
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
-            ball.setY(ball.getY()+0.15);
+            ball.setY(ball.getY()+0.1);
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
-            ball.setY(ball.getY()-0.15);
+            ball.setY(ball.getY()-0.1);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
             if(!controller.isFocused()){
@@ -265,6 +268,4 @@ public class Game extends State3D {
     public void dispose() {
         super.dispose();
     }
-
-
 }

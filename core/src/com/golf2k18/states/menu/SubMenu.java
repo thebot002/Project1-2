@@ -9,9 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.golf2k18.states.MenuState;
 import com.golf2k18.states.StateManager;
 
-public abstract class SubMenu extends MenuState{
+public abstract class SubMenu extends MenuState {
     private Stage stage;
     private boolean debug = false;
 
