@@ -234,6 +234,12 @@ public class Game extends State3D {
                 controller.unfocus();
             }
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.M)){
+            if(manualMovement) setProcessors();
+            else Gdx.input.setInputProcessor(new InputMultiplexer(hud, this));
+            manualMovement = !manualMovement;
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             double dir = directionInput.getValue();
             double intensity = intensityInput.getValue();
@@ -259,4 +265,6 @@ public class Game extends State3D {
     public void dispose() {
         super.dispose();
     }
+
+
 }

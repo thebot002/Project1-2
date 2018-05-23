@@ -8,10 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.golf2k18.objects.CourseIO;
-import com.golf2k18.objects.Formula;
-import com.golf2k18.objects.Matrix;
-import com.golf2k18.objects.Terrain;
+import com.golf2k18.objects.*;
 import com.golf2k18.states.menu.Menu;
 
 public class StateManager extends ApplicationAdapter {
@@ -92,5 +89,19 @@ public class StateManager extends ApplicationAdapter {
         String[] flat = {"1"};
         Terrain c5 = new Terrain(width,height,start,goal,new Formula(flat),"Plane");
         CourseIO.writeFile(c5);
+
+        float[][] flatinter = new float[width][height];
+		for (int i = 0; i < flatinter.length; i++) {
+			for (int j = 0; j < flatinter[0].length; j++) {
+				flatinter[i][j] = 1;
+			}
+		}
+		flatinter[9][10] = 2;
+        flatinter[10][9] = 2;
+        flatinter[11][10] = 2;
+        flatinter[10][11] = 2;
+		flatinter[10][10] = 3;
+        Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter),"PlaneSpline");
+		CourseIO.writeFile(c6);
     }
 }

@@ -49,6 +49,10 @@ public class Terrain implements Serializable {
         return start;
     }
 
+    public Vector3 getGoal() {
+        return goal;
+    }
+
     public float getMU() {
         return MU;
     }
