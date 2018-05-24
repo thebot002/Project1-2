@@ -41,7 +41,7 @@ public abstract class Engine {
         return v;
     }
 
-    public void updateBall(Vector3 position, Vector3 velocity){
+    protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
         if(velocity.len() <= STOP_TOLERANCE && (calcGravity(position).len() / mass) <= STOP_TOLERANCE) ball.setStopped();
 
@@ -71,7 +71,6 @@ public abstract class Engine {
             updateBall();
         }
 
-
         ball.setZ(terrain.getFunction().evaluateF(position.x,position.y));
     }
 
@@ -81,6 +80,10 @@ public abstract class Engine {
         n.scl(dot);
         n.add(v.scl(-1));
         n.scl(-1);
+    }
+
+    protected Vector3 derivePos(Vector3 position, Vector3 velocity){
+        return new Vector3(position.x + dt*velocity.x,position.y + dt*velocity.y,0);
     }
 
     public abstract void updateBall();

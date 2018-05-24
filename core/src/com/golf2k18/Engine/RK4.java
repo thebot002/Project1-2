@@ -12,7 +12,59 @@ public class RK4 extends Engine {
         super(terrain,ball);
     }
 
-    public void rk4(Vector3 position, Vector3 velocity) {
+    private Vector3 rk4(Vector3 position, Vector3 velocity){
+        Vector3 f1 = new Vector3(rk4V(position,velocity));
+        Vector3 k1 = f1.scl(dt);
+
+        Vector3 pos2 = new Vector3(position).add(dt/2);
+        Vector3 vel2 = new Vector3(velocity).add(new Vector3(k1).scl(.5f));
+        Vector3 f2 = new Vector3(rk4V(pos2,vel2));
+        Vector3 k2 = f2.scl(dt);
+
+        Vector3 pos3 = new Vector3(position).add(dt/2);
+        Vector3 vel3 = new Vector3(velocity).add(new Vector3(k2).scl(.5f));
+        Vector3 f3 = new Vector3(rk4V(pos3,vel3));
+        Vector3 k3 = f3.scl(dt);
+
+        Vector3 pos4 = new Vector3(position).add(dt);
+        Vector3 vel4 = new Vector3(velocity).add(new Vector3(k3));
+        Vector3 f4 = new Vector3(rk4V(pos4,vel4));
+        Vector3 k4 = f4.scl(dt);
+
+        k2.scl(2);
+        k3.scl(2);
+        Vector3 sumK = new Vector3(k1.add(k2.add(k3.add(k4))));
+        Vector3 newPos = new Vector3(new Vector3(position).add(sumK.scl((float)1/6)));
+        return newPos;
+    }
+
+    private Vector3 rk4V(Vector3 position, Vector3 velocity){
+        Vector3 f1 = new Vector3(getAcceleration(position,velocity));
+        Vector3 k1 = f1.scl(dt);
+
+        Vector3 pos2 = new Vector3(position).add(dt/2);
+        Vector3 vel2 = new Vector3(velocity).add(new Vector3(k1).scl(.5f));
+        Vector3 f2 = new Vector3(getAcceleration(pos2,vel2));
+        Vector3 k2 = f2.scl(dt);
+
+        Vector3 pos3 = new Vector3(position).add(dt/2);
+        Vector3 vel3 = new Vector3(velocity).add(new Vector3(k2).scl(.5f));
+        Vector3 f3 = new Vector3(getAcceleration(pos3,vel3));
+        Vector3 k3 = f3.scl(dt);
+
+        Vector3 pos4 = new Vector3(position).add(dt);
+        Vector3 vel4 = new Vector3(velocity).add(new Vector3(k3));
+        Vector3 f4 = new Vector3(getAcceleration(pos4,vel4));
+        Vector3 k4 = f4.scl(dt);
+
+        k2.scl(2);
+        k3.scl(2);
+        Vector3 sumK = new Vector3(k1.add(k2.add(k3.add(k4))));
+        Vector3 newVel = new Vector3(new Vector3(velocity).add(sumK.scl((float)1/6)));
+        return newVel;
+    }
+
+    /*public void rk4(Vector3 position, Vector3 velocity) {
 
         Vector3 force_k1 = getAcceleration(position,velocity);
 
@@ -58,12 +110,20 @@ public class RK4 extends Engine {
         float posY = position.y + ((dt/6)*(yV_k1 + (2*yV_k2) + (2* yV_k3) + yV_k4));
 
         ball.updateLocation(new Vector3(posX,posY,0));
-    }
+    }*/
 
     public void updateBall() {
+        dt = Gdx.graphics.getDeltaTime();
+
         Vector3 position = ball.getPosition();
         Vector3 velocity = ball.getVelocity();
-        rk4(position,velocity);
-        super.updateBall(ball.getPosition(),ball.getVelocity());
+
+        Vector3 newVel = rk4V(new Vector3(position),velocity);
+        ball.updateVelocity(new Vector3(newVel));
+        //Vector3 newPos = derivePos(new Vector3(position),new Vector3(newVel));
+        Vector3 newPos = rk4(new Vector3(position),new Vector3(newVel));
+        ball.updateLocation(newPos);
+
+        super.updateBall(newPos,newVel);
     }
 }

@@ -48,7 +48,7 @@ public class Game extends State3D {
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
 
-        engine = new Euler(terrain, ball);
+        engine = new RK4(terrain, ball);
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));

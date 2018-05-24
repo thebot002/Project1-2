@@ -11,10 +11,6 @@ public class Euler extends Engine {
         super(terrain,ball);
     }
 
-    private Vector3 euler(Vector3 position, Vector3 velocity){
-        return new Vector3(position.x + dt*velocity.x,position.y + dt*velocity.y,0);
-    }
-
     private Vector3 eulerV(Vector3 position, Vector3 velocity){
         float aX = getAcceleration(position,velocity).x;
         float aY = getAcceleration(position,velocity).y;
@@ -22,8 +18,7 @@ public class Euler extends Engine {
     }
 
     @Override
-    public void updateBall()
-    {
+    public void updateBall() {
         dt = Gdx.graphics.getDeltaTime();
 
         Vector3 pos = ball.getPosition();
@@ -31,7 +26,7 @@ public class Euler extends Engine {
 
         Vector3 newVel = eulerV(pos,vel);
         ball.updateVelocity(newVel);
-        Vector3 newPos = euler(pos,newVel);
+        Vector3 newPos = derivePos(pos,newVel);
         ball.updateLocation(newPos);
 
         super.updateBall(newPos,newVel);
