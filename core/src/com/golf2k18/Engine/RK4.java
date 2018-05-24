@@ -64,6 +64,6 @@ public class RK4 extends Engine {
         Vector3 position = ball.getPosition();
         Vector3 velocity = ball.getVelocity();
         rk4(position,velocity);
-        ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
+        super.updateBall(ball.getPosition(),ball.getVelocity());
     }
 }

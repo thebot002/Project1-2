@@ -34,7 +34,6 @@ public class Euler extends Engine {
         Vector3 newPos = euler(pos,newVel);
         ball.updateLocation(newPos);
 
-        ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
-        stopper(newPos,newVel);
+        super.updateBall(newPos,newVel);
     }
 }

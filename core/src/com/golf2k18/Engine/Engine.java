@@ -41,8 +41,46 @@ public abstract class Engine {
         return v;
     }
 
-    protected void stopper(Vector3 position, Vector3 velocity){
+    public void updateBall(Vector3 position, Vector3 velocity){
+        //stop the ball
         if(velocity.len() <= STOP_TOLERANCE && (calcGravity(position).len() / mass) <= STOP_TOLERANCE) ball.setStopped();
+
+        //check for collisions
+        if(position.x <= 0){
+            Vector3 n = new Vector3(1,0,0);
+            bounce(velocity, n);
+            ball.updateVelocity(n);
+            updateBall();
+        }
+        if(position.x >= terrain.getWidth()){
+            Vector3 n = new Vector3(-1,0,0);
+            bounce(velocity, n);
+            ball.updateVelocity(n);
+            updateBall();
+        }
+        if(position.y <= 0){
+            Vector3 n = new Vector3(0,1,0);
+            bounce(velocity, n);
+            ball.updateVelocity(n);
+            updateBall();
+        }
+        if(position.y >= terrain.getHeight()){
+            Vector3 n = new Vector3(0,-1,0);
+            bounce(velocity,n);
+            ball.updateVelocity(n);
+            updateBall();
+        }
+
+
+        ball.setZ(terrain.getFunction().evaluateF(position.x,position.y));
+    }
+
+    private void bounce(Vector3 velocity, Vector3 n){
+        Vector3 v = new Vector3(velocity);
+        float dot = v.dot(n) * 2;
+        n.scl(dot);
+        n.add(v.scl(-1));
+        n.scl(-1);
     }
 
     public abstract void updateBall();
