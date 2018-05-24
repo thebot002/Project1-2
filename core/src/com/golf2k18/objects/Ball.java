@@ -16,7 +16,6 @@ public class Ball
 {
     private final boolean DEBUG = false;
 
-    //private final float DIAMETER = 2f; //test diameter
     private final float DIAMETER = .42f;
 	private final float MASS = 0.45f;
 	private Vector3 velocity;
@@ -48,32 +47,21 @@ public class Ball
 	}
 
     /**
-     * Method used to update the force in the x direction contained in the velocity vector of the ball.
-     * @param x variable which specifies the force applied to the ball in the x direction.
+     * Method used to update the current velocity vector of the ball.
+     * @param velocity variable which specifies the new position.
      */
-	public void updateVelocityX(float x) {
-	    if(DEBUG) System.out.println("x: " + x);
-        velocity.x = x;
-	}
-    /**
-     * Method used to update the force in the y direction contained in the velocity vector of the ball.
-     * @param y variable which specifies the force applied to the ball in the y direction.
-     */
-    public void updateVelocityY(float y) {
-        if(DEBUG) System.out.println("y: " + y);
-        velocity.y = y;
+    public void updateVelocity(Vector3 velocity){
+        this.velocity = velocity;
     }
 
     /**
      * Method used to update the current location vector of the ball.
-     * @param x variable which specifies the new x.
-     * @param y variable which specifies the new y.
+     * @param position variable which specifies the new position.
      */
-    public void updateLocation(float x, float y) {
-        position.x = x;
-        position.y = y;
-        updateInstance();
-	}
+    public void updateLocation(Vector3 position){
+        this.position = position;
+    }
+
 	public float getMass() {
 		return MASS;
 	}
