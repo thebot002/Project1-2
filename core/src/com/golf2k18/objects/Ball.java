@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 
+/**
+ * Class that contains all the necessary information about the ball
+ */
 public class Ball
 {
     private final boolean DEBUG = false;
@@ -26,26 +29,46 @@ public class Ball
 
     private ModelInstance model;
 
+    /**
+     * Constructor for the ball class, this class creates the model and takes a Vector3 for position.
+     * @param position variable that hold the x and y coordinate for the ball.
+     */
     public Ball(Vector3 position) {
         this.position = position;
         createModel();
     }
 
+    /**
+     * Method which is used to apply a given force(Vector3) to this ball object.
+     * @param vector variable which specifies the force that should be applied to the ball.
+     */
     public void hit(Vector3 vector) {
 	    stopped = false;
 		this.velocity = vector.cpy();
 	}
 
+    /**
+     * Method used to update the force in the x direction contained in the velocity vector of the ball.
+     * @param x variable which specifies the force applied to the ball in the x direction.
+     */
 	public void updateVelocityX(float x) {
 	    if(DEBUG) System.out.println("x: " + x);
         velocity.x = x;
 	}
-
+    /**
+     * Method used to update the force in the y direction contained in the velocity vector of the ball.
+     * @param y variable which specifies the force applied to the ball in the y direction.
+     */
     public void updateVelocityY(float y) {
         if(DEBUG) System.out.println("y: " + y);
         velocity.y = y;
     }
 
+    /**
+     * Method used to update the current location vector of the ball.
+     * @param x variable which specifies the new x.
+     * @param y variable which specifies the new y.
+     */
     public void updateLocation(float x, float y) {
         position.x = x;
         position.y = y;

@@ -19,6 +19,9 @@ import com.golf2k18.states.StateManager;
 
 import java.util.HashMap;
 
+/**
+ * Class where every object interacts with each other.
+ */
 public class Game extends State3D {
 
     private Engine engine;
@@ -35,10 +38,18 @@ public class Game extends State3D {
 
     private HashMap<String,Label> labels;
 
+    /**
+     * Constructor for the Game class.
+     * @param manager Instance of the GameManager which is currently used.
+     * @param terrain Instance of the Terrain class which was selected by the user in the menus.
+     */
     public Game(StateManager manager, Terrain terrain) {
         super(manager, terrain);
     }
 
+    /**
+     * Method responsible for creating the menu, this is a part of the requirements of libGDX.
+     */
     @Override
     public void create() {
         super.create();
@@ -51,7 +62,7 @@ public class Game extends State3D {
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
     }
-
+    //Method which creates the HUD for the game.
     private void createHUD(){
         hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
@@ -126,7 +137,7 @@ public class Game extends State3D {
 
         hud.addActor(table);
     }
-
+    //Method which creates the pause state to push to the gameManager to temporarily pause the game.
     private void createPause(){
         pause = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
@@ -257,11 +268,14 @@ public class Game extends State3D {
             }
         }
     }
-
+    //Setting inputProcessor that processes the key-events and stuff like that.
     private void setProcessors(){
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
     }
 
+    /**
+     * Method that disposes the memory heavy objects(libGDX requirements).
+     */
     @Override
     public void dispose() {
         super.dispose();
