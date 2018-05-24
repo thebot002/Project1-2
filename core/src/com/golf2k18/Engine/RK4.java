@@ -18,8 +18,8 @@ public class RK4 extends Engine {
 
         float x_k1 = position.x + (dt * velocity.x);
         float y_k1 = position.y + (dt * velocity.y);
-        float xV_k1 = velocity.x + dt + force_k1.x;
-        float yV_k1 = velocity.y + dt + force_k1.y;
+        float xV_k1 = velocity.x + (dt * force_k1.x);
+        float yV_k1 = velocity.y + (dt * force_k1.y);
 
         Vector3 pos_k1 = new Vector3(x_k1,y_k1,0);
         Vector3 vel_k1 = new Vector3(xV_k1,yV_k1,0);
