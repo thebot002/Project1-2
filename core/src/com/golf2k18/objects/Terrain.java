@@ -12,14 +12,16 @@ public class Terrain implements Serializable {
     private int width;
     private int height;
     private Vector3 start;
-    private Vector3 goal;
+    private Vector3 hole;
+
+    private final float HOLE_DIAM = 1.08f;
 
     private float scale = 1; //formula unit to world unit
+
     private Vector3 offset;
-
     private String name;
-    private float MU = 0.5f;
 
+    private float MU = 0.5f;
     private Function function;
 
     /**
@@ -37,7 +39,7 @@ public class Terrain implements Serializable {
         this.width = width;
         this.height = height;
         this.start = start;
-        this.goal = goal;
+        this.hole = goal;
         this.name = name;
         offset = new Vector3(0,0,0);
         this.function = function;
@@ -73,15 +75,15 @@ public class Terrain implements Serializable {
      */
     public Vector3 getStart() {return start;}
 
-    public Vector3 getGoal() {
-        return goal;
+    public Vector3 getHole() {
+        return hole;
     }
+
     /**
      * Getter for friction coefficient.
      * @return float MU.
      */
     public float getMU() {return MU;}
-
     /**
      * Setter for the scale of the course.
      * @param scale variable which specifies the scale of the course.
@@ -93,4 +95,8 @@ public class Terrain implements Serializable {
      * @param offset variable that contains offset
      */
     public void setOffset(Vector3 offset){this.offset.set(offset);}
+
+    public float getHOLE_DIAM() {
+        return HOLE_DIAM;
+    }
 }

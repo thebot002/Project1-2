@@ -1,4 +1,4 @@
-package com.golf2k18.Engine;
+package com.golf2k18.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
