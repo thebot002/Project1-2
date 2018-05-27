@@ -14,14 +14,15 @@ import com.golf2k18.states.StateManager;
 
 public class CourseCreatorMenu extends SubMenu {
 
+    private Table content;
     private final String TITLE = "COURSE CREATOR";
 
     CourseCreatorMenu(StateManager manager) {
         super(manager);
+        content = createContent();
     }
 
-    @Override
-    protected Table createContent() {
+    private Table createContent() {
         Table table = new Table();
 
         List<CheckBox> terrains = new List<CheckBox>(StateManager.skin);
@@ -50,6 +51,11 @@ public class CourseCreatorMenu extends SubMenu {
         TextArea terrainArea = new TextArea("",StateManager.skin);
         table.add(new ScrollPane(terrainArea)).pad(10f).fillX();*/
         return table;
+    }
+
+    @Override
+    public Table getContent() {
+        return content;
     }
 
     @Override

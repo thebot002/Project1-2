@@ -14,7 +14,8 @@ import com.golf2k18.states.StateManager;
 
 public abstract class SubMenu extends MenuState {
     private Stage stage;
-    private boolean debug = false;
+
+    private boolean debug = true;
 
     SubMenu(StateManager manager) {
         super(manager);
@@ -22,7 +23,7 @@ public abstract class SubMenu extends MenuState {
 
     @Override
     protected void createStage() {
-        stage = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()));
+        stage = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Table table = new Table();
         if(debug) table.debug();
         table.setFillParent(true);
@@ -33,7 +34,7 @@ public abstract class SubMenu extends MenuState {
         table.row();
 
         //content field
-        table.add(createContent()).expandX().fillX();
+        table.add(getContent()).width(Gdx.graphics.getWidth()/2).expandX();
         table.row();
 
         //back button
@@ -44,7 +45,7 @@ public abstract class SubMenu extends MenuState {
                 manager.pop();
             }
         });
-        table.add(back).pad(10f).fillX().expandY().padBottom(100f).bottom();
+        table.add(back).pad(10f).expandY().padBottom(100f).bottom().width(Gdx.graphics.getWidth()/2).expandX();
 
         stage.addActor(table);
     }
@@ -54,7 +55,7 @@ public abstract class SubMenu extends MenuState {
         return stage;
     }
 
-    protected abstract Table createContent();
+    protected abstract Table getContent();
 
     protected abstract String getTitle();
 }

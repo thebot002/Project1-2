@@ -23,6 +23,7 @@ public class TerrainCreatorMenu extends SubMenu {
     private final float widthField = 30f;
 
     private boolean debug = false;
+    private Table content;
 
     /**
      * Constructor for the TerrainCreatorMenu class.
@@ -30,11 +31,11 @@ public class TerrainCreatorMenu extends SubMenu {
      */
     TerrainCreatorMenu(StateManager manager) {
         super(manager);
+        content = createContent();
     }
 
     //Creating every element of the TerrainCreatorMenu UI and then spacing them to look nice.
-    @Override
-    protected Table createContent() {
+    private Table createContent() {
         Table table = new Table();
 
         //formula TextField
@@ -217,6 +218,11 @@ public class TerrainCreatorMenu extends SubMenu {
         }
 
         return table;
+    }
+
+    @Override
+    public Table getContent() {
+        return content;
     }
 
     //Method that return the String that hold the title input for this terrain.

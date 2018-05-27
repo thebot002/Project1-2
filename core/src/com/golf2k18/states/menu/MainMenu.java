@@ -40,7 +40,6 @@ public class MainMenu extends MenuState
         mute = activated;
     }
 
-
     @Override
     protected Stage getStage() {
         return stage;

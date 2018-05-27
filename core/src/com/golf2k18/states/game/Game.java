@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -274,11 +276,41 @@ public class Game extends State3D {
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
     }
 
+    @Override
+    public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+        System.out.print(getObject(screenX, screenY));
+        return false;
+    }
+
+
     /**
      * Method that disposes the memory heavy objects(libGDX requirements).
      */
     @Override
     public void dispose() {
         super.dispose();
+    }
+
+    private int getObject (int screenX, int screenY) {
+        Vector3 position = new Vector3();
+        Ray ray = camera.getPickRay(screenX, screenY);
+        int result = -1;
+        float distance = -1;
+        for (int i = 0; i < instances.size; ++i) {
+            final ModelInstance instance = instances.get(i);
+            instance.transform.getTranslation(position);
+            //position.add(instance.tr);
+            final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
+            if (len < 0f)
+                continue;
+            float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
+            if (distance >= 0f && dist2 > distance)
+                continue;
+            if (dist2 <= (ball.getDiameter()/2) * (ball.getDiameter()/2)) {
+                result = i;
+                distance = dist2;
+            }
+        }
+        return result;
     }
 }
