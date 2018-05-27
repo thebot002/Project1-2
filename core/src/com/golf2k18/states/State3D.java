@@ -13,13 +13,11 @@ import com.badlogic.gdx.utils.Array;
 import com.golf2k18.objects.HeightField;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.TerrainModel;
-import com.golf2k18.states.State;
-import com.golf2k18.states.StateManager;
-import com.golf2k18.states.game.CameraController;
+import com.golf2k18.camera.GameCameraController;
 
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
-    protected CameraController controller;
+    protected GameCameraController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
 
@@ -46,7 +44,7 @@ public abstract class State3D extends State {
         camera.far = 1000f;
         camera.update();
 
-        Gdx.input.setInputProcessor(controller = new CameraController(camera));
+        Gdx.input.setInputProcessor(controller = new GameCameraController(camera));
 
         //environment setup
         DirectionalLight light = new DirectionalLight();

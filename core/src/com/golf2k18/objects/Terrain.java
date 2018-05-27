@@ -1,6 +1,8 @@
 package com.golf2k18.objects;
 
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.function.Function;
+import com.golf2k18.function.Spline;
 
 import java.io.Serializable;
 
@@ -98,5 +100,22 @@ public class Terrain implements Serializable {
 
     public float getHOLE_DIAM() {
         return HOLE_DIAM;
+    }
+
+    public void toSpline(int interval){
+        if(function instanceof Spline) return;
+
+        float[][] data = new float[(width*interval)+1][(height*interval)+1];
+        float[][] xDeriv = new float[(width*interval)+1][(height*interval)+1];
+        float[][] yDeriv = new float[(width*interval)+1][(height*interval)+1];
+
+        for (int i = 0; i <= width ; i++) {
+            for (int j = 0; j <=height ; j++) {
+                data[i][j] = function.evaluateF(i,j);
+                xDeriv[i][j] = function.evaluateXDeriv(i,j);
+                yDeriv[i][j] = function.evaluateYDeriv(i,j);
+            }
+        }
+        function = new Spline(data,xDeriv,yDeriv);
     }
 }

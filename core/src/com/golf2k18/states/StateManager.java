@@ -7,6 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.golf2k18.function.Formula;
+import com.golf2k18.function.Spline;
 import com.golf2k18.objects.*;
 import com.golf2k18.states.menu.MainMenu;
 

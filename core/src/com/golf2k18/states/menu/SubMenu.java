@@ -15,7 +15,7 @@ import com.golf2k18.states.StateManager;
 public abstract class SubMenu extends MenuState {
     private Stage stage;
 
-    private boolean debug = true;
+    private boolean debug = false;
 
     SubMenu(StateManager manager) {
         super(manager);

@@ -1,6 +1,7 @@
-package com.golf2k18.objects;
+package com.golf2k18.function;
 
-import org.omg.CORBA.MARSHAL;
+import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.objects.Matrix;
 
 import java.io.Serializable;
 
@@ -14,6 +15,24 @@ public class Spline implements Function, Serializable {
 
     private float[][] A1 = {{1,0,0,0},{0,0,1,0},{-3,3,-2,-1},{2,-2,1,1}};
     private float[][] A2 = {{1,0,-3,2},{0,0,3,-2},{0,1,-2,1},{0,0,-1,1}};
+
+    public Spline(float[][] data, float[][] xDeriv, float[][] yDeriv){
+        this.data = data;
+        coefficients = new Matrix[data.length-1][data[0].length-1];
+
+        this.xDeriv = xDeriv;
+        this.yDeriv = yDeriv;
+
+        xyDeriv = new float[data.length][data[0].length];
+        for (int i = 1; i < data.length - 1; i++) {
+            for (int j = 1; j < data[0].length-1; j++) {
+                if(i == 1) xyDeriv[i][j] = (yDeriv[i][2] - yDeriv[i][0])/2;
+                if(i == data.length - 1) xyDeriv[i][j] = (yDeriv[data.length-3][j] - yDeriv[data.length-1][j])/2;
+                xyDeriv[i][j] = (yDeriv[i][j+1] - yDeriv[i][j-1])/2;
+            }
+        }
+        interpolate();
+    }
 
     public Spline(float[][] data) {
         this.data = data;
@@ -54,21 +73,6 @@ public class Spline implements Function, Serializable {
                         {xDeriv[i][j],xDeriv[i][j+1],xyDeriv[i][j],xyDeriv[i][j+1]},
                         {xDeriv[i+1][j],xDeriv[i+1][j+1],xyDeriv[i+1][j],xyDeriv[i+1][j+1]}};
                 coefficients[i][j] = Matrix.multiplication(new Matrix(A1),Matrix.multiplication(new Matrix(fMatrix),new Matrix(A2)));
-
-                //float[][] xV = {{1,i,(float)Math.pow(i,2),(float)Math.pow(i,3)}};
-                //float[][] yV = {{1},{j},{(float)Math.pow(j,2)},{(float)Math.pow(j,3)}};
-                /*float result = Matrix.multiplication(new Matrix(xV),Matrix.multiplication(coefficients[i][j],new Matrix(yV))).get(0,0);
-                if(result != data[i][j]){
-                    //new Matrix(fMatrix).print();
-                    /*System.out.println("x");
-                    new Matrix(xV).print();
-                    System.out.println("y");
-                    new Matrix(yV).print();
-                    System.out.println("coefs");
-                    coefficients[i][j].print();
-                    System.out.println();
-                    System.out.println(result);
-                }*/
             }
         }
     }
@@ -120,5 +124,9 @@ public class Spline implements Function, Serializable {
         if(y > coefficients[0].length-1) y = coefficients[0].length-1;
         Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefficients[(int)x][(int)y]),yVector);
         return result.get(0,0);
+    }
+
+    public void update(Vector3 pos){
+
     }
 }

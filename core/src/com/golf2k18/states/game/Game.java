@@ -50,7 +50,6 @@ public class Game extends State3D {
     private HashMap<String,Label> labels;
 
     private boolean down = false;
-    private ModelInstance dragline;
 
     /**
      * Constructor for the Game class.

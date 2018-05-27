@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.golf2k18.objects.Formula;
+import com.golf2k18.function.Formula;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.states.StateManager;

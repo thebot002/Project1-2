@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.objects.CourseIO;
+import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.StateManager;
 import com.golf2k18.states.editor.TerrainEditor;
 
@@ -41,7 +42,9 @@ public class EditorMenu extends SubMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 manager.pop();
-                manager.push(new TerrainEditor(manager,CourseIO.getCourse("Plane")));
+                Terrain defaultTerrain = CourseIO.getCourse("Plane");
+                defaultTerrain.toSpline(1);
+                manager.push(new TerrainEditor(manager,defaultTerrain));
             }
         });
         table.add(splineTerrain).pad(10f).fillX();

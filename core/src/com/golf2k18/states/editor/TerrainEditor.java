@@ -1,44 +1,152 @@
 package com.golf2k18.states.editor;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Array;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
 import com.golf2k18.states.StateManager;
 
+import java.util.ArrayList;
+
 public class TerrainEditor extends State3D {
+
+    int startIndex;
+    ArrayList<Integer> selected;
+
+    private Model nodeSelected;
+    private Model nodeUnselected;
+
+    private final float NODE_DIAM = 0.2f;
+    private boolean ctrl = false;
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.CONTROL_LEFT)ctrl = true;
+        return super.keyDown(keycode);
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode == Input.Keys.CONTROL_LEFT)ctrl = false;
+        return super.keyUp(keycode);
+    }
+
     public TerrainEditor(StateManager manager, Terrain terrain) {
         super(manager, terrain);
     }
 
-    private final float NODE_DIAM = 0.2f;
     @Override
     public void create() {
         super.create();
         createPoints(1);
+        selected = new ArrayList<>();
+
+        Gdx.input.setInputProcessor(new InputMultiplexer(this, controller));
+        controller.toggleScroll();
     }
 
     private void createPoints(float interval){
         ModelBuilder builder = new ModelBuilder();
-        Texture nodeTexture = new Texture("Textures/grey_background.png");
 
-        Model nodeModel = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
+        nodeSelected = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
                 50,50,
-                new Material(TextureAttribute.createDiffuse(nodeTexture)),
+                new Material(ColorAttribute.createDiffuse(Color.BLUE)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
 
+        nodeUnselected = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
+                50,50,
+                new Material(ColorAttribute.createDiffuse(Color.GRAY)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
+        );
+        startIndex = instances.size;
+
         for (float i = 0; i <=terrain.getWidth() ; i+=interval) {
-            for (float j = 0; j < terrain.getHeight() ; j+=interval) {
-                instances.add(new ModelInstance(nodeModel,i,j,terrain.getFunction().evaluateF(i,j)));
+            for (float j = 0; j <= terrain.getHeight() ; j+=interval) {
+                instances.add(new ModelInstance(nodeUnselected,i,j,terrain.getFunction().evaluateF(i,j)));
             }
         }
     }
+
+    @Override
+    public boolean scrolled(int amount) {
+        for (int i = 0; i < selected.size(); i++) {
+        }
+        return super.scrolled(amount);
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(button == 0) {
+            int pointI = getObject(screenX, screenY) - startIndex;
+            if (!ctrl) {
+                for (int i : selected) {
+                    Vector3 pos = d1ToD2(i);
+                    instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.y, pos.x, terrain.getFunction().evaluateF(pos.x, pos.y)));
+                }
+                selected.clear();
+            }
+            if (pointI > -1) {
+                Vector3 pos = d1ToD2(pointI);
+                instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.y, pos.x, terrain.getFunction().evaluateF(pos.x, pos.y)));
+
+                selected.add(pointI);
+            }
+        }
+        return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    private Vector3 d1ToD2(int point){
+        float xAmount = terrain.getWidth() +1;
+
+        float x = point % xAmount;
+        float y = (point - x)/xAmount;
+
+        return new Vector3(x,y,0);
+    }
+
+    public int getObject (int screenX, int screenY) {
+        Ray ray = camera.getPickRay(screenX, screenY);
+
+        int result = -1;
+        float distance = -1;
+        Vector3 position = new Vector3();
+
+        for (int i = startIndex; i < instances.size; ++i) {
+            final ModelInstance point = instances.get(i);
+
+            point.transform.getTranslation(position);
+
+            final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
+            if (len < 0f)
+                continue;
+
+            float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
+            if (distance >= 0f && dist2 > distance)
+                continue;
+
+            if (dist2 <= (NODE_DIAM/2) * (NODE_DIAM/2)) {
+                result = i;
+                distance = dist2;
+            }
+        }
+        return result;
+    }
+
 
     @Override
     public void resize(int width, int height) {
