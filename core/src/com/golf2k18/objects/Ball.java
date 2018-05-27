@@ -136,4 +136,3 @@ public class Ball
 	    this.stopped = stopped;
     }
 }
-

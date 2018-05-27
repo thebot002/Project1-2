@@ -3,8 +3,16 @@ package com.golf2k18.states.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -41,6 +49,9 @@ public class Game extends State3D {
 
     private HashMap<String,Label> labels;
 
+    private boolean down = false;
+    private ModelInstance dragline;
+
     /**
      * Constructor for the Game class.
      * @param manager Instance of the GameManager which is currently used.
@@ -73,7 +84,7 @@ public class Game extends State3D {
         labels = new HashMap<>();
         labels.put("score",new Label("Score",StateManager.skin));
         labels.put("par", new Label("Par: ", StateManager.skin));
-        labels.put("title", new Label("Hole #", StateManager.skin,"title"));
+        labels.put("title", new Label("Hole "+terrain.getName(), StateManager.skin,"title"));
         labels.put("focus", new Label("",StateManager.skin));
         labels.put("distance", new Label("Distance to hole:",StateManager.skin));
         labels.put("speed", new Label("Speed:",StateManager.skin));
@@ -278,10 +289,34 @@ public class Game extends State3D {
 
     @Override
     public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-        System.out.print(getObject(screenX, screenY));
+        if(getObject(screenX, screenY)==4) down = true;
         return false;
     }
 
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if(down){
+            ModelBuilder builder = new ModelBuilder();
+            Model line = builder.createArrow(getTerrainMousePos(screenX,screenY,terrain.getFunction().evaluateF(ball.getX(),ball.getY())),ball.getPosition(),
+                    new Material(ColorAttribute.createDiffuse(Color.BLACK)),
+                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
+            );
+            if(instances.size == 6) instances.removeIndex(instances.size - 1);
+            instances.add(new ModelInstance(line,0,0,0));
+        }
+        return super.touchDragged(screenX, screenY, pointer);
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if(down && instances.size == 6){
+            instances.removeIndex(instances.size - 1);
+            Vector3 currentPos = new Vector3(ball.getPosition());
+            ball.hit(new Vector3(currentPos.add(new Vector3(getTerrainMousePos(screenX,screenY,terrain.getFunction().evaluateF(ball.getX(),ball.getY()))).scl(-1))).scl(2));
+        }
+        down = false;
+        return super.touchUp(screenX, screenY, pointer, button);
+    }
 
     /**
      * Method that disposes the memory heavy objects(libGDX requirements).
@@ -289,6 +324,17 @@ public class Game extends State3D {
     @Override
     public void dispose() {
         super.dispose();
+    }
+
+    private Vector3 getTerrainMousePos(int mouseX, int mouseY, float height){
+        Ray ray = camera.getPickRay(mouseX, mouseY);
+
+        Plane p = new Plane(new Vector3(0,0,1),height);
+        Vector3 intersect = new Vector3();
+
+        Intersector.intersectRayPlane(ray,p,intersect);
+
+        return intersect;
     }
 
     private int getObject (int screenX, int screenY) {
