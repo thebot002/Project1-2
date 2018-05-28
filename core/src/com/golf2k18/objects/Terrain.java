@@ -10,7 +10,7 @@ public class Terrain implements Serializable {
     private int height;
     private Vector3 start;
 
-    private Vector3 goal;
+    private Goal goal;
     private boolean goalHit;
 
         private float scale = 1; //formula unit to world unit
@@ -25,7 +25,7 @@ public class Terrain implements Serializable {
         this.width = width;
         this.height = height;
         this.start = start;
-        this.goal = goal;
+        this.goal = new Goal(goal);
         this.name = name;
         offset = new Vector3(0,0,0);
         this.function = function;
@@ -51,7 +51,7 @@ public class Terrain implements Serializable {
         return start;
     }
 
-    public Vector3 getGoal() {return goal;}
+    public Goal getGoal() {return goal;}
 
     public float getMU() {
         return MU;
@@ -65,9 +65,6 @@ public class Terrain implements Serializable {
         this.offset.set(offset);
     }
 
-    public boolean isGoalHit() {return goalHit;}
-
-    public void setGoalHit(boolean goalHit) {this.goalHit = goalHit;}
 
 }
 
