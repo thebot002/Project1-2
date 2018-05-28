@@ -25,6 +25,7 @@ public abstract class State3D extends State {
     private Environment environment;
 
     protected Terrain terrain;
+    private TerrainModel terrainModel;
     private Array<Renderable> fields;
 
     public State3D(StateManager manager, Terrain terrain) {
@@ -55,22 +56,8 @@ public abstract class State3D extends State {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1.f));
         environment.add(light);
 
-        TerrainModel terrainModel = new TerrainModel(terrain);
-        Array<HeightField> hf = terrainModel.map;
 
-        fields = new Array<Renderable>();
-        for (int i = 0; i < hf.size; i++) {
-            Renderable field = new Renderable();
-            field.environment = environment;
-            field.meshPart.mesh = hf.get(i).mesh;
-            field.meshPart.primitiveType = GL20.GL_TRIANGLES;
-            field.meshPart.offset = 0;
-            field.meshPart.size = hf.get(i).mesh.getNumIndices();
-            field.meshPart.update();
-            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
-            fields.add(field);
-        }
-
+        createTerrain();
         //add the terrain to the list of models to display
         for (ModelInstance m: terrainModel.world) {
             instances.add(m);
@@ -103,6 +90,24 @@ public abstract class State3D extends State {
     @Override
     public void dispose(){
         batch.dispose();
+    }
+
+    public void createTerrain(){
+        terrainModel = new TerrainModel(terrain);
+        Array<HeightField> hf = terrainModel.map;
+
+        fields = new Array<>();
+        for (int i = 0; i < hf.size; i++) {
+            Renderable field = new Renderable();
+            field.environment = environment;
+            field.meshPart.mesh = hf.get(i).mesh;
+            field.meshPart.primitiveType = GL20.GL_TRIANGLES;
+            field.meshPart.offset = 0;
+            field.meshPart.size = hf.get(i).mesh.getNumIndices();
+            field.meshPart.update();
+            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
+            fields.add(field);
+        }
     }
 
     public abstract void handleInput();

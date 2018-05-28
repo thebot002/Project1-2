@@ -85,12 +85,6 @@ public class TerrainModel {
                 new Material(TextureAttribute.createDiffuse(wood)), attr);
         world.add(new ModelInstance(border_d,-(width_border/2),terrain.getHeight()/2,(-height_border/2)+max));
         world.add(new ModelInstance(border_d,terrain.getWidth() + (width_border/2),terrain.getHeight()/2,(-height_border/2)+max));
-
-        /*Model hole = modelBuilder.createCylinder(terrain.getHOLE_DIAM(),20,terrain.getHOLE_DIAM(),50,
-                new Material(TextureAttribute.createDiffuse(new Texture("Textures/grey_background.png"))), attr);
-        ModelInstance holei = new ModelInstance(hole,terrain.getHole().x,terrain.getHole().y,terrain.getFunction().evaluateF(terrain.getHole().x,terrain.getHole().y));
-
-        world.add(holei);*/
     }
 
     /**

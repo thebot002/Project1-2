@@ -4,18 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.utils.Array;
+import com.golf2k18.function.Spline;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
 import com.golf2k18.states.StateManager;
@@ -33,17 +30,7 @@ public class TerrainEditor extends State3D {
     private final float NODE_DIAM = 0.2f;
     private boolean ctrl = false;
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.CONTROL_LEFT)ctrl = true;
-        return super.keyDown(keycode);
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.CONTROL_LEFT)ctrl = false;
-        return super.keyUp(keycode);
-    }
+    private Spline function;
 
     public TerrainEditor(StateManager manager, Terrain terrain) {
         super(manager, terrain);
@@ -52,6 +39,10 @@ public class TerrainEditor extends State3D {
     @Override
     public void create() {
         super.create();
+
+        if(terrain.getFunction() instanceof Spline)
+            function = (Spline) terrain.getFunction();
+
         createPoints(1);
         selected = new ArrayList<>();
 
@@ -77,15 +68,22 @@ public class TerrainEditor extends State3D {
 
         for (float i = 0; i <=terrain.getWidth() ; i+=interval) {
             for (float j = 0; j <= terrain.getHeight() ; j+=interval) {
-                instances.add(new ModelInstance(nodeUnselected,i,j,terrain.getFunction().evaluateF(i,j)));
+                instances.add(new ModelInstance(nodeUnselected,i,j,function.evaluateF(i,j)));
             }
         }
     }
 
     @Override
     public boolean scrolled(int amount) {
+        ArrayList<Vector3> newData = new ArrayList<>();
         for (int i = 0; i < selected.size(); i++) {
+            Vector3 nd = d1ToD2(selected.get(i));
+            nd.z = function.evaluateF(nd.y,nd.x);
+            nd.z += amount;
+            newData.add(nd);
         }
+        function.update(newData);
+        super.createTerrain();
         return super.scrolled(amount);
     }
 
@@ -96,18 +94,30 @@ public class TerrainEditor extends State3D {
             if (!ctrl) {
                 for (int i : selected) {
                     Vector3 pos = d1ToD2(i);
-                    instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.y, pos.x, terrain.getFunction().evaluateF(pos.x, pos.y)));
+                    instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.y, pos.x, function.evaluateF(pos.x, pos.y)));
                 }
                 selected.clear();
             }
             if (pointI > -1) {
                 Vector3 pos = d1ToD2(pointI);
-                instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.y, pos.x, terrain.getFunction().evaluateF(pos.x, pos.y)));
+                instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.y, pos.x, function.evaluateF(pos.x, pos.y)));
 
                 selected.add(pointI);
             }
         }
         return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.CONTROL_LEFT)ctrl = true;
+        return super.keyDown(keycode);
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode == Input.Keys.CONTROL_LEFT)ctrl = false;
+        return super.keyUp(keycode);
     }
 
     private Vector3 d1ToD2(int point){

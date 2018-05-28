@@ -130,7 +130,7 @@ public class GameCameraController extends InputAdapter {
     @Override
     public boolean scrolled(int amount) {
         if(!cScroll || ctrl){
-            if(amount<0 || camera.position.z>bottom)
+            if(amount>0 || camera.position.z>bottom)
                 camera.translate(tmpV1.set(camera.direction).scl(amount*(-0.8f)));
             updateDistanceCamFocus();
         }
