@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.engine.Engine;
-import com.golf2k18.engine.RK4;
+import com.golf2k18.engine.solver.*;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
@@ -70,7 +70,7 @@ public class Game extends State3D {
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
 
-        engine = new RK4(terrain, ball);
+        engine = new Engine(terrain, ball,new BS());
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
