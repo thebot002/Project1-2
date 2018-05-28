@@ -19,7 +19,6 @@ import com.golf2k18.states.game.Game;
 
 public class MainMenu extends MenuState
 {
-    private Texture backgroundMenu;
     private Label filePath;
     private TextField path;
     private SelectBox<String> courseList;
@@ -28,7 +27,6 @@ public class MainMenu extends MenuState
 
     public MainMenu(StateManager manager) {
         super(manager);
-        backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
         createMusic(false);
     }
 
@@ -154,6 +152,17 @@ public class MainMenu extends MenuState
         table.add(start).center().fillX().pad(10f);
         table.row();
 
+        //Select AI menu
+        TextButton selectAI = new TextButton("Choose AI", StateManager.skin, "default");
+        selectAI.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                manager.push(new AISelectMenu(manager));
+            }
+        });
+        table.add(selectAI).center().fillX().pad(10f);
+        table.row();
+
         //MuteButton
         TextButton mute = new TextButton("Mute/unmute music", StateManager.skin);
         mute.addListener(new ClickListener(){
@@ -195,7 +204,6 @@ public class MainMenu extends MenuState
 
     @Override
     public void dispose() {
-        backgroundMenu.dispose();
-        super.dispose();
+       super.dispose();
     }
 }
