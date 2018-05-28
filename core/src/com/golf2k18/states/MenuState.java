@@ -1,4 +1,4 @@
-package com.golf2k18.states.menu;
+package com.golf2k18.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,7 +8,7 @@ import com.golf2k18.states.StateManager;
 
 public abstract class MenuState extends State {
 
-    MenuState(StateManager manager) {
+    public MenuState(StateManager manager) {
         super(manager);
     }
 

@@ -4,14 +4,19 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.golf2k18.objects.CourseIO;
+import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.StateManager;
+import com.golf2k18.states.editor.TerrainEditor;
 
 public class EditorMenu extends SubMenu {
 
     private final String TITLE = "EDITOR MENU";
+    private Table content;
 
     EditorMenu(StateManager manager) {
         super(manager);
+        content = createContent();
     }
 
     @Override
@@ -19,13 +24,13 @@ public class EditorMenu extends SubMenu {
         return TITLE;
     }
 
-    @Override
-    protected Table createContent() {
+    private Table createContent() {
         Table table = new Table();
         TextButton fnctTerrain = new TextButton("Create terrain from function",StateManager.skin);
         fnctTerrain.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                manager.pop();
                 manager.push(new TerrainCreatorMenu(manager));
             }
         });
@@ -36,8 +41,10 @@ public class EditorMenu extends SubMenu {
         splineTerrain.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("To be implemented...");
-                //manager.push(new CourseCreatorMenu(manager));
+                manager.pop();
+                Terrain defaultTerrain = CourseIO.getCourse("Plane");
+                defaultTerrain.toSpline(1);
+                manager.push(new TerrainEditor(manager,defaultTerrain));
             }
         });
         table.add(splineTerrain).pad(10f).fillX();
@@ -53,5 +60,10 @@ public class EditorMenu extends SubMenu {
         table.add(courseCreation).pad(10f).fillX();
 
         return table;
+    }
+
+    @Override
+    public Table getContent() {
+        return content;
     }
 }
