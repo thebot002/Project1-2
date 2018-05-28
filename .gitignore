@@ -5,6 +5,9 @@
 *.ear
 hs_err_pid*
 
+[http]
+    sslVerify=false
+    
 ## Robovm
 /ios/robovm-build/
 
