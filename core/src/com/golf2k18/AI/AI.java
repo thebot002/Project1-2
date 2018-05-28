@@ -11,17 +11,15 @@ public class AI {
         this.ball = ball;
         this.terrain = terrain;
     }
-    public void play()
-    {
-        Vector3 tryBall = fitness();
-        ball.hit(tryBall);
-    }
-    public void holeInOne(){
+    public Vector3 holeInOne(){
+        Vector3 addVectors = new Vector3();
         while(!terrain.isGoalHit())
         {
             Vector3 tryBall = fitness();
-            ball.hit(tryBall);
+            addVectors = addVectors.add(tryBall);
+            ball.hit(addVectors);
         }
+        return addVectors;
     }
     private Vector3 fitness(){
         Vector3 coordinates = new Vector3();
