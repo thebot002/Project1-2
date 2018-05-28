@@ -19,4 +19,7 @@ public class Goal {
         }
         return hit;
     }
+    public Vector3 getLocation() {
+        return location;
+    }
 }
