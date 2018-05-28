@@ -1,4 +1,4 @@
-package com.golf2k18.objects;
+package com.golf2k18.function;
 
 public interface Function {
     float evaluateF(float x, float y);

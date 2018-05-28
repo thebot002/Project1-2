@@ -1,4 +1,4 @@
-package com.golf2k18.states.game;
+package com.golf2k18.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,12 +13,11 @@ import com.badlogic.gdx.utils.Array;
 import com.golf2k18.objects.HeightField;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.TerrainModel;
-import com.golf2k18.states.State;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.camera.GameCameraController;
 
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
-    protected CameraController controller;
+    protected GameCameraController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
 
@@ -26,9 +25,10 @@ public abstract class State3D extends State {
     private Environment environment;
 
     protected Terrain terrain;
+    private TerrainModel terrainModel;
     private Array<Renderable> fields;
 
-    State3D(StateManager manager, Terrain terrain) {
+    public State3D(StateManager manager, Terrain terrain) {
         super(manager);
         this.terrain = terrain;
     }
@@ -45,7 +45,7 @@ public abstract class State3D extends State {
         camera.far = 1000f;
         camera.update();
 
-        Gdx.input.setInputProcessor(controller = new CameraController(camera));
+        Gdx.input.setInputProcessor(controller = new GameCameraController(camera));
 
         //environment setup
         DirectionalLight light = new DirectionalLight();
@@ -56,22 +56,8 @@ public abstract class State3D extends State {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1.f));
         environment.add(light);
 
-        TerrainModel terrainModel = new TerrainModel(terrain);
-        Array<HeightField> hf = terrainModel.map;
 
-        fields = new Array<Renderable>();
-        for (int i = 0; i < hf.size; i++) {
-            Renderable field = new Renderable();
-            field.environment = environment;
-            field.meshPart.mesh = hf.get(i).mesh;
-            field.meshPart.primitiveType = GL20.GL_TRIANGLES;
-            field.meshPart.offset = 0;
-            field.meshPart.size = hf.get(i).mesh.getNumIndices();
-            field.meshPart.update();
-            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
-            fields.add(field);
-        }
-
+        createTerrain();
         //add the terrain to the list of models to display
         for (ModelInstance m: terrainModel.world) {
             instances.add(m);
@@ -104,6 +90,24 @@ public abstract class State3D extends State {
     @Override
     public void dispose(){
         batch.dispose();
+    }
+
+    public void createTerrain(){
+        terrainModel = new TerrainModel(terrain);
+        Array<HeightField> hf = terrainModel.map;
+
+        fields = new Array<>();
+        for (int i = 0; i < hf.size; i++) {
+            Renderable field = new Renderable();
+            field.environment = environment;
+            field.meshPart.mesh = hf.get(i).mesh;
+            field.meshPart.primitiveType = GL20.GL_TRIANGLES;
+            field.meshPart.offset = 0;
+            field.meshPart.size = hf.get(i).mesh.getNumIndices();
+            field.meshPart.update();
+            field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
+            fields.add(field);
+        }
     }
 
     public abstract void handleInput();

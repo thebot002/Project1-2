@@ -12,11 +12,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.objects.CourseIO;
+import com.golf2k18.states.MenuState;
 import com.golf2k18.states.StateManager;
 import com.golf2k18.states.game.Game;
 
 
-public class Menu extends MenuState
+public class MainMenu extends MenuState
 {
     private Texture backgroundMenu;
     private Label filePath;
@@ -25,7 +26,7 @@ public class Menu extends MenuState
     private Stage stage;
     public static boolean mute;
 
-    public Menu(StateManager manager) {
+    public MainMenu(StateManager manager) {
         super(manager);
         backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
         createMusic(false);
@@ -38,7 +39,6 @@ public class Menu extends MenuState
         StateManager.music.setVolume(activated?0.5f:0f);
         mute = activated;
     }
-
 
     @Override
     protected Stage getStage() {
@@ -148,7 +148,7 @@ public class Menu extends MenuState
             public void clicked(InputEvent event, float x, float y)
             {
                 manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
-                //manager.push(new Game(manager,new Engine().getTerrain()));
+                //manager.push(new Game(manager,new Euler().getTerrain()));
             }
         });
         table.add(start).center().fillX().pad(10f);
@@ -159,14 +159,14 @@ public class Menu extends MenuState
         mute.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!Menu.mute){
+                if(!MainMenu.mute){
                     StateManager.music.setVolume(0f);
-                    Menu.mute = true;
+                    MainMenu.mute = true;
                 }
                 else
                 {
                     StateManager.music.setVolume(.5f);
-                    Menu.mute = false;
+                    MainMenu.mute = false;
                 }
             }
         });

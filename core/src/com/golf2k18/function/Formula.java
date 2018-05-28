@@ -1,4 +1,4 @@
-package com.golf2k18.objects;
+package com.golf2k18.function;
 
 import java.io.Serializable;
 import java.util.Stack;

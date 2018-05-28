@@ -1,8 +1,10 @@
-package com.golf2k18.objects;
+package com.golf2k18.function;
 
-import org.omg.CORBA.MARSHAL;
+import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.objects.Matrix;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Spline implements Function, Serializable {
     private float[][] data;
@@ -14,6 +16,24 @@ public class Spline implements Function, Serializable {
 
     private float[][] A1 = {{1,0,0,0},{0,0,1,0},{-3,3,-2,-1},{2,-2,1,1}};
     private float[][] A2 = {{1,0,-3,2},{0,0,3,-2},{0,1,-2,1},{0,0,-1,1}};
+
+    public Spline(float[][] data, float[][] xDeriv, float[][] yDeriv){
+        this.data = data;
+        coefficients = new Matrix[data.length-1][data[0].length-1];
+
+        this.xDeriv = xDeriv;
+        this.yDeriv = yDeriv;
+
+        xyDeriv = new float[data.length][data[0].length];
+        for (int i = 1; i < data.length - 1; i++) {
+            for (int j = 1; j < data[0].length-1; j++) {
+                if(i == 1) xyDeriv[i][j] = (yDeriv[i][2] - yDeriv[i][0])/2;
+                if(i == data.length - 1) xyDeriv[i][j] = (yDeriv[data.length-3][j] - yDeriv[data.length-1][j])/2;
+                xyDeriv[i][j] = (yDeriv[i][j+1] - yDeriv[i][j-1])/2;
+            }
+        }
+        interpolate();
+    }
 
     public Spline(float[][] data) {
         this.data = data;
@@ -45,30 +65,19 @@ public class Spline implements Function, Serializable {
         interpolate();
     }
 
+    private void interpolate(int x, int y){
+        float[][] fMatrix = {
+                {data[x][y],data[x][y+1],yDeriv[x][y],yDeriv[x][y+1]},
+                {data[x+1][y],data[x+1][y+1],yDeriv[x+1][y],yDeriv[x+1][y+1]},
+                {xDeriv[x][y],xDeriv[x][y+1],xyDeriv[x][y],xyDeriv[x][y+1]},
+                {xDeriv[x+1][y],xDeriv[x+1][y+1],xyDeriv[x+1][y],xyDeriv[x+1][y+1]}};
+        coefficients[x][y] = Matrix.multiplication(new Matrix(A1),Matrix.multiplication(new Matrix(fMatrix),new Matrix(A2)));
+    }
+
     private void interpolate(){
         for (int i = 0; i < data.length - 1; i++) {
             for (int j = 0; j < data[0].length - 1; j++) {
-                float[][] fMatrix = {
-                        {data[i][j],data[i][j+1],yDeriv[i][j],yDeriv[i][j+1]},
-                        {data[i+1][j],data[i+1][j+1],yDeriv[i+1][j],yDeriv[i+1][j+1]},
-                        {xDeriv[i][j],xDeriv[i][j+1],xyDeriv[i][j],xyDeriv[i][j+1]},
-                        {xDeriv[i+1][j],xDeriv[i+1][j+1],xyDeriv[i+1][j],xyDeriv[i+1][j+1]}};
-                coefficients[i][j] = Matrix.multiplication(new Matrix(A1),Matrix.multiplication(new Matrix(fMatrix),new Matrix(A2)));
-
-                //float[][] xV = {{1,i,(float)Math.pow(i,2),(float)Math.pow(i,3)}};
-                //float[][] yV = {{1},{j},{(float)Math.pow(j,2)},{(float)Math.pow(j,3)}};
-                /*float result = Matrix.multiplication(new Matrix(xV),Matrix.multiplication(coefficients[i][j],new Matrix(yV))).get(0,0);
-                if(result != data[i][j]){
-                    //new Matrix(fMatrix).print();
-                    /*System.out.println("x");
-                    new Matrix(xV).print();
-                    System.out.println("y");
-                    new Matrix(yV).print();
-                    System.out.println("coefs");
-                    coefficients[i][j].print();
-                    System.out.println();
-                    System.out.println(result);
-                }*/
+                interpolate(i,j);
             }
         }
     }
@@ -120,5 +129,30 @@ public class Spline implements Function, Serializable {
         if(y > coefficients[0].length-1) y = coefficients[0].length-1;
         Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefficients[(int)x][(int)y]),yVector);
         return result.get(0,0);
+    }
+
+    public void update(Vector3 newData){
+        data[(int)newData.x][(int)newData.y] = newData.z;
+        interpolate(((int)newData.x)-1,((int)newData.y)-1);
+        if((int)newData.y != data.length) interpolate(((int)newData.x)-1,(int)newData.y);
+        if((int)newData.x != data[0].length) interpolate((int)newData.x,((int)newData.y)-1);
+        if((int)newData.x != data.length && (int)newData.y != data[0].length) interpolate((int)newData.x,(int)newData.y);
+    }
+
+    public void update(ArrayList<Vector3> newData){
+        boolean[][] toUpdate = new boolean[coefficients.length][coefficients[0].length];
+        for (int i = 0; i < newData.size(); i++) {
+            Vector3 nd = newData.get(i);
+            data[(int)nd.x][(int)nd.y] = nd.z;
+            toUpdate[((int)nd.x)-1][((int)nd.y)-1] = true;
+            if((int)nd.y != data.length) toUpdate[((int)nd.x)-1][(int)nd.y] = true;
+            if((int)nd.x != data[0].length) toUpdate[(int)nd.x][((int)nd.y)-1] = true;
+            if((int)nd.x != data.length && (int)nd.y != data[0].length) toUpdate[(int)nd.x][(int)nd.y] = true;
+        }
+        for (int i = 0; i < toUpdate.length; i++) {
+            for (int j = 0; j < toUpdate[0].length; j++) {
+                if(toUpdate[i][j]) interpolate(i,j);
+            }
+        }
     }
 }

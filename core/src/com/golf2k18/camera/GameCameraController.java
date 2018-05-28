@@ -1,4 +1,4 @@
-package com.golf2k18.states.game;
+package com.golf2k18.camera;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
-public class CameraController extends InputAdapter {
+public class GameCameraController extends InputAdapter {
 
-    private final int ctrl = Input.Keys.CONTROL_LEFT;
+    private final int ctrlKey = Input.Keys.CONTROL_LEFT;
     private final int lArrow = Input.Keys.DPAD_LEFT;
     private final int rArrow = Input.Keys.DPAD_RIGHT;
     private final int uArrow = Input.Keys.DPAD_UP;
@@ -36,12 +36,14 @@ public class CameraController extends InputAdapter {
     private final float translateUnits = 0.5f;
     private int bottom = 1;
 
+    private boolean cScroll = false;
+    private boolean ctrl = false;
 
     public boolean isFocused() {
-        return focused && !Gdx.input.isKeyPressed(ctrl);
+        return focused && !Gdx.input.isKeyPressed(ctrlKey);
     }
 
-    public CameraController(Camera camera) {
+    public GameCameraController(Camera camera) {
         this.camera = camera;
         focus = camera.position;
         updateDistanceCamFocus();
@@ -63,7 +65,8 @@ public class CameraController extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == ctrl){
+        if(keycode == ctrlKey){
+            ctrl = true;
             focused = !focused;
             return false;
         }
@@ -73,7 +76,8 @@ public class CameraController extends InputAdapter {
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == ctrl){
+        if(keycode == ctrlKey){
+            ctrl = false;
             focused = !focused;
             if(focused) unfocus();
             return false;
@@ -125,14 +129,16 @@ public class CameraController extends InputAdapter {
 
     @Override
     public boolean scrolled(int amount) {
-        if(amount<0 || camera.position.z>bottom)
-            camera.translate(tmpV1.set(camera.direction).scl(amount*0.8f));
-        updateDistanceCamFocus();
+        if(!cScroll || ctrl){
+            if(amount>0 || camera.position.z>bottom)
+                camera.translate(tmpV1.set(camera.direction).scl(amount*(-0.8f)));
+            updateDistanceCamFocus();
+        }
         return false;
     }
 
     public void update(){
-        if(focused && !Gdx.input.isKeyPressed(ctrl)){
+        if(focused && !Gdx.input.isKeyPressed(ctrlKey)){
             camera.position.set(distanceCamFocus).add(focus);
         }
         if(keyPressed.contains(lArrow)){
@@ -175,5 +181,9 @@ public class CameraController extends InputAdapter {
 
     private void updateDistanceCamFocus(){
         distanceCamFocus.set(camera.position).sub(focus);
+    }
+
+    public  void toggleScroll(){
+        cScroll = !cScroll;
     }
 }
