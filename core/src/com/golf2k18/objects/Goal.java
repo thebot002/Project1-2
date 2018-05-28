@@ -2,7 +2,9 @@ package com.golf2k18.objects;
 
 import com.badlogic.gdx.math.Vector3;
 
-public class Goal {
+import java.io.Serializable;
+
+public class Goal implements Serializable {
     private Vector3 location;
     private boolean hit;
     private final double radius = 10;
