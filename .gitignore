@@ -5,7 +5,7 @@
 *.ear
 hs_err_pid*
 
-## [http]
+## http
     sslVerify=false
     
 ## Robovm
