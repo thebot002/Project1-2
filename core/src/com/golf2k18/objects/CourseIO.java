@@ -6,6 +6,9 @@ import com.badlogic.gdx.utils.Array;
 
 import java.io.*;
 
+/**
+ * Class that handles importing and exporting courses from and to a file
+ */
 public class CourseIO {
     private static final FileHandle course_folder = Gdx.files.internal("Data/Courses");
 
@@ -19,6 +22,10 @@ public class CourseIO {
         return childrenNames;
     }
 
+    /**
+     * Write a terrain to a file
+     * @param terrain variable that describes the course
+     */
     public static void writeFile(Terrain terrain){
         try{
             FileOutputStream fos = new FileOutputStream(course_folder.path() + "/" + terrain.getName() + ".ser");
@@ -31,6 +38,11 @@ public class CourseIO {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static Terrain getCourse(String name){
         Terrain input = null;
         try {
