@@ -14,7 +14,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.states.MenuState;
 import com.golf2k18.states.StateManager;
+import com.golf2k18.states.game.Bot;
 import com.golf2k18.states.game.Game;
+import com.golf2k18.states.game.Human;
+
+import javax.swing.*;
 
 
 public class MainMenu extends MenuState
@@ -145,7 +149,17 @@ public class MainMenu extends MenuState
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
+                String playerState = dropDown.getSelected();
+                if(playerState.equals("Single player")){
+                    manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()),new Human()));
+                }
+                else if( playerState.equals("Multiplayer")){
+                    JOptionPane.showMessageDialog(null,"Bish you cant do that!!!");
+                }
+                else if(playerState.equals("Bot")){
+                    manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()),new Bot()));
+                }
+                //manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
                 //manager.push(new Game(manager,new Euler().getTerrain()));
             }
         });

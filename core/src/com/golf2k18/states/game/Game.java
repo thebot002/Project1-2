@@ -38,7 +38,7 @@ public class Game extends State3D {
     private Engine engine;
     private Ball ball;
     private Stage hud;
-
+   // private AI_Abstract AI;
     private Stage pause;
     private boolean paused = false;
 
@@ -56,7 +56,7 @@ public class Game extends State3D {
      * @param manager Instance of the GameManager which is currently used.
      * @param terrain Instance of the Terrain class which was selected by the user in the menus.
      */
-    public Game(StateManager manager, Terrain terrain) {
+    public Game(StateManager manager, Terrain terrain, Player player) {
         super(manager, terrain);
     }
 

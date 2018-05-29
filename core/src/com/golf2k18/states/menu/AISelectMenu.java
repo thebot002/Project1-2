@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -37,6 +38,11 @@ public class AISelectMenu extends MenuState {
         Table table = new Table();
         table.setFillParent(true);
 
+        //label title
+        Label label = new Label("AI selector", StateManager.skin, "title");
+        table.add(label).expand().top().padTop(100f).colspan(3);
+        table.row();
+
         SelectBox<String> dropDown = new SelectBox<String>(StateManager.skin);
         Array<String> input = new Array<String>();
         input.add("AI1");
@@ -49,7 +55,7 @@ public class AISelectMenu extends MenuState {
                 JOptionPane.showMessageDialog(null,AI);
             }
         });
-        table.add(dropDown);
+        table.add(dropDown).expand().padBottom(20f);
 
         TextButton back = new TextButton("return", StateManager.skin, "default");
         back.addListener(new ClickListener() {
@@ -59,7 +65,7 @@ public class AISelectMenu extends MenuState {
                 manager.pop();
             }
         });
-        table.add(back);
+        table.add(back).padBottom(20f);
         stage.addActor(table);
     }
 
