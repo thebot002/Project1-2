@@ -3,6 +3,9 @@ package com.golf2k18.engine.solver;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.engine.Engine;
 
+/**
+ * Euler method to solve differential equations
+ */
 public class Euler implements Solver {
 
     private Engine engine;
