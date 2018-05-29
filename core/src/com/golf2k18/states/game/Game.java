@@ -251,10 +251,10 @@ public class Game extends State3D {
     }
     public boolean isHit(Ball ball, boolean testing) {
         Vector3 pos = ball.getPosition();
-        if ((pos.x < hole.x - radius  || pos.x > hole.x + radius)) {
-            if(pos.y < hole.y - radius  || pos.y > hole.y + radius){
+        if ((pos.x > hole.x - radius && pos.x > hole.x + radius)) {
+            if(pos.y < hole.y - radius  && pos.y < hole.y + radius){
                 if (ball.isStopped()) {
-                    System.out.println("Goaall!!!");
+                   System.out.println("Goaall!!!");
                     return true;
                 }
             }

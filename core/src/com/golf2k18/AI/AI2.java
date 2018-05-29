@@ -16,16 +16,16 @@ import com.golf2k18.states.game.Game;
 public class AI2 extends Bot {
     public Vector3 holeInOne(Game game){
         System.out.println("hey im here!");
-        Vector3 addVectors = new Vector3(1f,2f,0f);
+        Vector3 addVectors = new Vector3();
         Ball ball = game.getBall();
         Terrain terrain = game.getTerrain();
         Vector3 ballOrigin = ball.getPosition();
 
-        while(!game.isHit(ball,true))
+        while(game.isHit(ball,true))
         {
             System.out.println("loooop");
-            Vector3 tryBall = new Vector3(3f,3f,0f);//fitness(terrain,ball);
-           // addVectors = addVectors.add(tryBall);
+            Vector3 tryBall = fitness(terrain,ball);
+           addVectors = addVectors.add(tryBall);
             ball.hit(tryBall);
         }
 
