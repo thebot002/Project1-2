@@ -21,7 +21,7 @@ public class Terrain implements Serializable {
 
     private final float HOLE_DIAM = 1.08f;
 
-        private float scale = 1; //formula unit to world unit
+       // private float scale = 1; //formula unit to world unit
     private float scale = 1; //formula unit to world unit
 
     private Vector3 offset;
@@ -107,35 +107,23 @@ public class Terrain implements Serializable {
         return HOLE_DIAM;
     }
 
-    public void toSpline(int interval){
-        if(function instanceof Spline) return;
+    public void toSpline(int interval) {
+        if (function instanceof Spline) return;
 
-        float[][] data = new float[(width*interval)+1][(height*interval)+1];
-        float[][] xDeriv = new float[(width*interval)+1][(height*interval)+1];
-        float[][] yDeriv = new float[(width*interval)+1][(height*interval)+1];
+        float[][] data = new float[(width * interval) + 1][(height * interval) + 1];
+        float[][] xDeriv = new float[(width * interval) + 1][(height * interval) + 1];
+        float[][] yDeriv = new float[(width * interval) + 1][(height * interval) + 1];
 
-        for (int i = 0; i <= width ; i++) {
-            for (int j = 0; j <=height ; j++) {
-                data[i][j] = function.evaluateF(i,j);
-                xDeriv[i][j] = function.evaluateXDeriv(i,j);
-                yDeriv[i][j] = function.evaluateYDeriv(i,j);
+        for (int i = 0; i <= width; i++) {
+            for (int j = 0; j <= height; j++) {
+                data[i][j] = function.evaluateF(i, j);
+                xDeriv[i][j] = function.evaluateXDeriv(i, j);
+                yDeriv[i][j] = function.evaluateYDeriv(i, j);
             }
         }
-        function = new Spline(data,xDeriv,yDeriv);
+        function = new Spline(data, xDeriv, yDeriv);
+    }
     public Goal getGoal() {return goal;}
-
-    public float getMU() {
-        return MU;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
-    public void setOffset(Vector3 offset){
-        this.offset.set(offset);
-    }
-
 
 }
 
