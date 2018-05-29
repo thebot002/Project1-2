@@ -11,7 +11,9 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.states.MenuState;
 import com.golf2k18.StateManager;
 
-
+/**
+ * Class that describes the user interface for importing a course from a file.
+ */
 public class IOMenu extends MenuState {
     private Stage stage;
     private Array<String> saves;
