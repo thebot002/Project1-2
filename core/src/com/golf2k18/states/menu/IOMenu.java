@@ -17,7 +17,10 @@ import com.golf2k18.StateManager;
 public class IOMenu extends MenuState {
     private Stage stage;
     private Array<String> saves;
-
+    /**
+     * Constructor for the IOMenu class.
+     * @param manager object of the GameStateManager which is currently used.
+     */
     public IOMenu(StateManager manager) {
         super(manager);
     }
