@@ -18,6 +18,9 @@ import com.golf2k18.states.MenuState;
 
 import javax.swing.*;
 
+/**
+ * The menu to select which AI the user wants to see playing the game, AI1 or AI2.
+ */
 public class AISelectMenu extends MenuState {
     private Stage stage;
     public static String AI;
