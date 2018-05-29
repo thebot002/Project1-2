@@ -15,6 +15,9 @@ import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.TerrainModel;
 import com.golf2k18.camera.GameCameraController;
 
+/**
+ * This abstract class is used to create the 3-dimensional states.
+ */
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
     protected GameCameraController controller;
@@ -33,6 +36,9 @@ public abstract class State3D extends State {
         this.terrain = terrain;
     }
 
+    /**
+     * Creates a model batch with the environment's properties and camera properties.
+     */
     @Override
     public void create () {
         batch = new ModelBatch();
@@ -92,6 +98,9 @@ public abstract class State3D extends State {
         batch.dispose();
     }
 
+    /**
+     * Creates the game's field.
+     */
     public void createTerrain(){
         terrainModel = new TerrainModel(terrain);
         Array<HeightField> hf = terrainModel.map;
