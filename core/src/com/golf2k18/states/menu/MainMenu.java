@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.golf2k18.AI.AI;
 import com.golf2k18.AI.AI2;
 import com.golf2k18.handlers.Bot;
 import com.golf2k18.handlers.Human;
@@ -156,6 +157,13 @@ public class MainMenu extends MenuState
             public void clicked(InputEvent event, float x, float y)
             {
                 String playerState = dropDown.getSelected();
+               /** Bot bot = null;
+                if(AISelectMenu.AI.equals("AI1")) {
+                    bot = new AI();
+                }
+                else if(AISelectMenu.AI.equals("AI2")){
+                    bot = new AI2();
+                }*/
                 if(playerState.equals("Single player")){
                     manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()),new Human()));
                 }
@@ -180,7 +188,7 @@ public class MainMenu extends MenuState
                 manager.push(new AISelectMenu(manager));
             }
         });
-        table.add(selectAI).center().fillX().pad(10f);
+        table.add(selectAI).center().fillX().pad(10f).colspan(3);
         table.row();
 
         //MuteButton

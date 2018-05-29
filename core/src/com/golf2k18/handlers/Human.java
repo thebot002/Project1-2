@@ -51,7 +51,7 @@ public class Human extends Player {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             double dir = game.directionInput.getValue();
             double intensity = game.intensityInput.getValue();
-
+            System.out.println(intensity);
             game.getBall().hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
         }
         /*if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){

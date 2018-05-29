@@ -241,7 +241,7 @@ public class Game extends State3D {
         }
         else {
             player.handleInput(this);
-            System.out.println(ball.getPosition());
+            //System.out.println(ball.getPosition());
         }
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
@@ -251,16 +251,20 @@ public class Game extends State3D {
     }
     public boolean isHit(Ball ball, boolean testing) {
         Vector3 pos = ball.getPosition();
-        if ((pos.x < hole.x + radius  || pos.x > hole.x - radius)&&(pos.y < hole.y + radius  || pos.y > hole.y - radius)) {
-            if(ball.isStopped()){
-                return true;
+        if ((pos.x < hole.x - radius  || pos.x > hole.x + radius)) {
+            if(pos.y < hole.y - radius  || pos.y > hole.y + radius){
+                if (ball.isStopped()) {
+                    System.out.println("Goaall!!!");
+                    return true;
+                }
             }
         }
         if(!testing)
         {
             endGameState = true;
         }
-         return false;
+        System.out.println("Missss");
+        return false;
 
     }
     //Setting inputProcessor that processes the key-events and stuff like that.

@@ -2,12 +2,13 @@
 package com.golf2k18.AI;
 
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.handlers.Bot;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Goal;
 import com.golf2k18.objects.Terrain;
 
 
-public class AI {
+public class AI extends Bot {
   /**  private Ball ball;
     private Terrain terrain;
     private Vector3 goal;
