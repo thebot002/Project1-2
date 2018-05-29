@@ -10,8 +10,7 @@ public abstract class AI_Abstract {
     private Terrain terrain;
     private Goal goal;
 
-    public Vector3 holeInOne(){
-
-    }
+    public abstract Vector3 holeInOne();
+    protected abstract Vector3 fitness();
 
 }

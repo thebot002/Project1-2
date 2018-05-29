@@ -13,7 +13,7 @@ public class AI {
     public void AI(Ball ball, Terrain terrain){
         this.ball = ball;
         this.terrain = terrain;
-        this.goal = terrain.getGoal();
+      //  this.goal = terrain.getGoal();
 
     }
     public Vector3 holeInOne(){

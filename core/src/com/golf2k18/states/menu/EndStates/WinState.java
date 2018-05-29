@@ -5,8 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.golf2k18.StateManager;
 import com.golf2k18.states.MenuState;
-import com.golf2k18.states.StateManager;
+
 
 public class WinState extends MenuState {
     private Stage stage;
