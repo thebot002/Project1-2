@@ -97,6 +97,10 @@ public class Ball
 		position.z = (float)z;
 		updateInstance();
 	}
+
+	public void setLocation(Vector3 vector){
+        this.position = vector;
+    }
     public Vector3 getVelocity()
 	{
 		return velocity.cpy();
