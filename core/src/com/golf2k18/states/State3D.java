@@ -74,6 +74,10 @@ public abstract class State3D extends State {
     public abstract void pause();
     public abstract void resume();
 
+    /**
+     * Shows on the screen all the different instances of the game
+     * @param instances instances of the game
+     */
     public void render (final Array<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
