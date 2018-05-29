@@ -6,6 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.golf2k18.states.State;
 import com.golf2k18.states.StateManager;
 
+/**
+ * This is a class that contains the templates for the menu.
+ */
 public abstract class MenuState extends State {
 
     public MenuState(StateManager manager) {
