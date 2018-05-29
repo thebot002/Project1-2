@@ -6,10 +6,16 @@ import com.badlogic.gdx.utils.Array;
 
 import java.io.*;
 
+/**
+ * Class that contains the information about the course inputs and outputs
+ */
 public class CourseIO {
     private static final FileHandle course_folder = Gdx.files.internal("Data/Courses");
 
-
+    /**
+     *Method used to contain all the different course names.
+     * @return
+     */
     public static Array<String> getCoursesNames(){
         FileHandle[] children = course_folder.list();
         Array<String> childrenNames = new Array<String>();
@@ -19,6 +25,10 @@ public class CourseIO {
         return childrenNames;
     }
 
+    /**
+     * Method used to write course properties into a file.
+     * @param terrain The variable that designates the course.
+     */
     public static void writeFile(Terrain terrain){
         try{
             FileOutputStream fos = new FileOutputStream(course_folder.path() + "/" + terrain.getName() + ".ser");
@@ -31,6 +41,11 @@ public class CourseIO {
         }
     }
 
+    /**
+     *Method used to get the properties of a course
+     * @param name Name of the course
+     * @return a new Terrain
+     */
     public static Terrain getCourse(String name){
         Terrain input = null;
         try {

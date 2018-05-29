@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
+/**
+ *This is a super-class for every class that can be pushed onto the stack.
+ */
 public abstract class State extends InputAdapter implements ApplicationListener {
 	protected Vector3 cursor;
 	protected StateManager manager;
