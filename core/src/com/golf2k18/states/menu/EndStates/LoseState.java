@@ -8,7 +8,9 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.StateManager;
 import com.golf2k18.states.MenuState;
 
-
+/**
+ * Desccribes the state of the game if the user loses, offering him the option to retry
+ */
 public class LoseState extends MenuState {
     private Stage stage;
     public LoseState(StateManager manager) {
@@ -28,7 +30,7 @@ public class LoseState extends MenuState {
         table.setFillParent(true);
 
         //WinTitle label
-        Label win = new Label("You win!", StateManager.skin, "Title");
+        Label win = new Label("You lost!", StateManager.skin, "Title");
         table.add(win).expand().center().top().padTop(50f);
         table.row();
 
