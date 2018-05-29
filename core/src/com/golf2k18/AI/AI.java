@@ -6,6 +6,7 @@ import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Goal;
 import com.golf2k18.objects.Terrain;
 
+
 public class AI {
   /**  private Ball ball;
     private Terrain terrain;
@@ -16,6 +17,7 @@ public class AI {
       //  this.goal = terrain.getGoal();
 
     }
+
     public Vector3 holeInOne(){
         Vector3 addVectors = new Vector3();
 

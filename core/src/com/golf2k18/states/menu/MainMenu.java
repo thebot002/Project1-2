@@ -21,7 +21,9 @@ import com.golf2k18.states.game.Game;
 
 import javax.swing.*;
 
-
+/**
+ * Class that describes the user interface for the main menu, including the skin and the music.
+ */
 public class MainMenu extends MenuState
 {
     private Label filePath;
@@ -29,12 +31,15 @@ public class MainMenu extends MenuState
     private SelectBox<String> courseList;
     private Stage stage;
     public static boolean mute;
-
+    /**
+     * Constructor for the MainMenu class.
+     * @param manager object of the GameStateManager which is currently used.
+     */
     public MainMenu(StateManager manager) {
         super(manager);
         createMusic(false);
     }
-
+    //Add music to the menu
     private void createMusic(boolean activated){
         StateManager.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Wii Sports - Wii Sports Theme.mp3"));
         StateManager.music.play();
