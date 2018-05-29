@@ -9,6 +9,9 @@ import com.golf2k18.objects.Terrain;
 import com.golf2k18.StateManager;
 import com.golf2k18.states.editor.TerrainEditor;
 
+/**
+ * Class that describes the user interface for the Editor Menu.
+ */
 public class EditorMenu extends SubMenu {
 
     private final String TITLE = "EDITOR MENU";
