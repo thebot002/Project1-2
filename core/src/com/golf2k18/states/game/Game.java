@@ -22,11 +22,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.engine.Engine;
-import com.golf2k18.engine.RK4;
+import com.golf2k18.engine.solver.*;
+import com.golf2k18.handlers.Player;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 
 import java.util.HashMap;
 
@@ -37,27 +38,26 @@ public class Game extends State3D {
 
     private Engine engine;
     private Ball ball;
-    private Stage hud;
+    public Stage hud;
 
     private Stage pause;
-    private boolean paused = false;
+    public boolean paused = false;
 
-    private boolean manualMovement = false;
+    public Slider directionInput;
+    public Slider intensityInput;
 
-    private Slider directionInput;
-    private Slider intensityInput;
-
-    private HashMap<String,Label> labels;
-
-    private boolean down = false;
+    public HashMap<String,Label> labels;
+    private Player player;
 
     /**
      * Constructor for the Game class.
      * @param manager Instance of the GameManager which is currently used.
      * @param terrain Instance of the Terrain class which was selected by the user in the menus.
      */
-    public Game(StateManager manager, Terrain terrain) {
+    public Game(StateManager manager, Terrain terrain, Player player) {
         super(manager, terrain);
+        this.player = player;
+        player.setState(this);
     }
 
     /**
@@ -70,11 +70,12 @@ public class Game extends State3D {
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
 
-        engine = new RK4(terrain, ball);
+        engine = new Engine(terrain, ball,new RK4());
         createHUD();
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
+        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
     }
+
     //Method which creates the HUD for the game.
     private void createHUD(){
         hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -228,126 +229,25 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(!ball.isStopped()) engine.updateBall();
+        if(!ball.isStopped()){
+            engine.updateBall();
+            ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
+        }
+        else {
+            player.handleInput(this);
+        }
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
-        ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
         if(ball.getPosition().x + (ball.getDiameter()/2) < 0){
             return;
         }
     }
-
-    @Override
-    public void handleInput() {
-        if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
-            ball.setX(ball.getX()+0.1);
-        }
-        if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
-            ball.setX(ball.getX()-0.1);
-        }
-        if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
-            ball.setY(ball.getY()+0.1);
-        }
-        if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
-            ball.setY(ball.getY()-0.1);
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
-            if(!controller.isFocused()){
-                controller.focus(ball.getPosition());
-            }
-            else{
-                controller.unfocus();
-            }
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.M)){
-            if(manualMovement) setProcessors();
-            else Gdx.input.setInputProcessor(new InputMultiplexer(hud, this));
-            manualMovement = !manualMovement;
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            double dir = directionInput.getValue();
-            double intensity = intensityInput.getValue();
-
-            ball.hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            if(!paused) pause();
-            else resume();
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
-            if(controller.isFocused()){
-                labels.get("focus").setText("");
-            }
-        }
-    }
     //Setting inputProcessor that processes the key-events and stuff like that.
-    private void setProcessors(){
+    public void setProcessors(){
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
     }
 
-    @Override
-    public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-        if(getObject(screenX, screenY)==4) down = true;
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if(down){
-            ModelBuilder builder = new ModelBuilder();
-            Model line = builder.createArrow(getTerrainMousePos(screenX,screenY,terrain.getFunction().evaluateF(ball.getX(),ball.getY())),ball.getPosition(),
-                    new Material(ColorAttribute.createDiffuse(Color.BLACK)),
-                    VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
-            );
-            if(instances.size == 6) instances.removeIndex(instances.size - 1);
-            instances.add(new ModelInstance(line,0,0,0));
-        }
-        return super.touchDragged(screenX, screenY, pointer);
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if(down && instances.size == 6){
-            instances.removeIndex(instances.size - 1);
-            Vector3 currentPos = new Vector3(ball.getPosition());
-            ball.hit(new Vector3(currentPos.add(new Vector3(getTerrainMousePos(screenX,screenY,terrain.getFunction().evaluateF(ball.getX(),ball.getY()))).scl(-1))).scl(2));
-        }
-        down = false;
-        return super.touchUp(screenX, screenY, pointer, button);
-    }
-
-    /**
-     * Method that disposes the memory heavy objects(libGDX requirements).
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
-
-    private Vector3 getTerrainMousePos(int mouseX, int mouseY, float height){
-        Ray ray = camera.getPickRay(mouseX, mouseY);
-
-        Plane p = new Plane(new Vector3(0,0,1),height);
-        Vector3 intersect = new Vector3();
-
-        Intersector.intersectRayPlane(ray,p,intersect);
-
-        return intersect;
-    }
-
-    private int getObject (int screenX, int screenY) {
-        Vector3 position = new Vector3();
-        Ray ray = camera.getPickRay(screenX, screenY);
-        int result = -1;
-        final ModelInstance instance = instances.get(4);
-        instance.transform.getTranslation(position);
-        //position.add(instance.tr);
-        final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
-        float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
-        if (dist2 <= (ball.getDiameter()/2) * (ball.getDiameter()/2)) {
-            result = 4;
-        }
-        return result;
+    public Ball getBall() {
+        return ball;
     }
 }

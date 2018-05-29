@@ -10,14 +10,18 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Array;
-import com.golf2k18.objects.HeightField;
+import com.golf2k18.StateManager;
+import com.golf2k18.models.HeightField;
 import com.golf2k18.objects.Terrain;
-import com.golf2k18.objects.TerrainModel;
+import com.golf2k18.models.TerrainModel;
 import com.golf2k18.camera.GameCameraController;
 
+/**
+ * This abstract class is used to create the 3-dimensional states.
+ */
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
-    protected GameCameraController controller;
+    public GameCameraController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
 
@@ -33,6 +37,9 @@ public abstract class State3D extends State {
         this.terrain = terrain;
     }
 
+    /**
+     * Creates a model batch with the environment's properties and camera properties.
+     */
     @Override
     public void create () {
         batch = new ModelBatch();
@@ -67,6 +74,10 @@ public abstract class State3D extends State {
     public abstract void pause();
     public abstract void resume();
 
+    /**
+     * Shows on the screen all the different instances of the game
+     * @param instances instances of the game
+     */
     public void render (final Array<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
@@ -92,6 +103,9 @@ public abstract class State3D extends State {
         batch.dispose();
     }
 
+    /**
+     * Creates the game's field.
+     */
     public void createTerrain(){
         terrainModel = new TerrainModel(terrain);
         Array<HeightField> hf = terrainModel.map;
@@ -110,9 +124,19 @@ public abstract class State3D extends State {
         }
     }
 
-    public abstract void handleInput();
     public void update(float dt){
         camera.update();
-        handleInput();
+    }
+
+    public PerspectiveCamera getCamera() {
+        return camera;
+    }
+
+    public Array<ModelInstance> getInstances() {
+        return instances;
+    }
+
+    public Terrain getTerrain() {
+        return terrain;
     }
 }

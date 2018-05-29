@@ -3,6 +3,9 @@ package com.golf2k18.function;
 import java.io.Serializable;
 import java.util.Stack;
 
+/**
+ * This class gives the code for derivating mathematical functions.
+ */
 public class Formula implements Function, Serializable {
 
     private Node root;

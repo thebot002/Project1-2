@@ -62,6 +62,10 @@ public class Ball
         this.position = position;
     }
 
+    /**
+     * Method used to know the mass of the ball.
+     * @return the constant mass of the ball.
+     */
 	public float getMass() {
 		return MASS;
 	}
@@ -98,6 +102,9 @@ public class Ball
 		return velocity.cpy();
 	}
 
+    /**
+     * Method that gives the ball's movement vector when it's stopped (0,0,0)
+     */
     public void setStopped() {
 	    velocity = new Vector3(0,0,0);
         this.stopped = true;

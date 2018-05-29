@@ -2,21 +2,29 @@ package com.golf2k18.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 
-public abstract class Engine {
+public class Engine {
     protected Terrain terrain;
-    protected Ball ball;
+    private Ball ball;
     private float mass;
     private final float GRAVITY = 9.81f;
     protected final double STOP_TOLERANCE = 0.2;
     protected float dt = Gdx.graphics.getDeltaTime();
+    private Solver sherlock;
 
-    public Engine(Terrain terrain, Ball ball) {
+    public Engine(Terrain terrain, Ball ball, Solver solver) {
         this.terrain = terrain;
         this.ball = ball;
         this.mass = ball.getMass();
+        this.sherlock = solver;
+        solver.setEngine(this);
+    }
+
+    public float getDt() {
+        return dt;
     }
 
     private Vector3 calcGravity(Vector3 position)
@@ -33,7 +41,7 @@ public abstract class Engine {
         v.scl(-terrain.getMU()*mass*GRAVITY);
         return v;
     }
-    protected Vector3 getAcceleration(Vector3 position, Vector3 velocity)
+    public Vector3 getAcceleration(Vector3 position, Vector3 velocity)
     {
         Vector3 v = calcGravity(position);
         v.add(calcFriction(velocity));
@@ -82,11 +90,20 @@ public abstract class Engine {
         n.scl(-1);
     }
 
-    protected Vector3 derivePos(Vector3 position, Vector3 velocity){
-        return new Vector3(position.x + dt*velocity.x,position.y + dt*velocity.y,0);
-    }
 
-    public abstract void updateBall();
+    public void updateBall(){
+        dt = Gdx.graphics.getDeltaTime();
+
+        Vector3 position = ball.getPosition();
+        Vector3 velocity = ball.getVelocity();
+
+        Vector3 newVel = sherlock.solveVel(new Vector3(position),velocity);
+        ball.updateVelocity(new Vector3(newVel));
+        Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(newVel));
+        ball.updateLocation(newPos);
+
+        updateBall(newPos,newVel);
+    }
 
     public Terrain getTerrain() {
         return terrain;

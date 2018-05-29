@@ -15,10 +15,13 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.function.Spline;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to create the course, with all its properties
+ */
 public class TerrainEditor extends State3D {
 
     int startIndex;
@@ -36,6 +39,9 @@ public class TerrainEditor extends State3D {
         super(manager, terrain);
     }
 
+    /**
+     * Creates the terrain according to the chosen function
+     */
     @Override
     public void create() {
         super.create();
@@ -73,12 +79,17 @@ public class TerrainEditor extends State3D {
         }
     }
 
+    /**
+     *Input handler for the terrain editor class
+     * @param amount
+     * @return the slopes
+     */
     @Override
     public boolean scrolled(int amount) {
         ArrayList<Vector3> newData = new ArrayList<>();
-        for (int i = 0; i < selected.size(); i++) {
-            Vector3 nd = d1ToD2(selected.get(i));
-            nd.z = function.evaluateF(nd.y,nd.x);
+        for (Integer aSelected : selected) {
+            Vector3 nd = d1ToD2(aSelected);
+            nd.z = function.evaluateF(nd.x, nd.y);
             nd.z += amount;
             newData.add(nd);
         }
@@ -87,6 +98,14 @@ public class TerrainEditor extends State3D {
         return super.scrolled(amount);
     }
 
+    /**
+     * Controls for the camera
+     * @param screenX x coordinate
+     * @param screenY y coordinate
+     * @param pointer mouse pointer
+     * @param button
+     * @return new camera position
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(button == 0) {
@@ -129,6 +148,12 @@ public class TerrainEditor extends State3D {
         return new Vector3(x,y,0);
     }
 
+    /**
+     * Converts the screen's (X,Y) coordinates into actual game coordinates for the camera
+     * @param screenX x coordinate
+     * @param screenY y coordinate
+     * @return the game coordinates
+     */
     public int getObject (int screenX, int screenY) {
         Ray ray = camera.getPickRay(screenX, screenY);
 
@@ -170,11 +195,6 @@ public class TerrainEditor extends State3D {
 
     @Override
     public void resume() {
-
-    }
-
-    @Override
-    public void handleInput() {
 
     }
 }
