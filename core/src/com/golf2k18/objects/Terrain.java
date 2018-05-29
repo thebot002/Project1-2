@@ -14,14 +14,10 @@ public class Terrain implements Serializable {
     private int width;
     private int height;
     private Vector3 start;
-
-    private Goal goal;
-    private boolean goalHit;
     private Vector3 hole;
 
     private final float HOLE_DIAM = 1.08f;
 
-       // private float scale = 1; //formula unit to world unit
     private float scale = 1; //formula unit to world unit
 
     private Vector3 offset;
@@ -45,7 +41,6 @@ public class Terrain implements Serializable {
         this.width = width;
         this.height = height;
         this.start = start;
-        this.goal = new Goal(goal);
         this.hole = goal;
         this.name = name;
         offset = new Vector3(0,0,0);
@@ -103,27 +98,29 @@ public class Terrain implements Serializable {
      */
     public void setOffset(Vector3 offset){this.offset.set(offset);}
 
+    /**
+     * gives the diameter of the hole
+     * @return the hole's diameter
+     */
     public float getHOLE_DIAM() {
         return HOLE_DIAM;
     }
 
-    public void toSpline(int interval) {
-        if (function instanceof Spline) return;
 
-        float[][] data = new float[(width * interval) + 1][(height * interval) + 1];
-        float[][] xDeriv = new float[(width * interval) + 1][(height * interval) + 1];
-        float[][] yDeriv = new float[(width * interval) + 1][(height * interval) + 1];
+    public void toSpline(int interval){
+        if(function instanceof Spline) return;
 
-        for (int i = 0; i <= width; i++) {
-            for (int j = 0; j <= height; j++) {
-                data[i][j] = function.evaluateF(i, j);
-                xDeriv[i][j] = function.evaluateXDeriv(i, j);
-                yDeriv[i][j] = function.evaluateYDeriv(i, j);
+        float[][] data = new float[(width*interval)+1][(height*interval)+1];
+        float[][] xDeriv = new float[(width*interval)+1][(height*interval)+1];
+        float[][] yDeriv = new float[(width*interval)+1][(height*interval)+1];
+
+        for (int i = 0; i <= width ; i++) {
+            for (int j = 0; j <=height ; j++) {
+                data[i][j] = function.evaluateF(i,j);
+                xDeriv[i][j] = function.evaluateXDeriv(i,j);
+                yDeriv[i][j] = function.evaluateYDeriv(i,j);
             }
         }
-        function = new Spline(data, xDeriv, yDeriv);
+        function = new Spline(data,xDeriv,yDeriv);
     }
-    public Goal getGoal() {return goal;}
-
 }
-

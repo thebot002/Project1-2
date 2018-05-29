@@ -11,15 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.golf2k18.handlers.Bot;
+import com.golf2k18.handlers.Human;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.states.MenuState;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 import com.golf2k18.states.game.Game;
+
+import javax.swing.*;
 
 
 public class MainMenu extends MenuState
 {
-    private Texture backgroundMenu;
     private Label filePath;
     private TextField path;
     private SelectBox<String> courseList;
@@ -28,7 +31,6 @@ public class MainMenu extends MenuState
 
     public MainMenu(StateManager manager) {
         super(manager);
-        backgroundMenu = new Texture("MiniGolf WIndmill.jpg");
         createMusic(false);
     }
 
@@ -147,11 +149,32 @@ public class MainMenu extends MenuState
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
+                String playerState = dropDown.getSelected();
+                if(playerState.equals("Single player")){
+                    manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()),new Human()));
+                }
+                else if( playerState.equals("Multiplayer")){
+                    JOptionPane.showMessageDialog(null,"Bish you cant do that!!!");
+                }
+                else if(playerState.equals("Bot")){
+                    manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()),new Bot()));
+                }
+                //manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
                 //manager.push(new Game(manager,new Euler().getTerrain()));
             }
         });
         table.add(start).center().fillX().pad(10f);
+        table.row();
+
+        //Select AI menu
+        TextButton selectAI = new TextButton("Choose AI", StateManager.skin, "default");
+        selectAI.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                manager.push(new AISelectMenu(manager));
+            }
+        });
+        table.add(selectAI).center().fillX().pad(10f);
         table.row();
 
         //MuteButton
@@ -195,7 +218,6 @@ public class MainMenu extends MenuState
 
     @Override
     public void dispose() {
-        backgroundMenu.dispose();
-        super.dispose();
+       super.dispose();
     }
 }

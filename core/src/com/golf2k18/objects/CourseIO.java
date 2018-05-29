@@ -7,12 +7,15 @@ import com.badlogic.gdx.utils.Array;
 import java.io.*;
 
 /**
- * Class that handles importing and exporting courses from and to a file
+ * Class that contains the information about the course inputs and outputs
  */
 public class CourseIO {
     private static final FileHandle course_folder = Gdx.files.internal("Data/Courses");
 
-
+    /**
+     *Method used to contain all the different course names.
+     * @return
+     */
     public static Array<String> getCoursesNames(){
         FileHandle[] children = course_folder.list();
         Array<String> childrenNames = new Array<String>();
@@ -23,8 +26,8 @@ public class CourseIO {
     }
 
     /**
-     * Write a terrain to a file
-     * @param terrain variable that describes the course
+     * Method used to write course properties into a file.
+     * @param terrain The variable that designates the course.
      */
     public static void writeFile(Terrain terrain){
         try{
@@ -39,9 +42,9 @@ public class CourseIO {
     }
 
     /**
-     *
-     * @param name
-     * @return
+     *Method used to get the properties of a course
+     * @param name Name of the course
+     * @return a new Terrain
      */
     public static Terrain getCourse(String name){
         Terrain input = null;

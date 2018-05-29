@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.function.Spline;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 
 import java.util.ArrayList;
 
@@ -76,9 +76,9 @@ public class TerrainEditor extends State3D {
     @Override
     public boolean scrolled(int amount) {
         ArrayList<Vector3> newData = new ArrayList<>();
-        for (int i = 0; i < selected.size(); i++) {
-            Vector3 nd = d1ToD2(selected.get(i));
-            nd.z = function.evaluateF(nd.y,nd.x);
+        for (Integer aSelected : selected) {
+            Vector3 nd = d1ToD2(aSelected);
+            nd.z = function.evaluateF(nd.x, nd.y);
             nd.z += amount;
             newData.add(nd);
         }
@@ -170,11 +170,6 @@ public class TerrainEditor extends State3D {
 
     @Override
     public void resume() {
-
-    }
-
-    @Override
-    public void handleInput() {
 
     }
 }

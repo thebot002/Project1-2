@@ -2,7 +2,7 @@ package com.golf2k18.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 
 /**
  * Class which provides the main method for running the libGDX application on desktops. It also specifies some functionality of the program.
