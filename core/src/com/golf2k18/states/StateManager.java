@@ -12,6 +12,9 @@ import com.golf2k18.function.Spline;
 import com.golf2k18.objects.*;
 import com.golf2k18.states.menu.MainMenu;
 
+/**
+ * This class contains the different states for the menu.
+ */
 public class StateManager extends ApplicationAdapter {
 	private Stack<State> states;
     public static final int HEIGHT = 800;
@@ -25,6 +28,9 @@ public class StateManager extends ApplicationAdapter {
 		states = new Stack<State>();
 	}
 
+    /**
+     * The menu has a skin and a state
+     */
 	@Override
     public void create () {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));

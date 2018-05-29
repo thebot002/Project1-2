@@ -19,6 +19,9 @@ import com.golf2k18.states.StateManager;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to create the course, with all its properties
+ */
 public class TerrainEditor extends State3D {
 
     int startIndex;
