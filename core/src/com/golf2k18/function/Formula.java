@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Stack;
 
 /**
- * This class gives the code for some basic mathematical functions
+ * This class gives the code for derivating mathematical functions.
  */
 public class Formula implements Function, Serializable {
 

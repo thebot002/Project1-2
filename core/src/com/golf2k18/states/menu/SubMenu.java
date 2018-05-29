@@ -12,6 +12,9 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.states.MenuState;
 import com.golf2k18.StateManager;
 
+/**
+ * Template class for the menus.
+ */
 public abstract class SubMenu extends MenuState {
     private Stage stage;
 
