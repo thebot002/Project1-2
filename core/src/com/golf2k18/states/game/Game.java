@@ -243,27 +243,22 @@ public class Game extends State3D {
             player.handleInput(this);
             //System.out.println(ball.getPosition());
         }
+        isHit(ball);
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
-        if(ball.getPosition().x + (ball.getDiameter()/2) < 0){
-            return;
-        }
     }
-    public boolean isHit(Ball ball, boolean testing) {
+    public boolean isHit(Ball ball) {
         Vector3 pos = ball.getPosition();
         if ((pos.x > hole.x - radius && pos.x > hole.x + radius)) {
             if(pos.y < hole.y - radius  && pos.y < hole.y + radius){
                 if (ball.isStopped()) {
                    System.out.println("Goaall!!!");
+                   endGameState = true;
                     return true;
                 }
             }
         }
-        if(!testing)
-        {
-            endGameState = true;
-        }
-        System.out.println("Missss");
+        //System.out.println("Missss");
         return false;
 
     }

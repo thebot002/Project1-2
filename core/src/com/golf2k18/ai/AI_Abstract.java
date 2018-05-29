@@ -1,4 +1,4 @@
-package com.golf2k18.AI;
+package com.golf2k18.ai;
 
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.objects.Ball;

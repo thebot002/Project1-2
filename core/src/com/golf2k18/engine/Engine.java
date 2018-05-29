@@ -1,5 +1,6 @@
 package com.golf2k18.engine;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
@@ -14,8 +15,8 @@ public class Engine {
     private float mass;
     private final float GRAVITY = 9.81f;
     protected final double STOP_TOLERANCE = 0.2;
-    protected float dt = 0.1f;
-    //protected float dt = Gdx.graphics.getDeltaTime();
+    //protected float dt = 0.1f;
+    protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
 
     /**
@@ -111,7 +112,7 @@ public class Engine {
      * Updates the ball's position
      */
     public void updateBall(){
-        //dt = Gdx.graphics.getDeltaTime();
+        dt = Gdx.graphics.getDeltaTime();
 
         Vector3 position = ball.getPosition();
         Vector3 velocity = ball.getVelocity();
