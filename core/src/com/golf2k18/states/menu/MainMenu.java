@@ -20,7 +20,9 @@ import com.golf2k18.states.game.Game;
 
 import javax.swing.*;
 
-
+/**
+ * Class that describes the user interface for the main menu, including the skin and the music.
+ */
 public class MainMenu extends MenuState
 {
     private Label filePath;
