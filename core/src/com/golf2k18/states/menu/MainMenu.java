@@ -38,7 +38,7 @@ public class MainMenu extends MenuState
         super(manager);
         createMusic(false);
     }
-
+    //Add music to the menu
     private void createMusic(boolean activated){
         StateManager.music = Gdx.audio.newMusic(Gdx.files.internal("Music/Wii Sports - Wii Sports Theme.mp3"));
         StateManager.music.play();
