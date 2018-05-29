@@ -39,7 +39,7 @@ public class Game extends State3D {
     private Engine engine;
     private Ball ball;
     public Stage hud;
-
+    private boolean endGameState;
     private Stage pause;
     public boolean paused = false;
     private Terrain terrain;
@@ -62,6 +62,7 @@ public class Game extends State3D {
         this.terrain = terrain;
         player.setState(this);
         hole = terrain.getHole();
+        endGameState = false;
     }
 
     /**
@@ -246,14 +247,19 @@ public class Game extends State3D {
             return;
         }
     }
-    public boolean isHit(Ball ball) {
+    public boolean isHit(Ball ball, boolean testing) {
         Vector3 pos = ball.getPosition();
         if ((pos.x < hole.x + radius  || pos.x > hole.x - radius)&&(pos.y < hole.y + radius  || pos.y > hole.y - radius)) {
             if(ball.isStopped()){
                 return true;
             }
         }
+        if(!testing)
+        {
+            endGameState = true;
+        }
          return false;
+
     }
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors(){

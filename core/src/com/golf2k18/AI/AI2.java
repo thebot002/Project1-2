@@ -1,44 +1,46 @@
 package com.golf2k18.AI;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.handlers.Bot;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Goal;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.game.Game;
 
-public class AI2 {
-    private Ball ball;
-    private Terrain terrain;
-    private Game game;
-    private Vector3 goal;
-    public void AI(Game game){
-        this.game = game;
-        this.ball = game.getBall();
-        this.terrain = game.getTerrain();
-        this.goal = terrain.getHole();
-
-    }
-    public Vector3 holeInOne(){
+public class AI2 extends Bot {
+    public Vector3 holeInOne(Game game){
         Vector3 addVectors = new Vector3();
-        Vector3 ballOrigin = new Vector3();
-        ballOrigin = ball.getPosition();
+        Ball ball = game.getBall();
+        Terrain terrain = game.getTerrain();
+        Vector3 ballOrigin = ball.getPosition();
 
-        while(!game.isHit(ball))
+        while(!game.isHit(ball,true))
         {
-            Vector3 tryBall = fitness();
+            Vector3 tryBall = fitness(terrain,ball);
             addVectors = addVectors.add(tryBall);
             ball.hit(tryBall);
         }
         ball.setLocation(ballOrigin);
         return addVectors;
     }
-    private Vector3 fitness(){
+    private Vector3 fitness(Terrain terrain, Ball ball){
         Vector3 coordinates = new Vector3();
-        coordinates.x = goal.x - ball.getX();
-        coordinates.y = goal.y - ball.getY();
+        Vector3 hole = terrain.getHole();
+        coordinates.x = hole.x - ball.getX();
+        coordinates.y = hole.y - ball.getY();
         return coordinates;
     }
 
-
-
+    @Override
+    public void handleInput(Game game) {
+        super.handleInput(game);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            AI2 bot = new AI2();
+            Vector3 holeInOne = bot.holeInOne(game);
+            Ball ball = game.getBall();
+            ball.hit(holeInOne);
+        }
+    }
 }

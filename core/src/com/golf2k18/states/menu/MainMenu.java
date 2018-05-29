@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.golf2k18.AI.AI2;
 import com.golf2k18.handlers.Bot;
 import com.golf2k18.handlers.Human;
 import com.golf2k18.objects.CourseIO;
@@ -157,7 +158,7 @@ public class MainMenu extends MenuState
                     JOptionPane.showMessageDialog(null,"Bish you cant do that!!!");
                 }
                 else if(playerState.equals("Bot")){
-                    manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()),new Bot()));
+                    manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected()), new AI2()));
                 }
                 //manager.push(new Game(manager,CourseIO.getCourse(courseList.getSelected())));
                 //manager.push(new Game(manager,new Euler().getTerrain()));

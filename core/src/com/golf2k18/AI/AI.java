@@ -7,9 +7,9 @@ import com.golf2k18.objects.Goal;
 import com.golf2k18.objects.Terrain;
 
 public class AI {
-    private Ball ball;
+  /**  private Ball ball;
     private Terrain terrain;
-    private Goal goal;
+    private Vector3 goal;
     public void AI(Ball ball, Terrain terrain){
         this.ball = ball;
         this.terrain = terrain;
@@ -19,7 +19,7 @@ public class AI {
     public Vector3 holeInOne(){
         Vector3 addVectors = new Vector3();
 
-        while(!goal.isHit(ball))
+        while(!goal.isHit(ball, true))
         {
             Vector3 tryBall = fitness();
 
@@ -32,7 +32,7 @@ public class AI {
         coordinates.x = goal.x - ball.getX();
         coordinates.y = goal.y - ball.getY();
         return coordinates;
-    }
+    }*/
 
 
 
