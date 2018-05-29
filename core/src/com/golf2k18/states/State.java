@@ -2,9 +2,8 @@ package com.golf2k18.states;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.StateManager;
 
 /**
  *This is a super-class for every class that can be pushed onto the stack.
