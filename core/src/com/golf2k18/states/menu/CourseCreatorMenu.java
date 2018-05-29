@@ -5,6 +5,9 @@ import com.badlogic.gdx.utils.Array;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.StateManager;
 
+/**
+ * Class that describes the user interface for the course creator menu.
+ */
 public class CourseCreatorMenu extends SubMenu {
 
     private Table content;
