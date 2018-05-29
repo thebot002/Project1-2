@@ -42,9 +42,11 @@ public class Game extends State3D {
 
     private Stage pause;
     public boolean paused = false;
-
+    private Terrain terrain;
+    private Vector3 hole;
     public Slider directionInput;
     public Slider intensityInput;
+    private final double radius = .5;
 
     public HashMap<String,Label> labels;
     private Player player;
@@ -57,7 +59,9 @@ public class Game extends State3D {
     public Game(StateManager manager, Terrain terrain, Player player) {
         super(manager, terrain);
         this.player = player;
+        this.terrain = terrain;
         player.setState(this);
+        hole = terrain.getHole();
     }
 
     /**
@@ -241,6 +245,15 @@ public class Game extends State3D {
         if(ball.getPosition().x + (ball.getDiameter()/2) < 0){
             return;
         }
+    }
+    public boolean isHit(Ball ball) {
+        Vector3 pos = ball.getPosition();
+        if ((pos.x < hole.x + radius  || pos.x > hole.x - radius)&&(pos.y < hole.y + radius  || pos.y > hole.y - radius)) {
+            if(ball.isStopped()){
+                return true;
+            }
+        }
+         return false;
     }
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors(){
