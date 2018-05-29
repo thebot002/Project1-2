@@ -6,6 +6,9 @@ import com.golf2k18.objects.Goal;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.game.Game;
 
+/**
+ * The 2nd AI that can play the game. It tries to find the hole while always hitting the ball from the starting position.
+ */
 public class AI2 {
     private Ball ball;
     private Terrain terrain;
