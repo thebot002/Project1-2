@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Stack;
 
 /**
- * This class gives the code for derivating mathematical functions.
+ * This class handles the storing, evaluating an deriving of functions.
  */
 public class Formula implements Function, Serializable {
 
@@ -12,6 +12,10 @@ public class Formula implements Function, Serializable {
     private Node xDeriv;
     private Node yDeriv;
 
+	/**
+	 * Constructor for the formula class, it stores the formula, and it's x and y derivatives in binary expression trees.
+	 * @param postFix array that holds a formula in a post fix notation.
+	 */
     public Formula(String[] postFix)
     {
         Stack<Node> nodeStack = new Stack();
@@ -45,19 +49,29 @@ public class Formula implements Function, Serializable {
        yDeriv = yDerive(root);
     }
 
-    //For generating nodes in a binary tree
+	/**
+	 * Inner Class that is the nodes of the binary expression tree.
+	 */
 	private class Node implements Serializable
 	{
 		String value; //Each node has a value (either a number or an operator)
 		Node left, right; //Each node has 2 children
-		
+
+		/**
+		 * Constructor for the node class.
+		 * @param value the operator or value that is stored in the node.
+		 */
 		Node(String value)
 		{
 			this.value = value;
 			left = right = null;
         }
 	}
-	
+
+	/**
+	 * Method that checks if the value of a node is an operator or not.
+	 * @param s the value of the checked node.
+	 */
 	private boolean isOperator(String s)
 	{
 		if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("sin") || s.equals("cos"))
@@ -67,17 +81,42 @@ public class Formula implements Function, Serializable {
 		return false;
 	}
 
+	/**
+	 * Calls the evaluation method for the main tree.
+	 * @param x the x position on the function.
+	 * @param y the y position on the function.
+	 * @return the value of the evaluated tree.
+	 */
 	public float evaluateF(float x,float y){
         return evaluate(root,x,y);
     }
 
+	/**
+	 * Calls the evaluation method for the x derivation tree.
+	 * @param x the x position on the function.
+	 * @param y the y position on the function.
+	 * @return the evaluated value of the derived tree.
+	 */
     public float evaluateXDeriv(float x,float y){
         return evaluate(xDeriv,x,y);
     }
+
+	/**
+	 * Calls the evaluation method for the y derivation tree.
+	 * @param x the x position on the function.
+	 * @param y the y position on the function.
+	 * @return the evaluated value of the derived tree.
+	 */
     public float evaluateYDeriv(float x,float y){
         return evaluate(yDeriv,x,y);
     }
 
+	/**
+	 * Evaluates the value of a given tree.
+	 * @param xValue the x position on the function.
+	 * @param yValue the y position on the function.
+	 * @return the value of the evaluated tree.
+	 */
     private float evaluate(Node root, float xValue, float yValue)
 	{
 		if(!isOperator(root.value))
@@ -135,7 +174,12 @@ public class Formula implements Function, Serializable {
 			return (float)Math.cos(leftValue);
 		}
 	}
-	
+
+	/**
+	 * Calculates the partially derivation of a tree in the x direction.
+	 * @param root the root node of the tree from which to start deriving.
+	 * @return the tree of the partially derived function.
+	 */
 	private Node xDerive(Node root)
 	{
 		if(!isOperator(root.value))
@@ -249,7 +293,12 @@ public class Formula implements Function, Serializable {
 		
 		return tempNode;
 	}
-	
+
+	/**
+	 * Calculates the partially derivation of a tree in the y direction.
+	 * @param root the root node of the tree from which to start deriving.
+	 * @return the tree of the partially derived function.
+	 */
 	private Node yDerive(Node root)
 	{
 		if(!isOperator(root.value))
@@ -363,34 +412,4 @@ public class Formula implements Function, Serializable {
 		
 		return tempNode;
 	}
-	/*
-	float xPartial(Node root, float xValue, float yValue, float delta)
-	{
-		float startPoint = evaluate(root, xValue - delta, yValue);
-		float endPoint = evaluate(root, xValue + delta, yValue);
-		
-		float xSlope = (endPoint - startPoint) / (2 * delta);
-		
-		return xSlope;
-	}
-	
-	float yPartial(Node root, float xValue, float yValue, float delta)
-	{
-		float startPoint = evaluate(root, xValue, yValue - delta);
-		float endPoint = evaluate(root, xValue, yValue + delta);
-		
-		float ySlope = (endPoint - startPoint) / (2 * delta);
-		
-		return ySlope;
-	}*/
-	
-	/*public static void main(String[] args)
-	{
-		Formula f = new Formula();
-		Node N = f.constructTree(new String[] {"0.2", "y", "*", "sin", "0.1", "x", "*", "+", "0.03", "x", "2", "^", "*", "+"});
-		System.out.println(f.yPartial(N, 0, 1, 0.001));
-		Node xD = f.xDerive(N);
-		Node yD = f.yDerive(N);
-		System.out.println(f.evaluate(yD, 0, 1));
-	}*/
 }
