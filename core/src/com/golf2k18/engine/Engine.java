@@ -6,6 +6,9 @@ import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 
+/**
+ * Our physics engine
+ */
 public class Engine {
     protected Terrain terrain;
     private Ball ball;
@@ -15,6 +18,12 @@ public class Engine {
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
 
+    /**
+     * The class' constructor
+     * @param terrain the terrain
+     * @param ball the ball
+     * @param solver the solver for differential equations
+     */
     public Engine(Terrain terrain, Ball ball, Solver solver) {
         this.terrain = terrain;
         this.ball = ball;
@@ -26,6 +35,7 @@ public class Engine {
     public float getDt() {
         return dt;
     }
+
 
     private Vector3 calcGravity(Vector3 position)
     {
@@ -41,6 +51,13 @@ public class Engine {
         v.scl(-terrain.getMU()*mass*GRAVITY);
         return v;
     }
+
+    /**
+     * Calculates the acceleration of the ball
+     * @param position the ball's position at a certain time
+     * @param velocity the ball's velocity at a certain time
+     * @return the ball's acceleration
+     */
     public Vector3 getAcceleration(Vector3 position, Vector3 velocity)
     {
         Vector3 v = calcGravity(position);
@@ -90,7 +107,9 @@ public class Engine {
         n.scl(-1);
     }
 
-
+    /**
+     * Updates the ball's position
+     */
     public void updateBall(){
         dt = Gdx.graphics.getDeltaTime();
 
