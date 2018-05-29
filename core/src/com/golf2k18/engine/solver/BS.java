@@ -50,14 +50,15 @@ public class BS implements Solver {
 
             Vector3 difK = new Vector3(k).add(new Vector3(kp).scl(-1f));
 
+            float q = (float)Math.sqrt((e*currentH)/(2*difK.len()));
             if(difK.len() <= (e*currentH)){
                 newVel.add(k);
                 newPos.add(currentH);
                 h -= currentH;
-                currentH = h;
+                currentH = q*currentH;
+                if(currentH > h) currentH = h;
             }
             else{
-                float q = (float)Math.sqrt((e*currentH)/(2*difK.len()));
                 currentH = q*currentH;
             }
         }while (h>0);
@@ -107,14 +108,15 @@ public class BS implements Solver {
 
             Vector3 difK = new Vector3(k).add(new Vector3(kp).scl(-1f));
 
+            float q = (float)Math.sqrt((e*currentH)/(2*difK.len()));
             if(difK.len() <= (e*currentH)){
                 newPos.add(k);
                 newVel = newVel.add(currentH);
                 h -= currentH;
-                currentH = h;
+                currentH = q*currentH;
+                if(currentH > h) currentH = h;
             }
             else{
-                float q = (float)Math.sqrt((e*currentH)/(2*difK.len()));
                 currentH = q*currentH;
             }
         }while (h>0);

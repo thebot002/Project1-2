@@ -1,11 +1,14 @@
 package com.golf2k18.function;
 
 import com.badlogic.gdx.math.Vector3;
-import com.golf2k18.objects.Matrix;
+import com.golf2k18.models.Matrix;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ *This class is used to make splines interpolations.
+ */
 public class Spline implements Function, Serializable {
     private float[][] data;
     private Matrix[][] coefficients;
@@ -17,6 +20,12 @@ public class Spline implements Function, Serializable {
     private float[][] A1 = {{1,0,0,0},{0,0,1,0},{-3,3,-2,-1},{2,-2,1,1}};
     private float[][] A2 = {{1,0,-3,2},{0,0,3,-2},{0,1,-2,1},{0,0,-1,1}};
 
+    /**
+     * Constructor of the class
+     * @param data a matrix
+     * @param xDeriv
+     * @param yDeriv
+     */
     public Spline(float[][] data, float[][] xDeriv, float[][] yDeriv){
         this.data = data;
         coefficients = new Matrix[data.length-1][data[0].length-1];
@@ -35,6 +44,10 @@ public class Spline implements Function, Serializable {
         interpolate();
     }
 
+    /**
+     * The method to interpolate a spline
+     * @param data the matrix we know
+     */
     public Spline(float[][] data) {
         this.data = data;
         coefficients = new Matrix[data.length-1][data[0].length-1];

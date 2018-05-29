@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.objects.Terrain;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 import com.golf2k18.states.editor.TerrainEditor;
 
 public class EditorMenu extends SubMenu {

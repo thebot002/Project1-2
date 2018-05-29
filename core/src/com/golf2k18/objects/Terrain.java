@@ -98,9 +98,14 @@ public class Terrain implements Serializable {
      */
     public void setOffset(Vector3 offset){this.offset.set(offset);}
 
+    /**
+     * gives the diameter of the hole
+     * @return the hole's diameter
+     */
     public float getHOLE_DIAM() {
         return HOLE_DIAM;
     }
+
 
     public void toSpline(int interval){
         if(function instanceof Spline) return;

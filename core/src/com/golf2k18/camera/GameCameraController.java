@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
+/**
+ * Class that contains the game's camera controls, the keyboard's arrows are used to move the camera, and the mouse cursor to zoom in/out.
+ */
 public class GameCameraController extends InputAdapter {
 
     private final int ctrlKey = Input.Keys.CONTROL_LEFT;
