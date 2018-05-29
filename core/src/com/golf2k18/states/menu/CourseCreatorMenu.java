@@ -12,7 +12,10 @@ public class CourseCreatorMenu extends SubMenu {
 
     private Table content;
     private final String TITLE = "COURSE CREATOR";
-
+    /**
+     * Constructor for the CourseCreatorMenu class.
+     * @param manager object of the GameStateManager which is currently used.
+     */
     CourseCreatorMenu(StateManager manager) {
         super(manager);
         content = createContent();
