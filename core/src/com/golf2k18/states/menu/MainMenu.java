@@ -30,7 +30,10 @@ public class MainMenu extends MenuState
     private SelectBox<String> courseList;
     private Stage stage;
     public static boolean mute;
-
+    /**
+     * Constructor for the MainMenu class.
+     * @param manager object of the GameStateManager which is currently used.
+     */
     public MainMenu(StateManager manager) {
         super(manager);
         createMusic(false);
