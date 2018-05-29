@@ -69,6 +69,7 @@ public class Game extends State3D {
 
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
+        ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
 
         engine = new Engine(terrain, ball,new RK4());
         createHUD();
@@ -231,10 +232,11 @@ public class Game extends State3D {
         super.update(dt);
         if(!ball.isStopped()){
             engine.updateBall();
-            ball.setZ(engine.getTerrain().getFunction().evaluateF(ball.getX(),ball.getY()));
+            ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
         }
         else {
             player.handleInput(this);
+            System.out.println(ball.getPosition());
         }
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");

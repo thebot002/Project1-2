@@ -20,7 +20,7 @@ public class StateManager extends ApplicationAdapter {
     public static Music music;
     public static Skin skin;
 
-    private final boolean reset = true;
+    private final boolean reset = false;
 
     public StateManager() {
 		states = new Stack<State>();
