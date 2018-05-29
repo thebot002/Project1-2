@@ -16,10 +16,17 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.states.game.Game;
 
+/**
+ * Defines the properties if a person is playing the game.
+ */
 public class Human extends Player {
     private boolean manualMovement = false;
     private boolean down = false;
 
+    /**
+     * Manual movements that can be executed by a player, using the keyboard and the mouse.
+     * @param game the game that is played
+     */
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
