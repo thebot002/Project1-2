@@ -39,6 +39,9 @@ public class TerrainEditor extends State3D {
         super(manager, terrain);
     }
 
+    /**
+     * Creates the terrain according to the chosen function
+     */
     @Override
     public void create() {
         super.create();
@@ -76,6 +79,11 @@ public class TerrainEditor extends State3D {
         }
     }
 
+    /**
+     *Input handler for the terrain editor class
+     * @param amount
+     * @return the slopes
+     */
     @Override
     public boolean scrolled(int amount) {
         ArrayList<Vector3> newData = new ArrayList<>();
@@ -90,6 +98,14 @@ public class TerrainEditor extends State3D {
         return super.scrolled(amount);
     }
 
+    /**
+     * Controls for the camera
+     * @param screenX x coordinate
+     * @param screenY y coordinate
+     * @param pointer mouse pointer
+     * @param button
+     * @return new camera position
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(button == 0) {
@@ -132,6 +148,12 @@ public class TerrainEditor extends State3D {
         return new Vector3(x,y,0);
     }
 
+    /**
+     * Converts the screen's (X,Y) coordinates into actual game coordinates for the camera
+     * @param screenX x coordinate
+     * @param screenY y coordinate
+     * @return the game coordinates
+     */
     public int getObject (int screenX, int screenY) {
         Ray ray = camera.getPickRay(screenX, screenY);
 
