@@ -1,4 +1,4 @@
-package com.golf2k18.states;
+package com.golf2k18;
 
 import java.util.Stack;
 
@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.golf2k18.function.Formula;
 import com.golf2k18.function.Spline;
 import com.golf2k18.objects.*;
+import com.golf2k18.states.State;
 import com.golf2k18.states.menu.MainMenu;
 
 public class StateManager extends ApplicationAdapter {

@@ -10,9 +10,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.Array;
-import com.golf2k18.objects.HeightField;
+import com.golf2k18.StateManager;
+import com.golf2k18.models.HeightField;
 import com.golf2k18.objects.Terrain;
-import com.golf2k18.objects.TerrainModel;
+import com.golf2k18.models.TerrainModel;
 import com.golf2k18.camera.GameCameraController;
 
 /**
@@ -20,7 +21,7 @@ import com.golf2k18.camera.GameCameraController;
  */
 public abstract class State3D extends State {
     protected PerspectiveCamera camera;
-    protected GameCameraController controller;
+    public GameCameraController controller;
     private ModelBatch batch;
     protected Array<ModelInstance> instances = new Array<>();
 
@@ -119,9 +120,19 @@ public abstract class State3D extends State {
         }
     }
 
-    public abstract void handleInput();
     public void update(float dt){
         camera.update();
-        handleInput();
+    }
+
+    public PerspectiveCamera getCamera() {
+        return camera;
+    }
+
+    public Array<ModelInstance> getInstances() {
+        return instances;
+    }
+
+    public Terrain getTerrain() {
+        return terrain;
     }
 }

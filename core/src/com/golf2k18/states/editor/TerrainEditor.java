@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.function.Spline;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
-import com.golf2k18.states.StateManager;
+import com.golf2k18.StateManager;
 
 import java.util.ArrayList;
 
@@ -170,11 +170,6 @@ public class TerrainEditor extends State3D {
 
     @Override
     public void resume() {
-
-    }
-
-    @Override
-    public void handleInput() {
 
     }
 }

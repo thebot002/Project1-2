@@ -1,7 +1,7 @@
 package com.golf2k18.function;
 
 import com.badlogic.gdx.math.Vector3;
-import com.golf2k18.objects.Matrix;
+import com.golf2k18.models.Matrix;
 
 import java.io.Serializable;
 import java.util.ArrayList;
