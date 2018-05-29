@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.states.game.Game;
 
 /**
- * Defines the properties if a person is playing the game.
+ * Defines the properties the different gams commands if it is being played by a human.
  */
 public class Human extends Player {
     private boolean manualMovement = false;
