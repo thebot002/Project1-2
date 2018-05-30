@@ -71,10 +71,13 @@ public class MainMenu extends MenuState
         //Drowpdown inputSource
         final SelectBox<String> inputSource = new SelectBox<String>(StateManager.skin);
         Array<String> inputSources = new Array<String>();
-        inputSources.add("UserInput");
-        inputSources.add("Read from file");
+        inputSources.add("Euler");
+        inputSources.add("Runge Kutta (Order 4)");
+        inputSources.add("Adams Bashforth (Four Stage)");
+        inputSources.add("Predictor-Corrector (Three Stage)");
+
         inputSource.setItems(inputSources);
-        inputSource.addListener(new ChangeListener() {
+        /*inputSource.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(inputSource.getSelected() == "Read from file")
@@ -86,7 +89,7 @@ public class MainMenu extends MenuState
                     setVisPath(false);
                 }
             }
-        });
+        });*/
         table.add(inputSource).center().fillX().pad(10f).colspan(2);
         table.row();
 

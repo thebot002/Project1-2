@@ -45,8 +45,17 @@ public class Formula implements Function, Serializable {
         }
         root = nodeStack.peek();
 
-       xDeriv = xDerive(root);
-       yDeriv = yDerive(root);
+        xDeriv = xDerive(root);
+        yDeriv = yDerive(root);
+
+        boolean x = false;
+        boolean y = false;
+        for (String s: postFix) {
+            if (s.equals("x")) x = true;
+            if (s.equals("y")) y = true;
+        }
+        if(!x) xDeriv = new Node("0");
+        if(!y) yDeriv = new Node("0");
     }
 
 	/**

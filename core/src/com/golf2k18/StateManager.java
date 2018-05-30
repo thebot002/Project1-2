@@ -98,19 +98,27 @@ public class StateManager extends ApplicationAdapter {
         Terrain c5 = new Terrain(width,height,start,goal,new Formula(flat),"Plane");
         CourseIO.writeFile(c5);
 
-        float[][] flatinter = new float[width][height];
-		for (int i = 0; i < flatinter.length; i++) {
+        float[][] flatinter = new float[width+1][height+1];
+        float[][] xDeriv = new float[width+1][height+1];
+        float[][] yDeriv = new float[width+1][height+1];
+        for (int i = 0; i < flatinter.length; i++) {
 			for (int j = 0; j < flatinter[0].length; j++) {
 				flatinter[i][j] = 1;
 			}
 		}
-		flatinter[9][10] = 2;
+        for (int i = 0; i < flatinter[0].length; i++) {
+            flatinter[0][i] = 4;
+            xDeriv[0][i] = -2f;
+            flatinter[1][i] = 2;
+            xDeriv[1][i] = -1f;
+        }
+		/*flatinter[9][10] = 2;
         flatinter[10][9] = 2;
         flatinter[11][10] = 2;
         flatinter[10][11] = 2;
 		flatinter[10][10] = 3;
-        Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter),"PlaneSpline");
-		CourseIO.writeFile(c6);
+        Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter,xDeriv,yDeriv),"PlaneSpline");
+		CourseIO.writeFile(c6);*/
 
 		//String[] sq = {"2","^","(","x","-","11",")"};
        // Terrain c7 = new Terrain(width,height,start,goal,new Formula(sq),"Sq");
