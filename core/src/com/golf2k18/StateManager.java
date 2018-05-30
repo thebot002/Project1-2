@@ -23,7 +23,7 @@ public class StateManager extends ApplicationAdapter {
     public static Music music;
     public static Skin skin;
 
-    private final boolean reset = false;
+    private final boolean reset = true;
 
     public StateManager() {
 		states = new Stack<>();
@@ -112,8 +112,8 @@ public class StateManager extends ApplicationAdapter {
         Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter),"PlaneSpline");
 		CourseIO.writeFile(c6);
 
-		String[] sq = {"2","^","(","x","-","11",")"};
-        Terrain c7 = new Terrain(width,height,start,goal,new Formula(sq),"Sq");
-        CourseIO.writeFile(c7);
+		//String[] sq = {"2","^","(","x","-","11",")"};
+       // Terrain c7 = new Terrain(width,height,start,goal,new Formula(sq),"Sq");
+       // CourseIO.writeFile(c7);
     }
 }
