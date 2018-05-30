@@ -245,14 +245,16 @@ public class Formula implements Function, Serializable {
 		if(root.value.equals("^"))
 		{
 			Node tempNode = new Node("*");
+			tempNode.left = new Node("*");
 			tempNode.right = new Node("^");
 			tempNode.right.right = new Node("-");
 			tempNode.right.right.right = new Node("1");
-			 
-			tempNode.left = root.right;
+
+			tempNode.left.left =  xDerive(root.left);
+			tempNode.left.right = root.right;
 			tempNode.right.left = root.left;
 			tempNode.right.right.left = root.right;
-			
+
 			return tempNode;
 		}
 		
@@ -364,11 +366,13 @@ public class Formula implements Function, Serializable {
 		if(root.value.equals("^"))
 		{
 			Node tempNode = new Node("*");
+			tempNode.left = new Node("*");
 			tempNode.right = new Node("^");
 			tempNode.right.right = new Node("-");
 			tempNode.right.right.right = new Node("1");
-			 
-			tempNode.left = root.right;
+
+			tempNode.left.left =  yDerive(root.left);
+			tempNode.left.right = root.right;
 			tempNode.right.left = root.left;
 			tempNode.right.right.left = root.right;
 			
