@@ -39,22 +39,24 @@ public class Game extends State3D {
     private Engine engine;
     private Ball ball;
     public Stage hud;
-    private boolean endGameState;
     private Stage pause;
     public boolean paused = false;
     private Terrain terrain;
     private Vector3 hole;
     public Slider directionInput;
     public Slider intensityInput;
-    private final double radius = .5;
+    private float radius;
+    private float marginRaduius;
+    private StateManager manager;
 
-    public HashMap<String,Label> labels;
+    public HashMap<String, Label> labels;
 
 
     private Player player;
 
     /**
      * Constructor for the Game class.
+     *
      * @param manager Instance of the GameManager which is currently used.
      * @param terrain Instance of the Terrain class which was selected by the user in the menus.
      */
@@ -64,7 +66,9 @@ public class Game extends State3D {
         this.terrain = terrain;
         player.setState(this);
         hole = terrain.getHole();
-        endGameState = false;
+        marginRaduius = .6f;
+        radius = terrain.getHOLE_DIAM() / 2 + marginRaduius;
+        this.manager = manager;
     }
 
     /**
@@ -76,26 +80,26 @@ public class Game extends State3D {
 
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
-        ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
+        ball.setZ(terrain.getFunction().evaluateF(ball.getX(), ball.getY()));
 
-        engine = new Engine(terrain, ball,new AM3()); //HERREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        engine = new Engine(terrain, ball, new AM3()); //HERREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
     }
 
     //Method which creates the HUD for the game.
-    private void createHUD(){
+    private void createHUD() {
         hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
         //creation of labels
         labels = new HashMap<>();
-        labels.put("score",new Label("Score",StateManager.skin));
+        labels.put("score", new Label("Score", StateManager.skin));
         labels.put("par", new Label("Par: ", StateManager.skin));
-        labels.put("title", new Label("Hole "+terrain.getName(), StateManager.skin,"title"));
-        labels.put("focus", new Label("",StateManager.skin));
-        labels.put("distance", new Label("Distance to hole:",StateManager.skin));
-        labels.put("speed", new Label("Speed:",StateManager.skin));
+        labels.put("title", new Label("Hole " + terrain.getName(), StateManager.skin, "title"));
+        labels.put("focus", new Label("", StateManager.skin));
+        labels.put("distance", new Label("Distance to hole:", StateManager.skin));
+        labels.put("speed", new Label("Speed:", StateManager.skin));
 
         //used to organise the different input elements
         Table table = new Table();
@@ -119,58 +123,59 @@ public class Game extends State3D {
 
         //direction field
         HorizontalGroup directionGroup = new HorizontalGroup();
-        Label directionText = new Label("Direction: ",StateManager.skin);
+        Label directionText = new Label("Direction: ", StateManager.skin);
         directionGroup.addActor(directionText);
-        directionInput = new Slider(-180f,180f,1,false,StateManager.skin);
+        directionInput = new Slider(-180f, 180f, 1, false, StateManager.skin);
         directionInput.setValue(0);
         directionGroup.addActor(directionInput);
         inputGroup.addActor(directionGroup);
 
         //intensity field
         HorizontalGroup intensityGroup = new HorizontalGroup();
-        Label intensityText = new Label("Intensity: ",StateManager.skin);
+        Label intensityText = new Label("Intensity: ", StateManager.skin);
         intensityGroup.addActor(intensityText);
-        intensityInput = new Slider(1f,20f,1,false,StateManager.skin);
+        intensityInput = new Slider(1f, 20f, 1, false, StateManager.skin);
         intensityGroup.addActor(intensityInput);
         inputGroup.addActor(intensityGroup);
 
         //hit button
-        TextButton hitButton = new TextButton("Hit",StateManager.skin);
-        hitButton.addListener(new ClickListener(){
+        TextButton hitButton = new TextButton("Hit", StateManager.skin);
+        hitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 double dir = directionInput.getValue();
                 double intensity = intensityInput.getValue();
 
-                ball.hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
+                ball.hit(new Vector3((float) (Math.cos(Math.toRadians(dir)) * intensity), (float) (Math.sin(Math.toRadians(dir)) * intensity), 0));
             }
         });
         inputGroup.addActor(hitButton);
         table.add(inputGroup).center().bottom().pad(10f);
 
         VerticalGroup ballInfo = new VerticalGroup();
-        Label distance = new Label("Distance to hole: ",StateManager.skin);
+        Label distance = new Label("Distance to hole: ", StateManager.skin);
         ballInfo.addActor(distance);
 
-        Label speed = new Label("Ball speed: ",StateManager.skin);
+        Label speed = new Label("Ball speed: ", StateManager.skin);
         ballInfo.addActor(speed);
 
         table.add(ballInfo).bottom().right().pad(10f);
 
         hud.addActor(table);
     }
+
     //Method which creates the pause state to push to the gameManager to temporarily pause the game.
-    private void createPause(){
+    private void createPause() {
         pause = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
         Table organizer = new Table();
         organizer.setFillParent(true);
 
-        Label pauseText = new Label("Paused",StateManager.skin,"title");
+        Label pauseText = new Label("Paused", StateManager.skin, "title");
         organizer.add(pauseText).center().pad(20f);
 
-        TextButton settings = new TextButton("Settings",StateManager.skin);
-        settings.addListener(new ClickListener(){
+        TextButton settings = new TextButton("Settings", StateManager.skin);
+        settings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             }
@@ -179,7 +184,7 @@ public class Game extends State3D {
         organizer.add(settings).top().pad(10f);
 
         TextButton menu = new TextButton("MainMenu", StateManager.skin);
-        menu.addListener(new ClickListener(){
+        menu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 manager.pop();
@@ -189,7 +194,7 @@ public class Game extends State3D {
         organizer.add(menu).top().pad(10f);
 
         TextButton resume = new TextButton("Resume", StateManager.skin);
-        resume.addListener(new ClickListener(){
+        resume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 resume();
@@ -206,9 +211,9 @@ public class Game extends State3D {
         super.render();
         hud.act();
         hud.draw();
-        if(paused){
+        if (paused) {
             pause.getBatch().begin();
-            pause.getBatch().draw(new Texture("Textures/grey_background.png"),0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            pause.getBatch().draw(new Texture("Textures/grey_background.png"), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             pause.getBatch().end();
 
             pause.act();
@@ -237,26 +242,25 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(!ball.isStopped()){
+        if (!ball.isStopped()) {
             engine.updateBall();
-            ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
-        }
-        else {
+            ball.setZ(terrain.getFunction().evaluateF(ball.getX(), ball.getY()));
+        } else {
             player.handleInput(this);
         }
         isHit(ball);
-        if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
+        if (controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
     }
 
     public boolean isHit(Ball ball) {
         Vector3 pos = ball.getPosition();
         boolean hit = false;
+        System.out.println(pos.dst(hole));
         if ((pos.dst(hole) < radius)) {
             System.out.println("between ifs");
             if (ball.isStopped()) {
                 System.out.println("Goaall!!!");
-                endGameState = true;
                 hit = true;
             } else {
                 System.out.println("not stopped");
@@ -267,16 +271,21 @@ public class Game extends State3D {
         }
         return hit;
     }
+
     //Setting inputProcessor that processes the key-events and stuff like that.
-    public void setProcessors(){
+    public void setProcessors() {
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
     }
 
     public Ball getBall() {
         return ball;
     }
+
     public Player getPlayer() {
         return player;
+    }
+    public StateManager getStateManager(){
+        return this.manager;
     }
 
 }
