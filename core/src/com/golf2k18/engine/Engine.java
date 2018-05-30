@@ -15,8 +15,8 @@ public class Engine {
     private float mass;
     private final float GRAVITY = 9.81f;
     protected final double STOP_TOLERANCE = 0.2;
-    //protected float dt = 0.1f;
-    protected float dt = Gdx.graphics.getDeltaTime();
+    protected float dt = 0.001f;
+    //protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
 
     /**
@@ -67,6 +67,23 @@ public class Engine {
         return v;
     }
 
+    /**
+     * Updates the ball's position
+     */
+    public void updateBall(){
+        //dt = Gdx.graphics.getDeltaTime();
+
+        Vector3 position = ball.getPosition();
+        Vector3 velocity = ball.getVelocity();
+
+        Vector3 newVel = sherlock.solveVel(new Vector3(position),new Vector3(velocity));
+        ball.updateVelocity(new Vector3(newVel));
+        Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(velocity));
+        ball.updateLocation(newPos);
+
+        updateBall(newPos,newVel);
+    }
+
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
         if(velocity.len() <= STOP_TOLERANCE && (calcGravity(position).len() / mass) <= STOP_TOLERANCE) ball.setStopped();
@@ -108,24 +125,7 @@ public class Engine {
         n.scl(-1);
     }
 
-    /**
-     * Updates the ball's position
-     */
-    public void updateBall(){
-        dt = Gdx.graphics.getDeltaTime();
-
-        Vector3 position = ball.getPosition();
-        Vector3 velocity = ball.getVelocity();
-
-        Vector3 newVel = sherlock.solveVel(new Vector3(position),velocity);
-        ball.updateVelocity(new Vector3(newVel));
-        Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(newVel));
-        ball.updateLocation(newPos);
-
-        updateBall(newPos,newVel);
-    }
-
-    public Terrain getTerrain() {
-        return terrain;
+    public void sclDt(float scl){
+        dt = dt * scl;
     }
 }

@@ -26,7 +26,7 @@ public class StateManager extends ApplicationAdapter {
     private final boolean reset = false;
 
     public StateManager() {
-		states = new Stack<State>();
+		states = new Stack<>();
 	}
 
     /**
@@ -111,5 +111,9 @@ public class StateManager extends ApplicationAdapter {
 		flatinter[10][10] = 3;
         Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter),"PlaneSpline");
 		CourseIO.writeFile(c6);
+
+		String[] sq = {"2","^","(","x","-","11",")"};
+        Terrain c7 = new Terrain(width,height,start,goal,new Formula(sq),"Sq");
+        CourseIO.writeFile(c7);
     }
 }

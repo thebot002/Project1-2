@@ -76,7 +76,7 @@ public class Game extends State3D {
         instances.add(ball.getModel());
         ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
 
-        engine = new Engine(terrain, ball,new RK4());
+        engine = new Engine(terrain, ball,new AM3()); //HERREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
@@ -241,7 +241,6 @@ public class Game extends State3D {
         }
         else {
             player.handleInput(this);
-            //System.out.println(ball.getPosition());
         }
         isHit(ball);
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
@@ -260,7 +259,6 @@ public class Game extends State3D {
         }
         //System.out.println("Missss");
         return false;
-
     }
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors(){
