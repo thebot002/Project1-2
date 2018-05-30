@@ -1,7 +1,6 @@
 package com.golf2k18.states.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,9 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.golf2k18.AI.AI;
-import com.golf2k18.AI.AI2;
-import com.golf2k18.handlers.Bot;
+import com.golf2k18.ai.AI2;
 import com.golf2k18.handlers.Human;
 import com.golf2k18.objects.CourseIO;
 import com.golf2k18.states.MenuState;
@@ -158,10 +155,10 @@ public class MainMenu extends MenuState
             {
                 String playerState = dropDown.getSelected();
                /** Bot bot = null;
-                if(AISelectMenu.AI.equals("AI1")) {
-                    bot = new AI();
+                if(AISelectMenu.ai.equals("AI1")) {
+                    bot = new ai();
                 }
-                else if(AISelectMenu.AI.equals("AI2")){
+                else if(AISelectMenu.ai.equals("AI2")){
                     bot = new AI2();
                 }*/
                 if(playerState.equals("Single player")){
@@ -180,8 +177,8 @@ public class MainMenu extends MenuState
         table.add(start).center().fillX().pad(10f);
         table.row();
 
-        //Select AI menu
-        TextButton selectAI = new TextButton("Choose AI", StateManager.skin, "default");
+        //Select ai menu
+        TextButton selectAI = new TextButton("Choose ai", StateManager.skin, "default");
         selectAI.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

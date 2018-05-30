@@ -1,4 +1,4 @@
-package com.golf2k18.states.menu.EndStates;
+package com.golf2k18.states.menu.endStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,12 +9,11 @@ import com.golf2k18.StateManager;
 import com.golf2k18.states.MenuState;
 
 /**
- * Describes the state of the game if the player wins. If he does, a message "You won!" will be displayed,
- * and the user will be asked to enter his username so the game can save it.
+ * Desccribes the state of the game if the user loses, offering him the option to retry
  */
-public class WinState extends MenuState {
+public class LoseState extends MenuState {
     private Stage stage;
-    public WinState(StateManager manager) {
+    public LoseState(StateManager manager) {
         super(manager);
     }
 
@@ -31,13 +30,13 @@ public class WinState extends MenuState {
         table.setFillParent(true);
 
         //WinTitle label
-        Label win = new Label("You won!", StateManager.skin, "Title");
+        Label win = new Label("You lost!", StateManager.skin, "Title");
         table.add(win).expand().center().top().padTop(50f);
         table.row();
 
-        //TextField text
-        TextField textField = new TextField("Enter username for highscores", StateManager.skin, "default");
-        table.add(textField);
+        //RetryButton Button
+        Button retry = new TextButton("Retry", StateManager.skin, "default");
+        table.add(retry);
         table.row();
 
         //returnButton Button

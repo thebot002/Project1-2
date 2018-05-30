@@ -49,6 +49,8 @@ public class Game extends State3D {
     private final double radius = .5;
 
     public HashMap<String,Label> labels;
+
+
     private Player player;
 
     /**
@@ -76,7 +78,7 @@ public class Game extends State3D {
         instances.add(ball.getModel());
         ball.setZ(terrain.getFunction().evaluateF(ball.getX(),ball.getY()));
 
-        engine = new Engine(terrain, ball,new RK4());
+        engine = new Engine(terrain, ball,new AM3()); //HERREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
@@ -241,31 +243,29 @@ public class Game extends State3D {
         }
         else {
             player.handleInput(this);
-            //System.out.println(ball.getPosition());
         }
+        isHit(ball);
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
-        if(ball.getPosition().x + (ball.getDiameter()/2) < 0){
-            return;
-        }
     }
-    public boolean isHit(Ball ball, boolean testing) {
-        Vector3 pos = ball.getPosition();
-        if ((pos.x > hole.x - radius && pos.x > hole.x + radius)) {
-            if(pos.y < hole.y - radius  && pos.y < hole.y + radius){
-                if (ball.isStopped()) {
-                   System.out.println("Goaall!!!");
-                    return true;
-                }
-            }
-        }
-        if(!testing)
-        {
-            endGameState = true;
-        }
-        System.out.println("Missss");
-        return false;
 
+    public boolean isHit(Ball ball) {
+        Vector3 pos = ball.getPosition();
+        boolean hit = false;
+        if ((pos.dst(hole) < radius)) {
+            System.out.println("between ifs");
+            if (ball.isStopped()) {
+                System.out.println("Goaall!!!");
+                endGameState = true;
+                hit = true;
+            } else {
+                System.out.println("not stopped");
+            }
+        } else {
+            //System.out.println("Missss");
+
+        }
+        return hit;
     }
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors(){
@@ -275,4 +275,8 @@ public class Game extends State3D {
     public Ball getBall() {
         return ball;
     }
+    public Player getPlayer() {
+        return player;
+    }
+
 }
