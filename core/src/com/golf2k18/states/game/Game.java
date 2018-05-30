@@ -49,6 +49,8 @@ public class Game extends State3D {
     private final double radius = .5;
 
     public HashMap<String,Label> labels;
+
+
     private Player player;
 
     /**
@@ -246,19 +248,24 @@ public class Game extends State3D {
         if(controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
     }
+
     public boolean isHit(Ball ball) {
         Vector3 pos = ball.getPosition();
-        if ((pos.x > hole.x - radius && pos.x > hole.x + radius)) {
-            if(pos.y < hole.y - radius  && pos.y < hole.y + radius){
-                if (ball.isStopped()) {
-                   System.out.println("Goaall!!!");
-                   endGameState = true;
-                    return true;
-                }
+        boolean hit = false;
+        if ((pos.dst(hole) < radius)) {
+            System.out.println("between ifs");
+            if (ball.isStopped()) {
+                System.out.println("Goaall!!!");
+                endGameState = true;
+                hit = true;
+            } else {
+                System.out.println("not stopped");
             }
+        } else {
+            //System.out.println("Missss");
+
         }
-        //System.out.println("Missss");
-        return false;
+        return hit;
     }
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors(){
@@ -268,4 +275,8 @@ public class Game extends State3D {
     public Ball getBall() {
         return ball;
     }
+    public Player getPlayer() {
+        return player;
+    }
+
 }

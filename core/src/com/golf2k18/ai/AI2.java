@@ -12,31 +12,22 @@ import com.golf2k18.states.game.Game;
  * The 2nd ai that can play the game. It tries to find the hole while always hitting the ball from the starting position.
  */
 public class AI2 extends Bot {
-private int cnt = 0;
+
+    private static Vector3 addVectors;
+        public AI2() {
+        addVectors = new Vector3();
+     }
+
     /*
     public Vector3 holeInOne(Game game) {
-        System.out.println("hey im here!");
-        Vector3 addVectors = new Vector3();
+        addVectors = new Vector3();
         Ball ball = game.getBall();
         Terrain terrain = game.getTerrain();
-        Vector3 ballOrigin = ball.getPosition();
-        for (int i = 0; i < 5; i++) {
-            ball.hit(new Vector3(1f, 1f, 0f));
-        }
-
-        while (!game.isHit(ball)) {
-            System.out.println("loooop");
-            Vector3 tryBall = fitness(terrain,ball);
-            addVectors = addVectors.add(tryBall);
-            ball.hit(new Vector3(1f, 1f, 0f));
-
-        }
-
-        ball.setLocation(ballOrigin);
         return addVectors;
 
     }
-*/
+    */
+
     private Vector3 fitness(Terrain terrain, Ball ball) {
         Vector3 coordinates = new Vector3();
         Vector3 hole = terrain.getHole();
@@ -52,8 +43,15 @@ private int cnt = 0;
         {
 
             if(!game.isHit(game.getBall())){
-                game.getBall().hit(new Vector3(5f,5f,0f));
+                    Terrain terrain = game.getTerrain();
+                    Ball ball =  game.getBall();
+                    Vector3 tryBall = fitness(terrain,ball);
+                   // addVectors = addVectors.add(tryBall);
+                    ball.hit(tryBall);
+
+
             }
+
 
         }
     }
