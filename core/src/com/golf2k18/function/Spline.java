@@ -23,8 +23,8 @@ public class Spline implements Function, Serializable {
     /**
      * Constructor of the class
      * @param data a matrix
-     * @param xDeriv
-     * @param yDeriv
+     * @param xDeriv derivative of x
+     * @param yDeriv derivative of y
      */
     public Spline(float[][] data, float[][] xDeriv, float[][] yDeriv){
         this.data = data;
