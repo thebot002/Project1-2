@@ -20,15 +20,7 @@ public class AI2 extends Bot {
         addVectors = new Vector3();
     }
 
-    /*
-    public Vector3 holeInOne(Game game) {
-        addVectors = new Vector3();
-        Ball ball = game.getBall();
-        Terrain terrain = game.getTerrain();
-        return addVectors;
-
-    }
-    */
+   */
 
     private Vector3 fitness(Terrain terrain, Ball ball) {
         Vector3 coordinates = new Vector3();
@@ -51,21 +43,6 @@ public class AI2 extends Bot {
         else{
             game.getStateManager().push(new WinState(game.getStateManager()));
         }
-        /*
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
 
-            while (!game.isHit(game.getBall())) {
-                Terrain terrain = game.getTerrain();
-                Ball ball = game.getBall();
-                Vector3 tryBall = fitness(terrain, ball);
-                // addVectors = addVectors.add(tryBall);
-                ball.hit(tryBall);
-            }
-            if(game.isHit(game.getBall())){
-                game.getStateManager().push(new WinState(game.getStateManager()));
-
-            }
-        }
-        */
     }
 }
