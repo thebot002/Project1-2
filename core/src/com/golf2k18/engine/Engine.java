@@ -82,6 +82,9 @@ public class Engine {
         ball.updateLocation(newPos);
 
         updateBall(newPos,newVel);
+        if(ball.getPosition().z <= 0){
+            ball.updateLocation(position);
+        }
     }
 
     protected void updateBall(Vector3 position, Vector3 velocity){
