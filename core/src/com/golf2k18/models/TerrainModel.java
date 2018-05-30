@@ -71,7 +71,7 @@ public class TerrainModel {
                 0, terrain.getHeight(),0,
                 0,0,1,
                 new Material(TextureAttribute.createDiffuse(new Texture("Textures/water.png"))),attr);
-        //world.add(new ModelInstance(water,0,0,0));
+        world.add(new ModelInstance(water,0,0,0));
 
         float height_border = 20f;
         float width_border = 0.5f;

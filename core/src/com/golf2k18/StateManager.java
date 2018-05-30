@@ -75,7 +75,7 @@ public class StateManager extends ApplicationAdapter {
     public void reset(){
 		int width = 20;
 		int height = 20;
-		Vector3 start = new Vector3(10,10,0);
+		Vector3 start = new Vector3(3,3,0);
 		Vector3 goal = new Vector3(15,15,0);
 
 		String[] cosx = {"x","cos"};
