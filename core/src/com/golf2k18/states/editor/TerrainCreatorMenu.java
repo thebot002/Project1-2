@@ -1,4 +1,4 @@
-package com.golf2k18.states.menu;
+package com.golf2k18.states.editor;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -8,6 +8,7 @@ import com.golf2k18.function.Formula;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.StateManager;
+import com.golf2k18.states.SubMenu;
 
 import javax.swing.*;
 
@@ -29,7 +30,7 @@ public class TerrainCreatorMenu extends SubMenu {
      * Constructor for the TerrainCreatorMenu class.
      * @param manager object of the GameStateManager which is currently used.
      */
-    TerrainCreatorMenu(StateManager manager) {
+    public TerrainCreatorMenu(StateManager manager) {
         super(manager);
     }
 

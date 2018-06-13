@@ -5,12 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.golf2k18.io.DataIO;
 import com.golf2k18.states.MenuState;
 import com.golf2k18.StateManager;
+import com.golf2k18.states.editor.EditorMenu;
 
 /**
  * Class that describes the user interface for the main menu, including the skin and the music.

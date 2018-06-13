@@ -10,6 +10,7 @@ import com.golf2k18.handlers.Player;
 import com.golf2k18.handlers.ai.AI;
 import com.golf2k18.handlers.ai.AI2;
 import com.golf2k18.objects.Course;
+import com.golf2k18.states.SubMenu;
 import com.golf2k18.states.game.Game;
 
 import java.util.ArrayList;

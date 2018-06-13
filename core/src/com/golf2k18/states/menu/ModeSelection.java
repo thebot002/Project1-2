@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.StateManager;
 import com.golf2k18.handlers.Human;
 import com.golf2k18.objects.Course;
+import com.golf2k18.states.SubMenu;
 import com.golf2k18.states.game.Game;
 
 public class ModeSelection extends SubMenu {

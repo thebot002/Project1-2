@@ -10,6 +10,7 @@ import com.golf2k18.StateManager;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.Course;
 import com.golf2k18.objects.Terrain;
+import com.golf2k18.states.SubMenu;
 
 public class TerrainSelection extends SubMenu {
     private static final String TITLE = "TERRAIN SELECTION";
@@ -85,7 +86,7 @@ public class TerrainSelection extends SubMenu {
                 manager.push(new ModeSelection(manager,course));
             }
         });
-        rightCol.add(next);
+        rightCol.add(next).padTop(30f);
 
         content.add(rightCol);
     }

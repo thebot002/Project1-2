@@ -1,4 +1,4 @@
-package com.golf2k18.states.menu;
+package com.golf2k18.states.editor;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.StateManager;
+import com.golf2k18.states.SubMenu;
+import com.golf2k18.states.editor.CourseCreatorMenu;
+import com.golf2k18.states.editor.TerrainCreatorMenu;
 import com.golf2k18.states.editor.TerrainEditor;
 
 /**
@@ -21,7 +24,7 @@ public class EditorMenu extends SubMenu {
      * Constructor for the EditorMenu class.
      * @param manager object of the GameStateManager which is currently used.
      */
-    EditorMenu(StateManager manager) {
+    public EditorMenu(StateManager manager) {
         super(manager);
     }
 
@@ -45,7 +48,7 @@ public class EditorMenu extends SubMenu {
         content.row();
 
         //"Create custom terrain" button
-        TextButton splineTerrain = new TextButton("Create custom terrain",StateManager.skin);
+        TextButton splineTerrain = new TextButton("Create custom terrain (Splines)",StateManager.skin);
         splineTerrain.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -58,7 +61,7 @@ public class EditorMenu extends SubMenu {
         content.add(splineTerrain).pad(10f).fillX();
         content.row();
         //"Create terrain" button
-        TextButton courseCreation = new TextButton("Create terrain",StateManager.skin);
+        TextButton courseCreation = new TextButton("Create course",StateManager.skin);
         courseCreation.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

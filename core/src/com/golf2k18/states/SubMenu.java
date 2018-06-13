@@ -1,4 +1,4 @@
-package com.golf2k18.states.menu;
+package com.golf2k18.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -20,7 +20,7 @@ public abstract class SubMenu extends MenuState {
 
     private boolean debug = false;
 
-    SubMenu(StateManager manager) {
+    public SubMenu(StateManager manager) {
         super(manager);
     }
 

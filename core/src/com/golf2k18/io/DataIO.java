@@ -59,6 +59,7 @@ public class DataIO {
         }
         catch (InvalidClassException e){
             StateManager.reset();
+            return getTerrain(name);
         }
         catch (ClassNotFoundException | IOException e){
             System.out.print(data_folder.path() + "/Terrains/" + name + ".ser");
