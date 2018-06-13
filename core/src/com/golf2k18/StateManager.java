@@ -8,10 +8,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.golf2k18.function.Formula;
-import com.golf2k18.function.Spline;
+import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.*;
 import com.golf2k18.states.State;
 import com.golf2k18.states.menu.MainMenu;
+import com.golf2k18.states.menu.TerrainSelection;
 
 /**
  * This class contains the different states for the menu.
@@ -22,8 +23,6 @@ public class StateManager extends ApplicationAdapter {
     public static final int WIDTH = 1200;
     public static Music music;
     public static Skin skin;
-
-    private final boolean reset = true;
 
     public StateManager() {
 		states = new Stack<>();
@@ -36,10 +35,10 @@ public class StateManager extends ApplicationAdapter {
     public void create () {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         State start = new MainMenu(this);
+        //State start = new TerrainSelection(this);
         start.create();
         states.push(start);
         Gdx.gl.glClearColor(1, 1, 1, 1);
-		if(reset)reset();
     }
 
     public StateManager push(State state)
@@ -72,7 +71,13 @@ public class StateManager extends ApplicationAdapter {
         skin.dispose();
     }
 
-    public void reset(){
+    public void home(){
+	    while(!(states.peek() instanceof MainMenu)){
+	        states.pop();
+        }
+    }
+
+    public static void reset(){
 		int width = 20;
 		int height = 20;
 		Vector3 start = new Vector3(3,3,0);
@@ -80,23 +85,23 @@ public class StateManager extends ApplicationAdapter {
 
 		String[] cosx = {"x","cos"};
 		Terrain c1 = new Terrain(width,height,start,goal,new Formula(cosx),"Cos");
-		CourseIO.writeFile(c1);
+		DataIO.writeTerrain(c1);
 
 		String[] sinx = {"x","sin"};
 		Terrain c2 = new Terrain(width,height,start,goal,new Formula(sinx),"Sin");
-		CourseIO.writeFile(c2);
+		DataIO.writeTerrain(c2);
 
 		String[] cosy = {"y","cos"};
 		Terrain c3 = new Terrain(width,height,start,goal,new Formula(cosy),"CosY");
-		CourseIO.writeFile(c3);
+		DataIO.writeTerrain(c3);
 
 		String[] siny = {"y","sin"};
 		Terrain c4 = new Terrain(width,height,start,goal,new Formula(siny),"SinY");
-		CourseIO.writeFile(c4);
+		DataIO.writeTerrain(c4);
 
         String[] flat = {"1"};
         Terrain c5 = new Terrain(width,height,start,goal,new Formula(flat),"Plane");
-        CourseIO.writeFile(c5);
+        DataIO.writeTerrain(c5);
 
         float[][] flatinter = new float[width+1][height+1];
         float[][] xDeriv = new float[width+1][height+1];
@@ -118,10 +123,10 @@ public class StateManager extends ApplicationAdapter {
         flatinter[10][11] = 2;
 		flatinter[10][10] = 3;
         Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter,xDeriv,yDeriv),"PlaneSpline");
-		CourseIO.writeFile(c6);*/
+		DataIO.writeFile(c6);*/
 
 		//String[] sq = {"2","^","(","x","-","11",")"};
        // Terrain c7 = new Terrain(width,height,start,goal,new Formula(sq),"Sq");
-       // CourseIO.writeFile(c7);
+       // DataIO.writeFile(c7);
     }
 }

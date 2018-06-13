@@ -1,5 +1,5 @@
 
-package com.golf2k18.ai;
+package com.golf2k18.handlers.ai;
 
 import com.golf2k18.handlers.Bot;
 
@@ -18,7 +18,7 @@ public class AI extends Bot {
     public Vector3 holeInOne(){
         Vector3 addVectors = new Vector3();
 
-        while(!goal.isHit(ball, true))
+        while(!goal.isGoal(ball, true))
         {
             Vector3 tryBall = fitness();
 

@@ -37,6 +37,7 @@ public abstract class SubMenu extends MenuState {
         table.row();
 
         //content field
+        createContent();
         table.add(getContent()).width(Gdx.graphics.getWidth()/2).expandX();
         table.row();
 
@@ -45,7 +46,7 @@ public abstract class SubMenu extends MenuState {
         back.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                manager.pop();
+                returnAction();
             }
         });
         table.add(back).pad(10f).expandY().padBottom(100f).bottom().width(Gdx.graphics.getWidth()/2).expandX();
@@ -58,7 +59,13 @@ public abstract class SubMenu extends MenuState {
         return stage;
     }
 
+    protected abstract void createContent();
+
     protected abstract Table getContent();
 
     protected abstract String getTitle();
+
+    protected void returnAction(){
+        manager.pop();
+    }
 }

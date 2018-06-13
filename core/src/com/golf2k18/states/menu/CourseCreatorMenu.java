@@ -2,7 +2,7 @@ package com.golf2k18.states.menu;
 
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
-import com.golf2k18.objects.CourseIO;
+import com.golf2k18.io.DataIO;
 import com.golf2k18.StateManager;
 
 /**
@@ -18,14 +18,13 @@ public class CourseCreatorMenu extends SubMenu {
      */
     CourseCreatorMenu(StateManager manager) {
         super(manager);
-        content = createContent();
     }
 
-    private Table createContent() {
-        Table table = new Table();
+    protected void createContent() {
+        content = new Table();
 
         List<CheckBox> terrains = new List<CheckBox>(StateManager.skin);
-        Array<String> terrain = CourseIO.getCoursesNames();
+        Array<String> terrain = DataIO.getTerrainNames();
         Array<CheckBox> boxes = new Array<CheckBox>();
         for (String t: terrain) {
             boxes.add(new CheckBox(t,StateManager.skin));
@@ -33,7 +32,7 @@ public class CourseCreatorMenu extends SubMenu {
         terrains.setItems(boxes);
         ScrollPane scrollPane = new ScrollPane(terrains);
         scrollPane.setHeight(100f);
-        table.add(scrollPane).center().pad(10f).expand();
+        content.add(scrollPane).center().pad(10f).expand();
 
 
         /*int areaSize = 10;
@@ -49,7 +48,6 @@ public class CourseCreatorMenu extends SubMenu {
 
         TextArea terrainArea = new TextArea("",StateManager.skin);
         table.add(new ScrollPane(terrainArea)).pad(10f).fillX();*/
-        return table;
     }
 
     @Override

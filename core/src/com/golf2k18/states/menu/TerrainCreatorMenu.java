@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.function.Formula;
+import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.Terrain;
-import com.golf2k18.objects.CourseIO;
 import com.golf2k18.StateManager;
 
 import javax.swing.*;
@@ -31,12 +31,11 @@ public class TerrainCreatorMenu extends SubMenu {
      */
     TerrainCreatorMenu(StateManager manager) {
         super(manager);
-        content = createContent();
     }
 
     //Creating every element of the TerrainCreatorMenu UI and then spacing them to look nice.
-    private Table createContent() {
-        Table table = new Table();
+    protected void createContent() {
+        content = new Table();
 
         //formula TextField
         Table formulaGroup = new Table();
@@ -46,8 +45,8 @@ public class TerrainCreatorMenu extends SubMenu {
         TextField fxInput = new TextField("",StateManager.skin);
         formulaGroup.add(fxInput).pad(10f).expandX().fillX();
 
-        table.add(formulaGroup).expandX().fillX();
-        table.row();
+        content.add(formulaGroup).expandX().fillX();
+        content.row();
 
         //Size field
         Table sizeGroup = new Table();
@@ -65,8 +64,8 @@ public class TerrainCreatorMenu extends SubMenu {
         final TextField dField = new TextField("",StateManager.skin);
         sizeGroup.add(dField).pad(10f).width(widthField).expandX().left();
 
-        table.add(sizeGroup).fillX();
-        table.row();
+        content.add(sizeGroup).fillX();
+        content.row();
 
         //Offset field
         Table offSetGroup = new Table();
@@ -89,8 +88,8 @@ public class TerrainCreatorMenu extends SubMenu {
         final TextField zOffField = new TextField("",StateManager.skin);
         offSetGroup.add(zOffField).pad(10f).width(widthField).expandX().left();
 
-        table.add(offSetGroup).fillX();
-        table.row();
+        content.add(offSetGroup).fillX();
+        content.row();
 
         //scale field
         Table scaleGroup = new Table();
@@ -100,8 +99,8 @@ public class TerrainCreatorMenu extends SubMenu {
 
         final TextField scaleField = new TextField("1",StateManager.skin);
         scaleGroup.add(scaleField).pad(10f).width(widthField).expandX().left();
-        table.add(scaleGroup).fillX();
-        table.row();
+        content.add(scaleGroup).fillX();
+        content.row();
 
         //Startpoint field
         Table startGroup = new Table();
@@ -118,8 +117,8 @@ public class TerrainCreatorMenu extends SubMenu {
         startGroup.add(yLabel).pad(10f);
         final TextField yStart = new TextField("",StateManager.skin);
         startGroup.add(yStart).pad(10f).width(widthField).expandX().left();
-        table.add(startGroup).fillX();
-        table.row();
+        content.add(startGroup).fillX();
+        content.row();
 
         //Endpoint field
         Table endGroup = new Table();
@@ -135,8 +134,8 @@ public class TerrainCreatorMenu extends SubMenu {
         endGroup.add(yEndLabel).pad(10f);
         final TextField yEnd = new TextField("",StateManager.skin);
         endGroup.add(yEnd).pad(10f).width(widthField).expandX().left();
-        table.add(endGroup).fillX();
-        table.row();
+        content.add(endGroup).fillX();
+        content.row();
 
         //Name field
         Table nameGroup = new Table();
@@ -146,12 +145,12 @@ public class TerrainCreatorMenu extends SubMenu {
         final TextField nameField = new TextField("", StateManager.skin);
         nameGroup.add(nameField).expandX().fillX().pad(10f).left();
 
-        table.add(nameGroup).fillX();
-        table.row();
+        content.add(nameGroup).fillX();
+        content.row();
 
         //Buttons
         TextButton create = new TextButton("Create terrain",StateManager.skin);
-        table.add(create).center().fillX().pad(10f).padBottom(50f);
+        content.add(create).center().fillX().pad(10f).padBottom(50f);
         create.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -197,7 +196,7 @@ public class TerrainCreatorMenu extends SubMenu {
                                 newC.setScale(fScale);
                             }
                         }
-                        CourseIO.writeFile(newC);
+                        DataIO.writeTerrain(newC);
                         manager.pop().pop();
                     }
                 }
@@ -216,8 +215,6 @@ public class TerrainCreatorMenu extends SubMenu {
             endGroup.debug();
             startGroup.debug();
         }
-
-        return table;
     }
 
     @Override

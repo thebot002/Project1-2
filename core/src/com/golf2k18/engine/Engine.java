@@ -70,20 +70,20 @@ public class Engine {
     /**
      * Updates the ball's position
      */
-    public void updateBall(){
-        dt = Gdx.graphics.getDeltaTime();
+    public void updateBall(float dt){
+        this.dt = dt;
 
         Vector3 position = ball.getPosition();
         Vector3 velocity = ball.getVelocity();
 
         Vector3 newVel = sherlock.solveVel(new Vector3(position),new Vector3(velocity));
-        ball.updateVelocity(new Vector3(newVel));
+        ball.getVelocity().set(newVel);
         Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(velocity));
-        ball.updateLocation(newPos);
+        ball.getPosition().set(newPos);
 
         updateBall(newPos,newVel);
         if(ball.getPosition().z <= 0){
-            ball.updateLocation(position);
+            ball.getPosition().set(position);
         }
     }
 
@@ -95,29 +95,29 @@ public class Engine {
         if(position.x <= 0){
             Vector3 n = new Vector3(1,0,0);
             bounce(velocity, n);
-            ball.updateVelocity(n);
-            updateBall();
+            ball.getVelocity().set(n);
+            updateBall(dt);
         }
         if(position.x >= terrain.getWidth()){
             Vector3 n = new Vector3(-1,0,0);
             bounce(velocity, n);
-            ball.updateVelocity(n);
-            updateBall();
+            ball.getVelocity().set(n);
+            updateBall(dt);
         }
         if(position.y <= 0){
             Vector3 n = new Vector3(0,1,0);
             bounce(velocity, n);
-            ball.updateVelocity(n);
-            updateBall();
+            ball.getVelocity().set(n);
+            updateBall(dt);
         }
         if(position.y >= terrain.getHeight()){
             Vector3 n = new Vector3(0,-1,0);
             bounce(velocity,n);
-            ball.updateVelocity(n);
-            updateBall();
+            ball.getVelocity().set(n);
+            updateBall(dt);
         }
 
-        ball.setZ(terrain.getFunction().evaluateF(position.x,position.y));
+        ball.getPosition().z = terrain.getFunction().evaluateF(position.x,position.y);
     }
 
     private void bounce(Vector3 velocity, Vector3 n){
@@ -126,9 +126,5 @@ public class Engine {
         n.scl(dot);
         n.add(v.scl(-1));
         n.scl(-1);
-    }
-
-    public void sclDt(float scl){
-        dt = dt * scl;
     }
 }

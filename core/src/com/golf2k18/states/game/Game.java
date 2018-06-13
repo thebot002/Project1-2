@@ -1,20 +1,9 @@
 package com.golf2k18.states.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -22,12 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.engine.Engine;
-import com.golf2k18.engine.solver.*;
 import com.golf2k18.handlers.Player;
 import com.golf2k18.objects.Ball;
-import com.golf2k18.objects.Terrain;
+import com.golf2k18.objects.Course;
 import com.golf2k18.states.State3D;
 import com.golf2k18.StateManager;
+import com.golf2k18.states.menu.Settings;
 
 import java.util.HashMap;
 
@@ -41,16 +30,18 @@ public class Game extends State3D {
     public Stage hud;
     private Stage pause;
     public boolean paused = false;
-    private Terrain terrain;
     private Vector3 hole;
     public Slider directionInput;
     public Slider intensityInput;
     private float radius;
-    private float marginRaduius;
+    private float marginRadius;
     private StateManager manager;
 
     public HashMap<String, Label> labels;
 
+    private Settings settings;
+    private Course course;
+    private int hole_number;
 
     private Player player;
 
@@ -58,16 +49,17 @@ public class Game extends State3D {
      * Constructor for the Game class.
      *
      * @param manager Instance of the GameManager which is currently used.
-     * @param terrain Instance of the Terrain class which was selected by the user in the menus.
+     * @param course Instance of the Course class which was selected by the user in the menus.
      */
-    public Game(StateManager manager, Terrain terrain, Player player) {
-        super(manager, terrain);
+    public Game(StateManager manager, Course course, Player player) {
+        super(manager, course.getTerrain(0));
+        this.course = course;
         this.player = player;
-        this.terrain = terrain;
+        hole_number = 0;
         player.setState(this);
         hole = terrain.getHole();
-        marginRaduius = .6f;
-        radius = terrain.getHOLE_DIAM() / 2 + marginRaduius;
+        marginRadius = .6f;
+        radius = terrain.getHOLE_DIAM() / 2 + marginRadius;
         this.manager = manager;
     }
 
@@ -80,9 +72,10 @@ public class Game extends State3D {
 
         ball = new Ball(terrain.getStart());
         instances.add(ball.getModel());
-        ball.setZ(terrain.getFunction().evaluateF(ball.getX(), ball.getY()));
+        ball.getPosition().z = terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y);
 
-        engine = new Engine(terrain, ball, new AM3()); //HERREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        settings = Settings.load();
+        engine = new Engine(terrain, ball, settings.getSolver());
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
@@ -243,17 +236,17 @@ public class Game extends State3D {
     public void update(float dt) {
         super.update(dt);
         if (!ball.isStopped()) {
-            engine.updateBall();
-            ball.setZ(terrain.getFunction().evaluateF(ball.getX(), ball.getY()));
+            engine.updateBall(dt);
+            ball.getPosition().z = terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y);
         } else {
             player.handleInput(this);
         }
-        isHit(ball);
+        if(isGoal()) endState();
         if (controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
     }
 
-    public boolean isHit(Ball ball) {
+    public boolean isGoal() {
         Vector3 pos = ball.getPosition();
         boolean hit = false;
         if ((pos.dst(hole) < radius)) {
@@ -272,11 +265,11 @@ public class Game extends State3D {
         return ball;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
     public StateManager getStateManager(){
         return this.manager;
     }
 
+    private void endState(){
+
+    }
 }
