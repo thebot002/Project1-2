@@ -12,20 +12,16 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Class that contains all the necessary information about the ball
  */
-public class Ball
-{
-    private final boolean DEBUG = false;
+public class Ball {
+    private final float DIAMETER = 0.42f; //dm
+	private final float MASS = 0.45f; //g
 
-    private final float DIAMETER = .42f;
-	private final float MASS = 0.45f;
 	private Vector3 velocity;
-
 	private Vector3 position;
 
+    private boolean stopped = true;
+
     private Texture ballTexture = new Texture("Textures/ball_texture.jpg");
-
-	private boolean stopped = true;
-
     private ModelInstance model;
 
     /**
@@ -47,22 +43,6 @@ public class Ball
 	}
 
     /**
-     * Method used to update the current velocity vector of the ball.
-     * @param velocity variable which specifies the new position.
-     */
-    public void updateVelocity(Vector3 velocity){
-        this.velocity = velocity;
-    }
-
-    /**
-     * Method used to update the current location vector of the ball.
-     * @param position variable which specifies the new position.
-     */
-    public void updateLocation(Vector3 position){
-        this.position = position;
-    }
-
-    /**
      * Method used to know the mass of the ball.
      * @return the constant mass of the ball.
      */
@@ -70,40 +50,17 @@ public class Ball
 		return MASS;
 	}
 
+    public float getDiameter() {
+        return DIAMETER;
+    }
+
     public Vector3 getPosition() {
         return position;
     }
 
-	public float getX() {
-		return position.x;
-	}
-
-    public float getY() {
-		return position.y;
-	}
-    public float getZ() {
-		return position.z;
-	}
-    public void setX(double x) {
-		position.x = (float)x;
-		updateInstance();
-	}
-
-    public void setY(double y) {
-		position.y = (float)y;
-		updateInstance();
-	}
-    public void setZ(double z) {
-		position.z = (float)z;
-		updateInstance();
-	}
-
-	public void setLocation(Vector3 vector){
-        this.position = vector;
-    }
     public Vector3 getVelocity()
 	{
-		return velocity.cpy();
+		return velocity;
 	}
 
     /**
@@ -114,16 +71,12 @@ public class Ball
         this.stopped = true;
     }
 
+    public boolean isStopped(){
+        return stopped;
+    }
+
     public ModelInstance getModel() {
         return model;
-    }
-
-    public float getDiameter() {
-        return DIAMETER;
-    }
-
-    public boolean isStopped(){
-	    return stopped;
     }
 
     private void createModel(){
@@ -139,11 +92,8 @@ public class Ball
         model = new ModelInstance(tempSphere,position.x,position.y,position.z+(DIAMETER/2));
     }
 
-    private void updateInstance(){
+    public void updateInstance(float z){
         model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
-    }
-
-    public void stopped(boolean stopped){
-	    this.stopped = stopped;
+        position.z = z;
     }
 }

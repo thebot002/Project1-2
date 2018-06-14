@@ -13,35 +13,37 @@ public class AM3 implements Solver {
 
     @Override
     public Vector3 solveVel(Vector3 position, Vector3 velocity) {
-        Vector3 newVel;
         if(velocities.isEmpty()){
-            positions.add(null);
-            velocities.add(null);
+            positions.add(position);
+            velocities.add(velocity);
         }
-        if(velocities.size() < 4){
-            velocities.add(predictor.solveVel(position,velocity));
-            newVel = velocities.get(velocities.size()-1);
+        if(velocities.size() < 3){
+            Vector3 newVel = predictor.solveVel(position,velocity);
+            velocities.add(newVel);
             positions.add(predictor.solvePos(position,newVel));
+            return newVel;
         }
         else{
-            velocities.set(0,velocities.get(1));
-            velocities.set(1,velocities.get(2));
-            velocities.set(2,velocities.get(3));
-            velocities.set(3,predictor.solveVel(position,velocity));
+            Vector3 predVel = predictor.solveVel(position,velocity);
+            Vector3 predPos = predictor.solvePos(position,velocity);
 
-            positions.set(0,positions.get(1));
-            positions.set(1,positions.get(2));
-            positions.set(2,positions.get(3));
-            positions.set(3,predictor.solvePos(position,velocities.get(3)));
-
-            Vector3 f1 = new Vector3(engine.getAcceleration(positions.get(3),velocities.get(3))).scl(9f);
+            Vector3 f1 = new Vector3(engine.getAcceleration(predVel,predPos)).scl(9f);
             Vector3 f2 = new Vector3(engine.getAcceleration(positions.get(2),velocities.get(2))).scl(19f);
             Vector3 f3 = new Vector3(engine.getAcceleration(positions.get(1),velocities.get(1))).scl(-5f);
             Vector3 f4 = new Vector3(engine.getAcceleration(positions.get(0),velocities.get(0)));
 
-            newVel = velocities.get(2).add(new Vector3(f1.add(f2.add(f3.add(f4)))).scl(engine.getDt()/24f));
+            Vector3 newVel = velocities.get(2).add(new Vector3(f1.add(f2.add(f3.add(f4)))).scl(engine.getDt()/24f));
+
+            velocities.set(0,velocities.get(1));
+            velocities.set(1,velocities.get(2));
+            velocities.set(2,newVel);
+
+            positions.set(0,positions.get(1));
+            positions.set(1,positions.get(2));
+            positions.set(2,solvePos(position,newVel));
+
+            return newVel;
         }
-        return newVel;
     }
 
     @Override

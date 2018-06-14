@@ -15,15 +15,14 @@ public class AB4 implements Solver{
 
     @Override
     public Vector3 solveVel(Vector3 position, Vector3 velocity) {
-        Vector3 newVel;
         if(velocities.isEmpty()){
             positions.add(null);
             velocities.add(null);
         }
         if(velocities.size() < 4){
-            velocities.add(bootstrapper.solveVel(position,velocity));
-            newVel = velocities.get(velocities.size()-1);
-            positions.add(bootstrapper.solvePos(position,newVel));
+            velocities.add(velocity);
+            positions.add(position);
+            return bootstrapper.solveVel(position,velocity);
         }
         else{
             velocities.set(0,velocities.get(1));
@@ -41,9 +40,8 @@ public class AB4 implements Solver{
             Vector3 f3 = new Vector3(engine.getAcceleration(positions.get(1),velocities.get(1))).scl(37f);
             Vector3 f4 = new Vector3(engine.getAcceleration(positions.get(0),velocities.get(0))).scl(-9f);
 
-            newVel = velocities.get(3).add(new Vector3(f1.add(f2.add(f3.add(f4)))).scl(engine.getDt()/24f));
+            return velocities.get(3).add(new Vector3(f1.add(f2.add(f3.add(f4)))).scl(engine.getDt()/24f));
         }
-        return newVel;
     }
 
     @Override

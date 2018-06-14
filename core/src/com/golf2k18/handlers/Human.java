@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.states.game.Game;
-import com.golf2k18.states.menu.endStates.WinState;
+import com.golf2k18.states.game.endStates.WinState;
 
 /**
  * Defines the properties the different gams commands if it is being played by a human.
@@ -32,20 +32,20 @@ public class Human extends Player {
     public void handleInput(Game game) {
         super.handleInput(game);
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
-            game.getBall().setX(game.getBall().getX()+0.1);
+            game.getBall().getPosition().x += 0.1;
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)){
-            game.getBall().setX(game.getBall().getX()-0.1);
+            game.getBall().getPosition().x -= 0.1;
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)){
-            game.getBall().setY(game.getBall().getY()+0.1);
+            game.getBall().getPosition().y += 0.1;
         }
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)){
-            game.getBall().setY(game.getBall().getY()-0.1);
+            game.getBall().getPosition().y -= 0.1;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.M)){
             if(manualMovement) game.setProcessors();
-            else Gdx.input.setInputProcessor(new InputMultiplexer(game.hud,game));
+            else Gdx.input.setInputProcessor(new InputMultiplexer(game.hud, game));
             manualMovement = !manualMovement;
         }
 
@@ -60,7 +60,7 @@ public class Human extends Player {
                 game.labels.get("focus").setText("");
             }
         }*/
-        if(game.isHit(game.getBall())){
+        if(game.isGoal()){
             game.getStateManager().push(new WinState(game.getStateManager()));
         }
     }
@@ -75,29 +75,29 @@ public class Human extends Player {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if(down){
             ModelBuilder builder = new ModelBuilder();
-            Model line = builder.createArrow(getTerrainMousePos(screenX,screenY,game.getTerrain().getFunction().evaluateF(game.getBall().getX(),game.getBall().getY())),game.getBall().getPosition(),
+            Model line = builder.createArrow(getTerrainMousePos(screenX,screenY, gameState.getTerrain().getFunction().evaluateF(gameState.getBall().getPosition().x, gameState.getBall().getPosition().y)), gameState.getBall().getPosition(),
                     new Material(ColorAttribute.createDiffuse(Color.BLACK)),
                     VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
             );
-            if(game.getInstances().size == 6) game.getInstances().removeIndex(game.getInstances().size - 1);
-            game.getInstances().add(new ModelInstance(line,0,0,0));
+            if(gameState.getInstances().size == 6) gameState.getInstances().removeIndex(gameState.getInstances().size - 1);
+            gameState.getInstances().add(new ModelInstance(line,0,0,0));
         }
         return super.touchDragged(screenX, screenY, pointer);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if(down && game.getInstances().size == 6){
-            game.getInstances().removeIndex(game.getInstances().size - 1);
-            Vector3 currentPos = new Vector3(game.getBall().getPosition());
-            game.getBall().hit(new Vector3(currentPos.add(new Vector3(getTerrainMousePos(screenX,screenY,game.getTerrain().getFunction().evaluateF(game.getBall().getX(),game.getBall().getY()))).scl(-1))).scl(2));
+        if(down && gameState.getInstances().size == 6){
+            gameState.getInstances().removeIndex(gameState.getInstances().size - 1);
+            Vector3 currentPos = new Vector3(gameState.getBall().getPosition());
+            gameState.getBall().hit(new Vector3(currentPos.add(new Vector3(getTerrainMousePos(screenX,screenY, gameState.getTerrain().getFunction().evaluateF(gameState.getBall().getPosition().x, gameState.getBall().getPosition().y))).scl(-1))).scl(2));
         }
         down = false;
         return super.touchUp(screenX, screenY, pointer, button);
     }
 
     private Vector3 getTerrainMousePos(int mouseX, int mouseY, float height){
-        Ray ray = game.getCamera().getPickRay(mouseX, mouseY);
+        Ray ray = gameState.getCamera().getPickRay(mouseX, mouseY);
 
         Plane p = new Plane(new Vector3(0,0,1),height);
         Vector3 intersect = new Vector3();
@@ -109,13 +109,13 @@ public class Human extends Player {
 
     private int getObject (int screenX, int screenY) {
         Vector3 position = new Vector3();
-        Ray ray = game.getCamera().getPickRay(screenX, screenY);
+        Ray ray = gameState.getCamera().getPickRay(screenX, screenY);
         int result = -1;
-        final ModelInstance instance = game.getInstances().get(4);
+        final ModelInstance instance = gameState.getInstances().get(4);
         instance.transform.getTranslation(position);
         final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
         float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
-        if (dist2 <= (game.getBall().getDiameter()/2) * (game.getBall().getDiameter()/2)) {
+        if (dist2 <= (gameState.getBall().getDiameter()/2) * (gameState.getBall().getDiameter()/2)) {
             result = 4;
         }
         return result;

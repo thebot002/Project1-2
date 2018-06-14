@@ -1,4 +1,4 @@
-package com.golf2k18.states.menu.endStates;
+package com.golf2k18.states.game.endStates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
