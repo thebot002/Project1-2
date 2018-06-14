@@ -31,6 +31,7 @@ public class AI2 extends Bot {
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
+
             Terrain terrain = game.getTerrain();
             Ball ball = game.getBall();
             Vector3 tryBall = fitness(terrain, ball);
