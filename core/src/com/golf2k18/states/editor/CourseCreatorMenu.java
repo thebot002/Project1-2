@@ -77,7 +77,7 @@ public class CourseCreatorMenu extends SubMenu {
                             return;
                         }
                         ArrayList<Terrain> finalList = new ArrayList<>();
-                        for (int i = 1; i < terrainOrder.size(); i++) {
+                        for (int i = 1; i <= terrainOrder.size(); i++) {
                             if(!terrainOrder.containsKey(i)) {
                                 JOptionPane.showMessageDialog(null,"A value is missing in the order of the terrains","Error",JOptionPane.ERROR_MESSAGE);
                                 return;
