@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Course implements Serializable {
     private ArrayList<Terrain> course;
     private String name;
+    private int[] scores;
 
     /**
      * Takes properties from the course class
@@ -16,12 +17,14 @@ public class Course implements Serializable {
     public Course(ArrayList<Terrain> course, String name) {
         this.course = course;
         this.name = name;
+        scores = new int[course.size()];
     }
 
     public Course(Terrain terrain, String name){
         course = new ArrayList<>();
         course.add(terrain);
         this.name = name;
+        scores = new int[1];
     }
 
     /**
@@ -35,5 +38,17 @@ public class Course implements Serializable {
 
     public String getName(){
         return name;
+    }
+
+    public int getSize(){
+        return course.size();
+    }
+
+    public void setScore(int courseNumber,int score){
+        scores[courseNumber] = score;
+    }
+
+    public int[] getScores() {
+        return scores;
     }
 }
