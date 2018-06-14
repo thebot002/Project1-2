@@ -40,19 +40,29 @@ public class EditorMenu extends SubMenu {
         fnctTerrain.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                manager.pop();
-                manager.push(new TerrainCreatorMenu(manager));
+                manager.push(new TerrainCreatorMenu(manager,false));
             }
         });
         content.add(fnctTerrain).pad(10f).fillX().expandX();
         content.row();
+
+        //edit a course created from function
+        TextButton editFnctTerrain = new TextButton("Edit a terrain created from function",StateManager.skin);
+        editFnctTerrain.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                manager.push(new TerrainCreatorMenu(manager,true));
+            }
+        });
+        content.add(editFnctTerrain).pad(10f).fillX().expandX();
+        content.row();
+
 
         //"Create custom terrain" button
         TextButton splineTerrain = new TextButton("Create custom terrain (Splines)",StateManager.skin);
         splineTerrain.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                manager.pop();
                 Terrain defaultTerrain = DataIO.getTerrain("Plane");
                 defaultTerrain.toSpline(1);
                 manager.push(new TerrainEditor(manager,defaultTerrain));

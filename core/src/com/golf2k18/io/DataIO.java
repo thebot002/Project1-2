@@ -57,7 +57,7 @@ public class DataIO {
             ObjectInputStream ois = new ObjectInputStream(fis);
             input = (Terrain) ois.readObject();
         }
-        catch (InvalidClassException e){
+        catch (InvalidClassException | EOFException e){
             StateManager.reset();
             return getTerrain(name);
         }

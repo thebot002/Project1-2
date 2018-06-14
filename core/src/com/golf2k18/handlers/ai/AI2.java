@@ -5,7 +5,6 @@ import com.golf2k18.handlers.Bot;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.game.Game;
-import com.golf2k18.states.game.endStates.WinState;
 
 /**
  * The 2nd ai that can play the game. It tries to find the hole while always hitting the ball from the starting position.
@@ -31,17 +30,11 @@ public class AI2 extends Bot {
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
-        if(!game.isGoal()) {
-            Terrain terrain = game.getTerrain();
-            Ball ball = game.getBall();
-            Vector3 tryBall = fitness(terrain, ball);
-            // addVectors = addVectors.add(tryBall);
-            ball.hit(tryBall);
-            hitCount++;
-        }
-        else{
-            game.getStateManager().push(new WinState(game.getStateManager()));
-        }
-
+        Terrain terrain = game.getTerrain();
+        Ball ball = game.getBall();
+        Vector3 tryBall = fitness(terrain, ball);
+        // addVectors = addVectors.add(tryBall);
+        ball.hit(tryBall);
+        hitCount++;
     }
 }

@@ -71,6 +71,10 @@ public class Terrain implements Serializable {
      */
     public int getHeight() {return height;}
 
+    public Vector3 getOffset() {return offset;}
+
+    public float getScale() {return scale;}
+
     /**
      * Getter for the start vector.
      * @return Vector3 start.

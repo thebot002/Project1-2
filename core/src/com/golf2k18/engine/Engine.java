@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
-import com.golf2k18.objects.Goal;
 import com.golf2k18.objects.Terrain;
 
 /**

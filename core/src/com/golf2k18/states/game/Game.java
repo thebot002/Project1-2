@@ -181,7 +181,7 @@ public class Game extends State3D {
         menu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                manager.pop();
+                manager.home();
             }
         });
         organizer.row();

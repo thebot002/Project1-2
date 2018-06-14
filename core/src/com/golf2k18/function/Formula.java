@@ -12,9 +12,12 @@ public class Formula implements Function, Serializable {
     private Node xDeriv;
     private Node yDeriv;
 
-    public Formula(String inFix)
-	{
+    private String infix;
+    private String[] postfix;
+
+    public Formula(String inFix){
 		this(convert(inFix.split("\\s+")));
+		infix = inFix;
 	}
 
 	/**
@@ -23,6 +26,7 @@ public class Formula implements Function, Serializable {
 	 */
     public Formula(String[] postFix)
     {
+        this.postfix = postFix;
         Stack<Node> nodeStack = new Stack();
         Node tempRoot, tempLeft, tempRight;
 
@@ -520,4 +524,13 @@ public class Formula implements Function, Serializable {
 		
 		return tempNode;
 	}
+
+    @Override
+    public String toString() {
+	    String post = "";
+        for (String s: postfix) {
+            post += s;
+        }
+        return infix == null?post:infix;
+    }
 }
