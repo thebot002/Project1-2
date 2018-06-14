@@ -92,7 +92,7 @@ public class Engine {
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
         if(velocity.len() <= STOP_TOLERANCE && (calcGravity(position).len() / mass) <= STOP_TOLERANCE) ball.setStopped();
-        if((ball.getPosition().dst(terrain.getHole()) < terrain.getHOLE_DIAM()/2 && (velocity.len() <= GOAL_TOLERANCE && (calcGravity(position).len() / mass) <= GOAL_TOLERANCE))){
+        if((ball.getPosition().dst(terrain.getHole()) < (terrain.getHOLE_DIAM()/2) && (velocity.len() <= GOAL_TOLERANCE && (calcGravity(position).len() / mass) <= GOAL_TOLERANCE))){
             ball.setStopped();
         }
 

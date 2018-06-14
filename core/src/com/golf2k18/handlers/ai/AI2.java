@@ -11,19 +11,11 @@ import com.golf2k18.states.game.Game;
  */
 public class AI2 extends Bot {
 
-    private static Vector3 addVectors;
-/*
-    public AI2() {
-        addVectors = new Vector3();
-    }
-
-   */
-
     private Vector3 fitness(Terrain terrain, Ball ball) {
         Vector3 coordinates = new Vector3();
         Vector3 hole = terrain.getHole();
-        coordinates.x = hole.x - ball.getPosition().x -1.5f;
-        coordinates.y = hole.y - ball.getPosition().y -1.5f;
+        coordinates.x = hole.x - ball.getPosition().x -1.8f;
+        coordinates.y = hole.y - ball.getPosition().y -1.8f;
         return coordinates;
     }
 
