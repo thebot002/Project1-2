@@ -157,7 +157,6 @@ public class TerrainCreatorMenu extends SubMenu {
             public void clicked(InputEvent event, float x, float y) {
                 try{
                     String formulaS = fxInput.getText();
-                    String[] formula = {"x", "2", "^", "y", "2", "^", "+", "0.5", "^", "sin"};
                     String widthS = wField.getText();
                     String heightS = dField.getText();
                     String xOff = xOffField.getText();
@@ -186,7 +185,7 @@ public class TerrainCreatorMenu extends SubMenu {
                             JOptionPane.showMessageDialog(null,"The goal point isn't on the field.\nPlease choose another point.","Error",JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-                        newC = new Terrain(width, height,start,goal,new Formula(formula),name);
+                        newC = new Terrain(width, height,start,goal,new Formula(formulaS),name);
                         if(xOff.length() != 0 || yOff.length() != 0 || zOff.length() != 0){
                             newC.setOffset(new Vector3(xOff.length()!=0?Float.parseFloat(xOff):0,
                                     yOff.length()!=0?Float.parseFloat(yOff):0,

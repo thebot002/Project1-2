@@ -12,6 +12,11 @@ public class Formula implements Function, Serializable {
     private Node xDeriv;
     private Node yDeriv;
 
+    public Formula(String inFix)
+	{
+		this(convert(inFix.split("\\s+")));
+	}
+
 	/**
 	 * Constructor for the formula class, it stores the formula, and it's x and y derivatives in binary expression trees.
 	 * @param postFix array that holds a formula in a post fix notation.
@@ -81,13 +86,103 @@ public class Formula implements Function, Serializable {
 	 * Method that checks if the value of a node is an operator or not.
 	 * @param s the value of the checked node.
 	 */
-	private boolean isOperator(String s)
+	private static boolean isOperator(String s)
 	{
-		if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("sin") || s.equals("cos"))
+		if(s.equals("(") || s.equals(")") || s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("sin") || s.equals("cos"))
 		{
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Is used by the convertor to check which operator has priority
+	 * @param op the operator
+	 * @return it's priority value (higher equals higher priority)
+	 */
+
+	private static int getPriority(String op)
+	{
+		int priority = 0;
+
+		if(op.equals("-") || op.equals("+"))
+		{
+			priority = 0;
+		}
+		if(op.equals("*") || op.equals("/"))
+		{
+			priority = 1;
+		}
+		if(op.equals("^"))
+		{
+			priority = 2;
+		}
+		if(op.equals("sin") || op.equals("cos"))
+		{
+			priority = 3;
+		}
+		if(op.equals("(") || op.equals(")"))
+		{
+			priority = 4;
+		}
+
+		return priority;
+	}
+
+
+	/**
+	 * Converts an infix notation formula to a postfix notation formula.
+	 * @param infix the infix notation formula.
+	 * @return the postfix notation formula.
+	 */
+	private static String[] convert(String[] infix)
+	{
+		Stack<String> operatorStack = new Stack();
+		Stack<String> postfixStack = new Stack();
+
+		for (int i = 0; i < infix.length; i++)
+		{
+			String currentSymbol = infix[i];
+
+			if (!isOperator(currentSymbol))
+			{
+				postfixStack.push(currentSymbol);
+			}
+			else
+			{
+				while(!operatorStack.isEmpty() && (getPriority(currentSymbol) < getPriority(operatorStack.peek())) && !operatorStack.peek().equals("("))
+				{
+					postfixStack.push(operatorStack.pop());
+				}
+				operatorStack.push(currentSymbol);
+			}
+
+			if(!operatorStack.isEmpty() && operatorStack.peek().equals(")"))
+			{
+				operatorStack.pop();
+
+				while(!operatorStack.peek().equals("("))
+				{
+					postfixStack.push(operatorStack.pop());
+				}
+
+				operatorStack.pop();
+			}
+		}
+
+		while(!operatorStack.isEmpty())
+		{
+			postfixStack.push(operatorStack.pop());
+		}
+
+		String[] postfix = new String[postfixStack.size()];
+
+		for(int i = postfix.length - 1; i >= 0; i--)
+		{
+			postfix[i] = postfixStack.pop();
+		}
+
+		return postfix;
 	}
 
 	/**
