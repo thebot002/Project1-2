@@ -16,6 +16,7 @@ import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Course;
 import com.golf2k18.states.State3D;
 import com.golf2k18.StateManager;
+import com.golf2k18.states.game.endStates.WinState;
 import com.golf2k18.states.menu.Settings;
 import com.golf2k18.states.menu.SettingsMenu;
 
@@ -274,6 +275,7 @@ public class Game extends State3D {
         if ((pos.dst(terrain.getHole()) < radius)) {
             if (ball.isStopped())
                 goal = true;
+            endState();
         }
         return goal;
     }
@@ -292,6 +294,7 @@ public class Game extends State3D {
     }
 
     private void endState(){
-
+        this.player.resetCount();
+        manager.push(new WinState(manager));
     }
 }
