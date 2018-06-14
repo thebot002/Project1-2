@@ -14,7 +14,7 @@ import com.golf2k18.states.MenuState;
  * Describes the state of the game if the player wins. If he does, a message "You won!" will be displayed,
  * and the user will be asked to enter his username so the game can save it.
  */
-public class WinState extends MenuState {
+public class WinState extends MenuState implements EndState{
     private Stage stage;
     public WinState(StateManager manager) {
         super(manager);

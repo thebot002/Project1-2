@@ -198,7 +198,7 @@ public class TerrainCreatorMenu extends SubMenu {
                             }
                         }
                         DataIO.writeTerrain(newC);
-                        manager.pop().pop();
+                        manager.home();
                     }
                 }
                 catch (NumberFormatException e){

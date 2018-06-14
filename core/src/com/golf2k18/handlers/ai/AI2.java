@@ -37,6 +37,7 @@ public class AI2 extends Bot {
             Vector3 tryBall = fitness(terrain, ball);
             // addVectors = addVectors.add(tryBall);
             ball.hit(tryBall);
+            hitCount++;
         }
         else{
             game.getStateManager().push(new WinState(game.getStateManager()));

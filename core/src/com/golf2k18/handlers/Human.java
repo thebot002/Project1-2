@@ -52,8 +52,8 @@ public class Human extends Player {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             double dir = game.directionInput.getValue();
             double intensity = game.intensityInput.getValue();
-            System.out.println(intensity);
             game.getBall().hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
+            hitCount++;
         }
         /*if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
             if(game.controller.isFocused()){
@@ -91,6 +91,7 @@ public class Human extends Player {
             gameState.getInstances().removeIndex(gameState.getInstances().size - 1);
             Vector3 currentPos = new Vector3(gameState.getBall().getPosition());
             gameState.getBall().hit(new Vector3(currentPos.add(new Vector3(getTerrainMousePos(screenX,screenY, gameState.getTerrain().getFunction().evaluateF(gameState.getBall().getPosition().x, gameState.getBall().getPosition().y))).scl(-1))).scl(2));
+            hitCount++;
         }
         down = false;
         return super.touchUp(screenX, screenY, pointer, button);
