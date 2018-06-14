@@ -11,9 +11,7 @@ import com.golf2k18.function.Formula;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.*;
 import com.golf2k18.states.State;
-import com.golf2k18.states.editor.CourseCreatorMenu;
 import com.golf2k18.states.menu.MainMenu;
-import com.golf2k18.states.menu.TerrainSelection;
 
 /**
  * This class contains the different states for the menu.

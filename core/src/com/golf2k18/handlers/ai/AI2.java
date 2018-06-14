@@ -23,8 +23,8 @@ public class AI2 extends Bot {
     private Vector3 fitness(Terrain terrain, Ball ball) {
         Vector3 coordinates = new Vector3();
         Vector3 hole = terrain.getHole();
-        coordinates.x = hole.x - ball.getPosition().x;
-        coordinates.y = hole.y - ball.getPosition().y;
+        coordinates.x = hole.x - ball.getPosition().x -1.5f;
+        coordinates.y = hole.y - ball.getPosition().y -1.5f;
         return coordinates;
     }
 

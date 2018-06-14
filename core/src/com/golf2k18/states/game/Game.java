@@ -17,6 +17,7 @@ import com.golf2k18.objects.Course;
 import com.golf2k18.states.State3D;
 import com.golf2k18.StateManager;
 import com.golf2k18.states.menu.Settings;
+import com.golf2k18.states.menu.SettingsMenu;
 
 import java.util.HashMap;
 
@@ -70,7 +71,7 @@ public class Game extends State3D {
     public void create() {
         super.create();
 
-        ball = new Ball(terrain.getStart());
+        ball = new Ball(terrain.getStart().cpy());
         instances.add(ball.getModel());
         ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
 
@@ -170,6 +171,7 @@ public class Game extends State3D {
         settings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                manager.push(new SettingsMenu(manager));
             }
         });
         organizer.row();
@@ -194,6 +196,18 @@ public class Game extends State3D {
         });
         organizer.row();
         organizer.add(resume).top().pad(10f);
+
+        TextButton restart = new TextButton("Restart", StateManager.skin);
+        restart.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ball.getPosition().set(terrain.getStart().cpy());
+                ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
+                player.resetCount();
+            }
+        });
+        organizer.row();
+        organizer.add(restart).top().pad(10f);
 
         pause.addActor(organizer);
     }

@@ -16,7 +16,7 @@ public class Engine {
     private float mass;
     private final float GRAVITY = 9.81f;
     protected final double STOP_TOLERANCE = 0.2;
-    protected final double GOAL_TOLERANCE = 0.7;
+    protected final double GOAL_TOLERANCE = 10.0;
     //protected float dt = 0.01f;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
@@ -93,7 +93,7 @@ public class Engine {
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
         if(velocity.len() <= STOP_TOLERANCE && (calcGravity(position).len() / mass) <= STOP_TOLERANCE) ball.setStopped();
-        if(((ball.getPosition().x < terrain.getHole().x + 10 / 2 || ball.getPosition().x > terrain.getHole().x - 10/2)&&(ball.getPosition().y < terrain.getHole().y + 10 / 2 || ball.getPosition().y > terrain.getHole().y - 10/2)&& velocity.len() <= GOAL_TOLERANCE && (calcGravity(position).len() / mass) <= GOAL_TOLERANCE)){
+        if((ball.getPosition().dst(terrain.getHole()) < terrain.getHOLE_DIAM()/2 && (velocity.len() <= GOAL_TOLERANCE && (calcGravity(position).len() / mass) <= GOAL_TOLERANCE))){
             ball.setStopped();
         }
 
