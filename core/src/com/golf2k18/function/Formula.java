@@ -39,7 +39,7 @@ public class Formula implements Function, Serializable {
                 tempRight = nodeStack.pop();
                 tempRoot.right = tempRight;
 
-                if(postFix[i] != "sin" && postFix[i] != "cos")
+                if(!postFix[i].equals("sin") && !postFix[i].equals("cos"))
                 {
                     tempLeft = nodeStack.pop();
                     tempRoot.left = tempLeft;
