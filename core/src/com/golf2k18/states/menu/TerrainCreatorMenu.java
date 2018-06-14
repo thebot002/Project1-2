@@ -156,7 +156,8 @@ public class TerrainCreatorMenu extends SubMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try{
-                    String[] formula = {"y","sin"};
+                    String formulaS = fxInput.getText();
+                    String[] formula = {"x", "2", "^", "y", "2", "^", "+", "0.5", "^", "sin"};
                     String widthS = wField.getText();
                     String heightS = dField.getText();
                     String xOff = xOffField.getText();
