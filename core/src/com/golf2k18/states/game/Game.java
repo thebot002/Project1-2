@@ -292,6 +292,6 @@ public class Game extends State3D {
     }
 
     private void endState(){
-
+        this.player.resetCount();
     }
 }

@@ -31,17 +31,13 @@ public class AI2 extends Bot {
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
-        if(!game.isGoal()) {
             Terrain terrain = game.getTerrain();
             Ball ball = game.getBall();
             Vector3 tryBall = fitness(terrain, ball);
             // addVectors = addVectors.add(tryBall);
             ball.hit(tryBall);
             hitCount++;
-        }
-        else{
-            game.getStateManager().push(new WinState(game.getStateManager()));
-        }
+
 
     }
 }
