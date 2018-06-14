@@ -11,7 +11,7 @@ import com.golf2k18.states.MenuState;
 /**
  * Desccribes the state of the game if the user loses, offering him the option to retry
  */
-public class LoseState extends MenuState {
+public class LoseState extends MenuState implements EndState{
     private Stage stage;
     public LoseState(StateManager manager) {
         super(manager);

@@ -16,7 +16,7 @@ public class Ball {
     private final float DIAMETER = 0.42f; //dm
 	private final float MASS = 0.45f; //g
 
-	private Vector3 velocity;
+	private Vector3 velocity = new Vector3();
 	private Vector3 position;
 
     private boolean stopped = true;
@@ -93,7 +93,7 @@ public class Ball {
     }
 
     public void updateInstance(float z){
-        model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
         position.z = z;
+        model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
     }
 }
