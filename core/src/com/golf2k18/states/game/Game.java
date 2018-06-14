@@ -145,12 +145,11 @@ public class Game extends State3D {
         inputGroup.addActor(hitButton);
         table.add(inputGroup).center().bottom().pad(10f);
 
-        VerticalGroup ballInfo = new VerticalGroup();
-        Label distance = new Label("Distance to hole: ", StateManager.skin);
-        ballInfo.addActor(distance);
+        Table ballInfo = new Table();
+        ballInfo.add(labels.get("distance")).fillX().pad(10f);
+        ballInfo.row();
 
-        Label speed = new Label("Ball speed: ", StateManager.skin);
-        ballInfo.addActor(speed);
+        ballInfo.add(labels.get("speed")).expandX().fillX().pad(10f);
 
         table.add(ballInfo).bottom().right().pad(10f);
 
@@ -250,8 +249,9 @@ public class Game extends State3D {
         labels.get("score").setText("Score: "+String.valueOf(player.getHitCount()));
         if (controller.isFocused()) labels.get("focus").setText("Ball focus ON");
         else labels.get("focus").setText("");
-        labels.get("distance").setText("Distance to hole: "+ball.getPosition().dst(terrain.getHole()));
-        labels.get("speed").setText("Speed: "+(ball.getVelocity().len())*10);
+        String dist = "Distance to hole: " + String.valueOf(ball.getPosition().dst(terrain.getHole()) / 10) + "m";
+        labels.get("distance").setText(dist);
+        labels.get("speed").setText("Speed: " + String.valueOf(ball.getVelocity().len()/10) + "m/s");
     }
 
     public boolean isGoal() {
