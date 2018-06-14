@@ -297,4 +297,8 @@ public class Game extends State3D {
         this.player.resetCount();
         manager.push(new WinState(manager));
     }
+
+    public Engine getEngine(){
+        return this.engine;
+    }
 }
