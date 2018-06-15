@@ -94,7 +94,6 @@ public class CourseCreatorMenu extends SubMenu {
                 catch (NumberFormatException e){
                     JOptionPane.showMessageDialog(null,"Please fill in with appropriate values","Error",JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
         content.add(create).fillX().colspan(2).pad(10f);

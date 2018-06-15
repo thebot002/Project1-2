@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Array;
 import com.golf2k18.StateManager;
 import com.golf2k18.objects.Course;
 import com.golf2k18.objects.Terrain;
-import com.golf2k18.states.menu.Settings;
 
 import java.io.*;
 

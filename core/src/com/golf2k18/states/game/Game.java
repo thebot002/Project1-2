@@ -20,7 +20,7 @@ import com.golf2k18.states.game.endStates.EndState;
 import com.golf2k18.states.game.endStates.LoseState;
 import com.golf2k18.states.game.endStates.TerrainWinState;
 import com.golf2k18.states.game.endStates.WinState;
-import com.golf2k18.states.menu.Settings;
+import com.golf2k18.io.Settings;
 import com.golf2k18.states.menu.SettingsMenu;
 
 import java.util.HashMap;
@@ -204,12 +204,13 @@ public class Game extends State3D {
         organizer.add(resume).top().pad(10f);
 
         TextButton givUp = new TextButton("Give up", StateManager.skin);
+        Game g = this;
         givUp.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(course.getSize() != hole_number){
                     course.setScore(hole_number,17);
-                    nextTerrain();
+                    endState(new LoseState(manager,g));
                 }
             }
         });
@@ -275,9 +276,7 @@ public class Game extends State3D {
         }
         if(isGoal()) {
             if(hole_number == course.getSize()) endState(new WinState(manager,this));
-            else{
-                endState(new TerrainWinState(manager,this));
-            }
+            else endState(new TerrainWinState(manager,this));
         }
         if(player.getHitCount() > 17) endState(new LoseState(manager,this));
         updateLabels();
@@ -312,6 +311,7 @@ public class Game extends State3D {
     }
 
     private void endState(EndState state){
+        course.setScore(hole_number-1,player.getHitCount());
         this.player.resetCount();
         manager.push(state);
     }
