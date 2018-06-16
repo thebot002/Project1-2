@@ -22,7 +22,7 @@ public class GameCameraController extends InputAdapter {
     private final int rotateButton = Input.Buttons.RIGHT;
 
     private int button = -1;
-    private ArrayList<Integer> keyPressed = new ArrayList<Integer>();
+    private ArrayList<Integer> keyPressed = new ArrayList<>();
 
     private Camera camera;
 
@@ -49,6 +49,14 @@ public class GameCameraController extends InputAdapter {
     public GameCameraController(Camera camera) {
         this.camera = camera;
         focus = camera.position;
+        updateDistanceCamFocus();
+    }
+
+    public void initFocus(Vector3 focus){
+        camera.position.set(focus.cpy().add(new Vector3(0,-1,1).scl(10)));
+        camera.lookAt(focus);
+        focused = true;
+        this.focus = focus;
         updateDistanceCamFocus();
     }
 

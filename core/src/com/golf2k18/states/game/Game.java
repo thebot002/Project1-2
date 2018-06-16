@@ -77,6 +77,7 @@ public class Game extends State3D {
         super.create();
 
         ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
+        controller.initFocus(ball.getPosition());
 
         engine = new Engine(terrain, ball, StateManager.settings.getSolver());
         createHUD();
