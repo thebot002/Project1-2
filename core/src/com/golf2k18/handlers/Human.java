@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.states.game.Game;
 
 /**
- * Defines the properties the different gams commands if it is being played by a human.
+ * Defines the properties the different games commands if it is being played by a human.
  */
 public class Human extends Player {
     private boolean manualMovement = false;
@@ -54,16 +54,20 @@ public class Human extends Player {
             game.getBall().hit(new Vector3((float)(Math.cos(Math.toRadians(dir))*intensity) , (float)(Math.sin(Math.toRadians(dir))*intensity) , 0));
             hitCount++;
         }
-        /*if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
             if(game.controller.isFocused()){
                 game.labels.get("focus").setText("");
             }
-        }*/
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
+            if(!game.controller.isFocused())game.controller.focus(game.getBall().getPosition());
+            else game.controller.unfocus();
+        }
     }
 
     @Override
     public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-        if(getObject(screenX, screenY)==4) down = true;
+        if(ballTouched(screenX, screenY)) down = true;
         return false;
     }
 
@@ -104,17 +108,15 @@ public class Human extends Player {
         return intersect;
     }
 
-    private int getObject (int screenX, int screenY) {
+    private boolean ballTouched (int screenX, int screenY) {
         Vector3 position = new Vector3();
         Ray ray = gameState.getCamera().getPickRay(screenX, screenY);
-        int result = -1;
-        final ModelInstance instance = gameState.getInstances().get(4);
+
+        final ModelInstance instance = gameState.getBall().getModel();
         instance.transform.getTranslation(position);
         final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
         float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
-        if (dist2 <= (gameState.getBall().getDiameter()/2) * (gameState.getBall().getDiameter()/2)) {
-            result = 4;
-        }
-        return result;
+        if (dist2 <= (gameState.getBall().getDiameter()/2) * (gameState.getBall().getDiameter()/2)) return true;
+        return false;
     }
 }
