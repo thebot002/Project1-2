@@ -38,7 +38,7 @@ public abstract class SubMenu extends MenuState {
 
         //content field
         createContent();
-        table.add(getContent()).width(Gdx.graphics.getWidth()/2).expandX();
+        table.add(getContent()).width(Gdx.graphics.getWidth()/2).expand().fill();
         table.row();
 
         //back button

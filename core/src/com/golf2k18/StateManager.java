@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.golf2k18.function.Formula;
 import com.golf2k18.io.DataIO;
+import com.golf2k18.io.Settings;
 import com.golf2k18.objects.*;
 import com.golf2k18.states.State;
 import com.golf2k18.states.menu.MainMenu;
@@ -20,8 +21,10 @@ public class StateManager extends ApplicationAdapter {
 	private Stack<State> states;
     public static final int HEIGHT = 800;
     public static final int WIDTH = 1200;
+    public static Settings settings;
     public static Music music;
     public static Skin skin;
+
 
     public StateManager() {
 		states = new Stack<>();
@@ -33,8 +36,8 @@ public class StateManager extends ApplicationAdapter {
 	@Override
     public void create () {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
+        settings = Settings.load();
         State start = new MainMenu(this);
-        //State start = new CourseCreatorMenu(this);
         start.create();
         states.push(start);
         Gdx.gl.glClearColor(1, 1, 1, 1);

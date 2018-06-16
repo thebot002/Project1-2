@@ -35,6 +35,7 @@ public class SettingsMenu extends SubMenu {
         content.add(volumeLabel);
 
         Slider volume = new Slider(0,1,0.1f,false,StateManager.skin);
+        volume.setValue(settings.getMusicVolume());
         content.add(volume).fillX();
         content.row();
 
@@ -58,12 +59,17 @@ public class SettingsMenu extends SubMenu {
         apply.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                change = false;
+                settings.setMusicVolume(volume.getValue());
+                StateManager.music.setVolume(volume.getValue());
+                settings.setSelectedSolver(solvers.getCheckedIndex());
                 DataIO.writeSettings(settings);
                 StateManager.music.setVolume(volume.getValue());
             }
         });
         content.add(apply).expand().fillX().bottom().colspan(2);
 
+        content.debug();
         content.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
