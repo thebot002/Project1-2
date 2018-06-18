@@ -9,12 +9,23 @@ import com.golf2k18.engine.Engine;
 public class Euler implements Solver {
 
     private Engine engine;
-
+/**
+ * solvePos calculates ball position after a single time step
+ * @param  position ball position
+ * @param  velocity ball velocity
+ *@return Vector3 returns the new ball position
+ */
     @Override
     public Vector3 solvePos(Vector3 position, Vector3 velocity){
         return new Vector3(position.x + engine.getDt()*velocity.x,position.y + engine.getDt()*velocity.y,0);
     }
 
+    /**
+     * solveVel calculates the balls velocity
+     * @param position ball position
+     * @param velocity ball velocity
+     * @return Vector3 updated velocity
+     */
     @Override
     public Vector3 solveVel(Vector3 position, Vector3 velocity){
         float aX = engine.getAcceleration(position,velocity).x;
