@@ -84,6 +84,9 @@ public class Engine {
         ball.getPosition().set(newPos);
 
         updateBall(newPos,newVel);
+        if(ball.getPosition().dst(terrain.getHole())<terrain.getHOLE_DIAM() / 2 + 0.6f){
+            ball.setRolledOver(true);
+        }
 //        if(ball.getPosition().z <= 0){
 //            ball.getPosition().set(position);
 //        }
