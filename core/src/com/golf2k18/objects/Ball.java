@@ -20,6 +20,7 @@ public class Ball {
 	private Vector3 position;
 
     private boolean stopped = true;
+    private boolean rolledOver;
 
     private Texture ballTexture = new Texture("Textures/ball_texture.jpg");
     private ModelInstance model;

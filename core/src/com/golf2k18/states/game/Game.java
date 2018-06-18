@@ -301,6 +301,7 @@ public class Game extends State3D {
         return goal;
     }
 
+
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors() {
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
