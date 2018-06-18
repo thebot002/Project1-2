@@ -38,7 +38,7 @@ public abstract class SubMenu extends MenuState {
 
         //content field
         createContent();
-        table.add(getContent()).width(Gdx.graphics.getWidth()/2).expandX();
+        table.add(getContent()).width(Gdx.graphics.getWidth()/2).expand().fill();
         table.row();
 
         //back button
@@ -49,8 +49,9 @@ public abstract class SubMenu extends MenuState {
                 returnAction();
             }
         });
-        table.add(back).pad(10f).expandY().padBottom(100f).bottom().width(Gdx.graphics.getWidth()/2).expandX();
+        table.add(back).pad(10f).padBottom(100f).bottom().width(Gdx.graphics.getWidth()/2).expandX();
 
+        table.debug();
         stage.addActor(table);
     }
 

@@ -91,6 +91,20 @@ public class Settings implements Serializable {
         catch (IOException e){
             e.printStackTrace();
         }
-        return settings;
+        finally {
+            return settings;
+        }
+    }
+
+    public void setSelectedSolver(int i){
+        selectedSolver = i;
+    }
+
+    public void setMusicVolume(float volume){
+        musicVolume = volume;
+    }
+
+    public float getMusicVolume(){
+        return musicVolume;
     }
 }

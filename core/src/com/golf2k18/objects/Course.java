@@ -20,10 +20,10 @@ public class Course implements Serializable {
         scores = new int[course.size()];
     }
 
-    public Course(Terrain terrain, String name){
+    public Course(Terrain terrain){
         course = new ArrayList<>();
         course.add(terrain);
-        this.name = name;
+        this.name = terrain.getName();
         scores = new int[1];
     }
 

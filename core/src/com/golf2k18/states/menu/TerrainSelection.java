@@ -80,7 +80,7 @@ public class TerrainSelection extends SubMenu {
 
                 if(terrain_course.getSelected().equals("Terrain")){
                     Terrain t = DataIO.getTerrain(selector.getChecked().getLabel().getText().toString());
-                    course = new Course(t,t.getName());
+                    course = new Course(t);
                 }
                 else course = DataIO.getCourse(selector2.getChecked().getLabel().getText().toString());
                 manager.push(new ModeSelection(manager,course));

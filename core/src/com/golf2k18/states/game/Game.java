@@ -20,7 +20,6 @@ import com.golf2k18.states.game.endStates.EndState;
 import com.golf2k18.states.game.endStates.LoseState;
 import com.golf2k18.states.game.endStates.TerrainWinState;
 import com.golf2k18.states.game.endStates.WinState;
-import com.golf2k18.io.Settings;
 import com.golf2k18.states.menu.SettingsMenu;
 
 import java.util.HashMap;
@@ -41,9 +40,8 @@ public class Game extends State3D {
     private float marginRadius;
     private StateManager manager;
 
-    private HashMap<String, Label> labels;
+    public HashMap<String, Label> labels;
 
-    private Settings settings;
     private Course course;
     private int hole_number;
 
@@ -79,9 +77,9 @@ public class Game extends State3D {
         super.create();
 
         ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
+        controller.initFocus(ball.getPosition());
 
-        settings = Settings.load();
-        engine = new Engine(terrain, ball, settings.getSolver());
+        engine = new Engine(terrain, ball, StateManager.settings.getSolver());
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
@@ -234,6 +232,8 @@ public class Game extends State3D {
     @Override
     public void render() {
         super.render();
+        //hud.getBatch().begin();
+
         hud.act();
         hud.draw();
         if (paused) {
