@@ -20,7 +20,7 @@ public class Ball {
 	private Vector3 position;
 
     private boolean stopped = true;
-    private boolean rolledOver;
+    private boolean rolledOver = false;
 
     private Texture ballTexture = new Texture("Textures/ball_texture.jpg");
     private ModelInstance model;
@@ -103,4 +103,6 @@ public class Ball {
     public void setVelocity(Vector3 velocity){
         this.velocity = velocity;
     }
+    public void setRolledOver(boolean b){this.rolledOver = b;}
+    public boolean isRolledOver() {return rolledOver;}
 }
