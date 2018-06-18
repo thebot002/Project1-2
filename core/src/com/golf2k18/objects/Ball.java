@@ -96,4 +96,10 @@ public class Ball {
         position.z = z;
         model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
     }
+    public void setPosition(Vector3 v){
+        this.position=v;
+    }
+    public void setVelocity(Vector3 velocity){
+        this.velocity = velocity;
+    }
 }
