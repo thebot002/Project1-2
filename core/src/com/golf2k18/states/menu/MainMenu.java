@@ -25,7 +25,7 @@ public class MainMenu extends MenuState
      */
     public MainMenu(StateManager manager) {
         super(manager);
-        createMusic();
+        //createMusic();
     }
     //Add music to the menu
     private void createMusic(){
