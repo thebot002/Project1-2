@@ -57,11 +57,11 @@ public class AI extends Bot {
         newPosition = solver.solvePos(game.getBall().getPosition(),tempBallVelocity);
 
         if(newPosition.dst(terrain.getHole()) > (terrain.getHOLE_DIAM() / 2 + .2f)){
-            count++;
             if(velocities.size() < 1) {
                 tempBallVelocity = tempBallVelocity.add(.3f);
             }
             else{
+                count++;
                 velocities.add(tempBallVelocity);
                 tempBallVelocity = velocities.get(count).add(.3f);
             }
@@ -69,11 +69,9 @@ public class AI extends Bot {
 
         }
         else{
-            System.out.println("i got here");
             game.getBall().hit(tempBallVelocity.add(new Vector3(-7,-7,0)));
             velocities = new ArrayList<>();
             count = 0;
-            System.out.println("even farther");
         }
         System.out.println("X = " + newPosition.x + " " + "Y = " + newPosition.y);
     }
