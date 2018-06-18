@@ -77,7 +77,7 @@ public class CourseCreatorMenu extends SubMenu {
                             return;
                         }
                         ArrayList<Terrain> finalList = new ArrayList<>();
-                        for (int i = 1; i < terrainOrder.size(); i++) {
+                        for (int i = 1; i <= terrainOrder.size(); i++) {
                             if(!terrainOrder.containsKey(i)) {
                                 JOptionPane.showMessageDialog(null,"A value is missing in the order of the terrains","Error",JOptionPane.ERROR_MESSAGE);
                                 return;
@@ -94,7 +94,6 @@ public class CourseCreatorMenu extends SubMenu {
                 catch (NumberFormatException e){
                     JOptionPane.showMessageDialog(null,"Please fill in with appropriate values","Error",JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
         content.add(create).fillX().colspan(2).pad(10f);

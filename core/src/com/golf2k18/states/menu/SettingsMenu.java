@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.StateManager;
 import com.golf2k18.io.DataIO;
+import com.golf2k18.io.Settings;
 import com.golf2k18.states.SubMenu;
 
 import javax.swing.*;

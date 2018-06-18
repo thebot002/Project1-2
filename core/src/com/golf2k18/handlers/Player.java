@@ -27,6 +27,10 @@ public abstract class Player extends InputAdapter {
         return hitCount;
     }
 
+    public void hit(){
+        hitCount++;
+    }
+
     public void resetCount() {
         this.hitCount = 0;
     }

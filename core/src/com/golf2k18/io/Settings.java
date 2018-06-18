@@ -1,7 +1,6 @@
-package com.golf2k18.states.menu;
+package com.golf2k18.io;
 
 import com.golf2k18.engine.solver.*;
-import com.golf2k18.io.DataIO;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

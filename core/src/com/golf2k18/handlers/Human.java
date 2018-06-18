@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.golf2k18.states.game.Game;
-import com.golf2k18.states.game.endStates.WinState;
 
 /**
  * Defines the properties the different gams commands if it is being played by a human.
@@ -60,9 +59,6 @@ public class Human extends Player {
                 game.labels.get("focus").setText("");
             }
         }*/
-        if(game.isGoal()){
-            game.getStateManager().push(new WinState(game.getStateManager()));
-        }
     }
 
     @Override

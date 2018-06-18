@@ -16,8 +16,11 @@ import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Course;
 import com.golf2k18.states.State3D;
 import com.golf2k18.StateManager;
+import com.golf2k18.states.game.endStates.EndState;
+import com.golf2k18.states.game.endStates.LoseState;
+import com.golf2k18.states.game.endStates.TerrainWinState;
 import com.golf2k18.states.game.endStates.WinState;
-import com.golf2k18.states.menu.Settings;
+import com.golf2k18.io.Settings;
 import com.golf2k18.states.menu.SettingsMenu;
 
 import java.util.HashMap;
@@ -38,7 +41,7 @@ public class Game extends State3D {
     private float marginRadius;
     private StateManager manager;
 
-    public HashMap<String, Label> labels;
+    private HashMap<String, Label> labels;
 
     private Settings settings;
     private Course course;
@@ -56,7 +59,10 @@ public class Game extends State3D {
         super(manager, course.getTerrain(0));
 
         this.course = course;
-        hole_number = 0;
+        hole_number = 1;
+
+        ball = new Ball(terrain.getStart().cpy());
+        instances.add(ball.getModel());
 
         this.player = player;
         player.setState(this);
@@ -72,8 +78,6 @@ public class Game extends State3D {
     public void create() {
         super.create();
 
-        ball = new Ball(terrain.getStart().cpy());
-        instances.add(ball.getModel());
         ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
 
         settings = Settings.load();
@@ -89,9 +93,9 @@ public class Game extends State3D {
 
         //creation of labels
         labels = new HashMap<>();
-        labels.put("score", new Label("Score", StateManager.skin));
+        labels.put("score", new Label("Score: 0", StateManager.skin));
         labels.put("par", new Label("Par: ", StateManager.skin));
-        labels.put("title", new Label("Hole " + terrain.getName(), StateManager.skin, "title"));
+        labels.put("title", new Label("Hole " + (course.getSize()>1? "#"+hole_number+":" : "")+ terrain.getName(), StateManager.skin, "title"));
         labels.put("focus", new Label("", StateManager.skin));
         labels.put("distance", new Label("Distance to hole:", StateManager.skin));
         labels.put("speed", new Label("Speed:", StateManager.skin));
@@ -142,6 +146,7 @@ public class Game extends State3D {
                 double intensity = intensityInput.getValue();
 
                 ball.hit(new Vector3((float) (Math.cos(Math.toRadians(dir)) * intensity), (float) (Math.sin(Math.toRadians(dir)) * intensity), 0));
+                player.hit();
             }
         });
         inputGroup.addActor(hitButton);
@@ -198,13 +203,26 @@ public class Game extends State3D {
         organizer.row();
         organizer.add(resume).top().pad(10f);
 
+        TextButton givUp = new TextButton("Give up", StateManager.skin);
+        Game g = this;
+        givUp.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(course.getSize() != hole_number){
+                    course.setScore(hole_number,17);
+                    endState(new LoseState(manager,g));
+                }
+            }
+        });
+        organizer.row();
+        organizer.add(givUp).top().pad(10f);
+
+
         TextButton restart = new TextButton("Restart", StateManager.skin);
         restart.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ball.getPosition().set(terrain.getStart().cpy());
-                ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
-                player.resetCount();
+                restart();
             }
         });
         organizer.row();
@@ -256,7 +274,11 @@ public class Game extends State3D {
         } else {
             player.handleInput(this);
         }
-        if(isGoal()) endState();
+        if(isGoal()) {
+            if(hole_number == course.getSize()) endState(new WinState(manager,this));
+            else endState(new TerrainWinState(manager,this));
+        }
+        if(player.getHitCount() > 17) endState(new LoseState(manager,this));
         updateLabels();
     }
 
@@ -275,7 +297,6 @@ public class Game extends State3D {
         if ((pos.dst(terrain.getHole()) < radius)) {
             if (ball.isStopped())
                 goal = true;
-            endState();
         }
         return goal;
     }
@@ -289,13 +310,31 @@ public class Game extends State3D {
         return ball;
     }
 
-    public StateManager getStateManager(){
-        return this.manager;
+    private void endState(EndState state){
+        course.setScore(hole_number-1,player.getHitCount());
+        this.player.resetCount();
+        manager.push(state);
     }
 
-    private void endState(){
-        this.player.resetCount();
-        manager.push(new WinState(manager));
+    public Course getCourse() {
+        return course;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void restart(){
+        ball.getPosition().set(terrain.getStart().cpy());
+        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
+        player.resetCount();
+    }
+
+    public void nextTerrain(){
+        hole_number++;
+        terrain = course.getTerrain(hole_number-1);
+        ball.getPosition().set(terrain.getStart().cpy());
+        create();
     }
 
     public Engine getEngine(){
