@@ -10,14 +10,14 @@ import com.golf2k18.objects.Terrain;
 import java.io.*;
 
 /**
- * Class that contains the information about the course inputs and outputs
+ * Class to input and output data(courses,terrains and settings) to the assets folder.
  */
 public class DataIO {
     private static final FileHandle data_folder = Gdx.files.internal("Data");
 
     /**
      *Method used to contain all the different course names.
-     * @return
+     * @return all the names of saved terrains.
      */
     public static Array<String> getTerrainNames(){
         FileHandle[] children = data_folder.child("Terrains").list();
@@ -29,7 +29,7 @@ public class DataIO {
     }
 
     /**
-     * Method used to write course properties into a file.
+     * Method used to write terrain properties into a file.
      * @param terrain The variable that designates the course.
      */
     public static void writeTerrain(Terrain terrain){
@@ -46,7 +46,7 @@ public class DataIO {
 
     /**
      *Method used to get the properties of a course
-     * @param name Name of the course
+     * @param name Name of the terrain
      * @return a new Terrain
      */
     public static Terrain getTerrain(String name){
@@ -69,7 +69,7 @@ public class DataIO {
 
     /**
      *Method used to contain all the different course names.
-     * @return
+     * @return the name of all the courses saved.
      */
     public static Array<String> getCourseNames(){
         FileHandle[] children = data_folder.child("Courses").list();
@@ -108,6 +108,10 @@ public class DataIO {
             ObjectInputStream ois = new ObjectInputStream(fis);
             input = (Course) ois.readObject();
         }
+        catch (InvalidClassException | EOFException e){
+            StateManager.reset();
+            return getCourse(name);
+        }
         catch (ClassNotFoundException | IOException e){
             System.out.print(data_folder.path() + "/Courses/" + name + ".ser");
             e.printStackTrace();
@@ -115,10 +119,9 @@ public class DataIO {
         return input;
     }
 
-
     /**
-     * Method used to write course properties into a file.
-     * @param settings The variable that designates the course.
+     * Method used to write settings into a file.
+     * @param settings The variable that settings file.
      */
     public static void writeSettings(Settings settings){
         try{
@@ -131,7 +134,6 @@ public class DataIO {
             e.printStackTrace();
         }
     }
-
 
     /**
      *Method used to get the settings
@@ -150,5 +152,4 @@ public class DataIO {
         }
         return input;
     }
-
 }

@@ -91,7 +91,9 @@ public class Settings implements Serializable {
         catch (IOException e){
             e.printStackTrace();
         }
-        return settings;
+        finally {
+            return settings;
+        }
     }
 
     public void setSelectedSolver(int i){

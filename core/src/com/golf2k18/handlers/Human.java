@@ -30,6 +30,7 @@ public class Human extends Player {
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
+        if(down) return;
         if(manualMovement && Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)){
             game.getBall().getPosition().x += 0.1;
         }

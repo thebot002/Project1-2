@@ -1,5 +1,6 @@
 package com.golf2k18;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.golf2k18.function.Formula;
+import com.golf2k18.function.Spline;
 import com.golf2k18.handlers.Human;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.io.Settings;
@@ -39,8 +41,8 @@ public class StateManager extends ApplicationAdapter {
     public void create () {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         settings = Settings.load();
-        //State start = new MainMenu(this);
-        State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new Human());
+        State start = new MainMenu(this);
+        //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new Human());
         start.create();
         states.push(start);
         Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -122,16 +124,20 @@ public class StateManager extends ApplicationAdapter {
             flatinter[1][i] = 2;
             xDeriv[1][i] = -1f;
         }
-		/*flatinter[9][10] = 2;
+		flatinter[9][10] = 2;
         flatinter[10][9] = 2;
         flatinter[11][10] = 2;
         flatinter[10][11] = 2;
 		flatinter[10][10] = 3;
         Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter,xDeriv,yDeriv),"PlaneSpline");
-		DataIO.writeFile(c6);*/
+		DataIO.writeTerrain(c6);
 
-		//String[] sq = {"2","^","(","x","-","11",")"};
-       // Terrain c7 = new Terrain(width,height,start,goal,new Formula(sq),"Sq");
-       // DataIO.writeFile(c7);
+        ArrayList<Terrain> terrains = new ArrayList<>();
+        terrains.add(c5);
+        terrains.add(c2);
+        terrains.add(c4);
+        terrains.add(c6);
+        Course course = new Course(terrains,"Default");
+        DataIO.writeCourse(course);
     }
 }

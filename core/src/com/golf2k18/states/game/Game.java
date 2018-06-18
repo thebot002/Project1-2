@@ -232,6 +232,8 @@ public class Game extends State3D {
     @Override
     public void render() {
         super.render();
+        //hud.getBatch().begin();
+
         hud.act();
         hud.draw();
         if (paused) {
