@@ -34,8 +34,6 @@ public class Game extends State3D {
     public Stage hud;
     private Stage pause;
     public boolean paused = false;
-    public Slider directionInput;
-    public Slider intensityInput;
     private float radius;
     private float marginRadius;
     private StateManager manager;
@@ -82,7 +80,7 @@ public class Game extends State3D {
         engine = new Engine(terrain, ball, StateManager.settings.getSolver());
         createHUD();
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player, controller));
+        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player.getInputProcessor(), controller));
     }
 
     //Method which creates the HUD for the game.
@@ -114,41 +112,7 @@ public class Game extends State3D {
 
         table.row();
 
-        table.add(labels.get("focus")).left().bottom().pad(10f);
-
-        VerticalGroup inputGroup = new VerticalGroup();
-
-        //direction field
-        HorizontalGroup directionGroup = new HorizontalGroup();
-        Label directionText = new Label("Direction: ", StateManager.skin);
-        directionGroup.addActor(directionText);
-        directionInput = new Slider(-180f, 180f, 1, false, StateManager.skin);
-        directionInput.setValue(0);
-        directionGroup.addActor(directionInput);
-        inputGroup.addActor(directionGroup);
-
-        //intensity field
-        HorizontalGroup intensityGroup = new HorizontalGroup();
-        Label intensityText = new Label("Intensity: ", StateManager.skin);
-        intensityGroup.addActor(intensityText);
-        intensityInput = new Slider(1f, 20f, 1, false, StateManager.skin);
-        intensityGroup.addActor(intensityInput);
-        inputGroup.addActor(intensityGroup);
-
-        //hit button
-        TextButton hitButton = new TextButton("Hit", StateManager.skin);
-        hitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                double dir = directionInput.getValue();
-                double intensity = intensityInput.getValue();
-
-                ball.hit(new Vector3((float) (Math.cos(Math.toRadians(dir)) * intensity), (float) (Math.sin(Math.toRadians(dir)) * intensity), 0));
-                player.hit();
-            }
-        });
-        inputGroup.addActor(hitButton);
-        table.add(inputGroup).center().bottom().pad(10f);
+        table.add(labels.get("focus")).left().bottom().pad(10f).colspan(2);
 
         Table ballInfo = new Table();
         ballInfo.add(labels.get("distance")).fillX().pad(10f);
@@ -232,8 +196,6 @@ public class Game extends State3D {
     @Override
     public void render() {
         super.render();
-        //hud.getBatch().begin();
-
         hud.act();
         hud.draw();
         if (paused) {
@@ -244,6 +206,7 @@ public class Game extends State3D {
             pause.act();
             pause.draw();
         }
+        player.renderInput();
     }
 
     @Override
@@ -291,7 +254,7 @@ public class Game extends State3D {
         labels.get("speed").setText("Speed: " + String.valueOf(ball.getVelocity().len()/10) + "m/s");
     }
 
-    public boolean isGoal() {
+    private boolean isGoal() {
         Vector3 pos = ball.getPosition();
         boolean goal = false;
         if ((pos.dst(terrain.getHole()) < radius)) {
@@ -303,7 +266,7 @@ public class Game extends State3D {
 
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors() {
-        Gdx.input.setInputProcessor(new InputMultiplexer(hud, this, controller));
+        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player.getInputProcessor(), controller));
     }
 
     public Ball getBall() {

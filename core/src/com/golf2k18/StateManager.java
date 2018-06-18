@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.golf2k18.function.Formula;
 import com.golf2k18.function.Spline;
-import com.golf2k18.handlers.Human;
+import com.golf2k18.handlers.HumanDrag;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.io.Settings;
 import com.golf2k18.objects.*;
@@ -42,7 +42,7 @@ public class StateManager extends ApplicationAdapter {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         settings = Settings.load();
         State start = new MainMenu(this);
-        //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new Human());
+        //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new HumanDrag());
         start.create();
         states.push(start);
         Gdx.gl.glClearColor(1, 1, 1, 1);
