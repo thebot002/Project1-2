@@ -52,7 +52,7 @@ public class AI extends Bot {
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
-        System.out.println(holeInOne(game));
+        game.getBall().hit(holeInOne(game));
         //'t deet ut neet
             }
 }

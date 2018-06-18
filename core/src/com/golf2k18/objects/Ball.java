@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.states.game.Game;
 
 /**
  * Class that contains all the necessary information about the ball
@@ -24,6 +25,8 @@ public class Ball {
 
     private Texture ballTexture = new Texture("Textures/ball_texture.jpg");
     private ModelInstance model;
+
+
 
     /**
      * Constructor for the ball class, this class creates the model and takes a Vector3 for position.
