@@ -144,14 +144,6 @@ public class Spline implements Function, Serializable {
         return result.get(0,0);
     }
 
-    public void update(Vector3 newData){
-        data[(int)newData.x][(int)newData.y] = newData.z;
-        interpolate(((int)newData.x)-1,((int)newData.y)-1);
-        if((int)newData.y != data.length) interpolate(((int)newData.x)-1,(int)newData.y);
-        if((int)newData.x != data[0].length) interpolate((int)newData.x,((int)newData.y)-1);
-        if((int)newData.x != data.length && (int)newData.y != data[0].length) interpolate((int)newData.x,(int)newData.y);
-    }
-
     public void update(ArrayList<Vector3> newData){
         boolean[][] toUpdate = new boolean[coefficients.length][coefficients[0].length];
         for (int i = 0; i < newData.size(); i++) {

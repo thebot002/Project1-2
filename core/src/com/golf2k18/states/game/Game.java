@@ -276,7 +276,7 @@ public class Game extends State3D {
 
     public void restart(){
         ball.getPosition().set(terrain.getStart().cpy());
-        ball.getVelocity().set(new Vector3());
+        ball.setStopped();
         ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
         player.resetCount();
     }

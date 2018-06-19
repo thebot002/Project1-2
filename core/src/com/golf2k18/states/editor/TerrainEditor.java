@@ -12,11 +12,22 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.function.Spline;
+import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.states.State3D;
 import com.golf2k18.StateManager;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -26,13 +37,21 @@ public class TerrainEditor extends State3D {
     private int startIndex;
     private Model nodeSelected;
     private Model nodeUnselected;
+    private Model startNode;
+    private int startPosIndex;
+    private int goalPosIndex;
+    private Model goalNode;
 
     private final float NODE_DIAM = 0.2f;
     private boolean ctrl = false;
+    private boolean change = false;
+    private boolean setStart = false;
+    private boolean setHole = false;
 
     private Spline function;
-
     private ArrayList<Integer> selected;
+
+    private Stage hud;
 
     public TerrainEditor(StateManager manager, Terrain terrain) {
         super(manager, terrain);
@@ -49,15 +68,105 @@ public class TerrainEditor extends State3D {
             terrain.toSpline(1);
         function = (Spline) terrain.getFunction();
 
-        createPoints(1);
+        createNodes();
+        initNodes();
         selected = new ArrayList<>();
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, controller));
+        createHUD();
+
+        Gdx.input.setInputProcessor(new InputMultiplexer(this, controller, hud));
         controller.toggleScroll();
     }
 
-    private void createPoints(float interval){
+    private void createHUD(){
+        hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+        Table content = new Table();
+        content.setFillParent(true);
+
+        content.add(new Label("TERRAIN EDITION",StateManager.skin,"title")).center().expandX().top().pad(10f).colspan(3);
+        content.row();
+
+        content.add();
+        content.add();
+        Table nameTable = new Table();
+        nameTable.add(new Label("Name: ",StateManager.skin));
+        TextField nameField = new TextField("",StateManager.skin);
+        nameTable.add(nameField).expandX().fillX().padLeft(10f);
+        content.add(nameTable).expandY().fillX().pad(10f).bottom().right();
+        content.row();
+
+        TextButton start = new TextButton("Modify start position",StateManager.skin);
+        start.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setStart = true;
+                initNodes();
+            }
+        });
+        content.add(start).fillX().pad(10f);
+
+        content.add();
+        TextButton save = new TextButton("Save",StateManager.skin);
+        save.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String name = nameField.getText();
+                if(name.length() > 0){
+                    terrain.setName(name);
+                    DataIO.writeTerrain(terrain);
+                }
+                initNodes();
+            }
+        });
+        content.add(save).fillX().pad(10f);
+        content.row();
+
+        TextButton hole = new TextButton("Modify hole position",StateManager.skin);
+        hole.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setHole = true;
+                initNodes();
+            }
+        });
+        content.add(hole).fillX().pad(10f);
+
+        content.add();
+        TextButton home = new TextButton("Home",StateManager.skin);
+        home.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(change) {
+                    int n = JOptionPane.showConfirmDialog(
+                            null,
+                            "There are some unsaved changes.\nReturn?",
+                            "Warning",
+                            JOptionPane.YES_NO_OPTION);
+                    if(n == 0) manager.home();
+                }
+                else manager.home();
+            }
+        });
+        content.add(home).fillX().pad(10f).right();
+
+        hud.addActor(content);
+    }
+
+    private void createNodes(){
         ModelBuilder builder = new ModelBuilder();
+
+        startNode = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
+                50,50,
+                new Material(ColorAttribute.createDiffuse(Color.GREEN)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
+        );
+
+        goalNode = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
+                50,50,
+                new Material(ColorAttribute.createDiffuse(Color.RED)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
+        );
 
         nodeSelected = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
                 50,50,
@@ -71,23 +180,36 @@ public class TerrainEditor extends State3D {
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
         startIndex = instances.size;
+    }
 
-        for (float i = 0; i <=terrain.getWidth() ; i+=interval) {
-            for (float j = 0; j <= terrain.getHeight() ; j+=interval) {
-                instances.add(new ModelInstance(nodeUnselected,i,j,function.evaluateF(i,j)));
+    private void initNodes(){
+        if(instances.size > startIndex)instances.removeRange(startIndex,instances.size-1);
+        for (float i = 0; i <=terrain.getWidth() ; i++) {
+            for (float j = 0; j <= terrain.getHeight() ; j++) {
+                if(i == terrain.getStart().x && j == terrain.getStart().y){
+                    startPosIndex = instances.size;
+                    instances.add(new ModelInstance(startNode,i,j,function.evaluateF(i,j)));
+                }
+                else if(i == terrain.getHole().x && j == terrain.getHole().y){
+                    goalPosIndex = instances.size;
+                    instances.add(new ModelInstance(goalNode,i,j,function.evaluateF(i,j)));
+                }
+                else instances.add(new ModelInstance(nodeUnselected,i,j,function.evaluateF(i,j)));
             }
         }
     }
 
     @Override
     public boolean scrolled(int amount) {
+        if(ctrl) return false;
         ArrayList<Vector3> newData = new ArrayList<>();
         for (Integer aSelected : selected) {
+            if(!change) change = true;
             Vector3 pos = instances.get(startIndex + aSelected).transform.getTranslation(new Vector3());
-            //Vector3 nd = d1ToD2(aSelected);
             pos.z = function.evaluateF(pos.x, pos.y);
-            pos.z += amount;
+            pos.z -= amount;
             newData.add(pos);
+            instances.get(startIndex + aSelected).transform.setTranslation(pos);
         }
         function.update(newData);
         super.createTerrain();
@@ -101,16 +223,32 @@ public class TerrainEditor extends State3D {
             if (!ctrl) {
                 for (int i : selected) {
                     Vector3 pos = d1ToD2(i);
-                    instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.y, pos.x, function.evaluateF(pos.x, pos.y)));
+                    if(pos.x == terrain.getStart().x && pos.y == terrain.getStart().y)
+                        instances.set(i + startIndex, new ModelInstance(startNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
+                    else if(pos.x == terrain.getStart().x && pos.y == terrain.getStart().y)
+                        instances.set(i + startIndex, new ModelInstance(goalNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
+                    else
+                        instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
                 }
                 selected.clear();
             }
-            if (pointI > -1) {
+            if (pointI > startIndex) {
                 Vector3 pos = d1ToD2(pointI);
-                instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.y, pos.x, function.evaluateF(pos.x, pos.y)));
-
-                selected.add(pointI);
+                if(setStart){
+                    terrain.getStart().set(pos.x,pos.y,function.evaluateF(pos.x,pos.y));
+                    initNodes();
+                }
+                else if(setHole){
+                    terrain.getHole().set(pos.x,pos.y,function.evaluateF(pos.x,pos.y));
+                    initNodes();
+                }
+                else{
+                    instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
+                    selected.add(pointI);
+                }
             }
+            if(setStart) setStart = false;
+            if(setHole) setHole = false;
         }
         return super.touchDown(screenX, screenY, pointer, button);
     }
@@ -118,6 +256,8 @@ public class TerrainEditor extends State3D {
     @Override
     public boolean keyDown(int keycode) {
         if(keycode == Input.Keys.CONTROL_LEFT)ctrl = true;
+        if(keycode == Input.Keys.S) setStart = true;
+        if(keycode == Input.Keys.G) setHole = true;
         return super.keyDown(keycode);
     }
 
@@ -128,10 +268,10 @@ public class TerrainEditor extends State3D {
     }
 
     private Vector3 d1ToD2(int point){
-        float xAmount = terrain.getWidth() +1;
+        float yAmount = terrain.getHeight() +1;
 
-        float x = point % xAmount;
-        float y = (point - x)/xAmount;
+        float y = point % yAmount;
+        float x = (point - y)/yAmount;
 
         return new Vector3(x,y,0);
     }
@@ -170,10 +310,16 @@ public class TerrainEditor extends State3D {
         return result;
     }
 
-
     @Override
     public void resize(int width, int height) {
 
+    }
+
+    @Override
+    public void render() {
+        super.render();
+        hud.act();
+        hud.draw();
     }
 
     @Override
