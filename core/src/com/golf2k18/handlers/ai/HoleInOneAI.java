@@ -54,6 +54,7 @@ public class HoleInOneAI extends Bot {
             tempBallVelocity = game.getBall().getPosition();
             velocities.add(tempBallVelocity);
         }
+
         newPosition = solver.solvePos(game.getBall().getPosition(),tempBallVelocity);
 
         if(newPosition.dst(terrain.getHole()) > (terrain.getHOLE_DIAM() / 2 + .2f)){
