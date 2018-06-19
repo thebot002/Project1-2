@@ -6,6 +6,6 @@ package com.golf2k18.handlers;
 public abstract class Bot extends Player {
     @Override
     public void renderInput() {
-
+        System.out.println(gameState.getBall().getVelocity());
     }
 }

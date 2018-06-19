@@ -13,6 +13,7 @@ import com.golf2k18.states.game.Game;
 public class AI extends Bot {
     private Ball ball;
     private Terrain terrain;
+    private boolean executed = false;
 
 
     public Vector3 solvePos(Vector3 position, Vector3 velocity, Engine engine){
@@ -52,7 +53,10 @@ public class AI extends Bot {
     @Override
     public void handleInput(Game game) {
         super.handleInput(game);
-        game.getBall().hit(holeInOne(game));
+        if(!executed) {
+            game.getBall().hit(holeInOne(game));
+            this.executed = true;
+        }
         //'t deet ut neet
             }
 }
