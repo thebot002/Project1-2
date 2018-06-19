@@ -101,25 +101,25 @@ public class Engine {
             Vector3 n = new Vector3(1,0,0);
             bounce(velocity, n);
             ball.getVelocity().set(n);
-            updateBall(dt);
+            ball.getPosition().x = 0;
         }
         if(position.x >= terrain.getWidth()){
             Vector3 n = new Vector3(-1,0,0);
             bounce(velocity, n);
             ball.getVelocity().set(n);
-            updateBall(dt);
+            ball.getPosition().x = terrain.getWidth();
         }
         if(position.y <= 0){
             Vector3 n = new Vector3(0,1,0);
             bounce(velocity, n);
             ball.getVelocity().set(n);
-            updateBall(dt);
+            ball.getPosition().y = 0;
         }
         if(position.y >= terrain.getHeight()){
             Vector3 n = new Vector3(0,-1,0);
             bounce(velocity,n);
             ball.getVelocity().set(n);
-            updateBall(dt);
+            ball.getPosition().y = terrain.getHeight();
         }
 
         ball.getPosition().z = terrain.getFunction().evaluateF(position.x,position.y);
