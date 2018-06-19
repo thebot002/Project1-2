@@ -254,7 +254,7 @@ public class Game extends State3D {
         labels.get("speed").setText("Speed: " + String.valueOf(ball.getVelocity().len()/10) + "m/s");
     }
 
-    private boolean isGoal() {
+    public boolean isGoal() {
         Vector3 pos = ball.getPosition();
         boolean goal = false;
         if ((pos.dst(terrain.getHole()) < radius)) {
