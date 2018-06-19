@@ -15,7 +15,7 @@ public class Engine {
     private float mass;
     private final float GRAVITY = 9.81f;
     protected final double STOP_TOLERANCE = 0.1;
-    protected final double GOAL_TOLERANCE = 10.0;
+    protected final double GOAL_TOLERANCE = 15.0;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
 
@@ -147,4 +147,5 @@ public class Engine {
         }
         return goal;
     }
+
 }
