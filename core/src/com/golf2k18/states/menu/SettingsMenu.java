@@ -19,13 +19,10 @@ public class SettingsMenu extends SubMenu {
     private final String TITLE = "SETTINGS";
     private Table content;
 
-    private Settings settings;
-
     private boolean change = false;
 
     public SettingsMenu(StateManager manager) {
         super(manager);
-        settings = Settings.load();
     }
 
     protected void createContent() {
@@ -36,7 +33,7 @@ public class SettingsMenu extends SubMenu {
         content.add(volumeLabel).pad(10f);
 
         Slider volume = new Slider(0,1,0.1f,false,StateManager.skin);
-        volume.setValue(settings.getMusicVolume());
+        volume.setValue(StateManager.settings.getMusicVolume());
         content.add(volume).fillX().pad(10f);
         content.row();
 
@@ -44,13 +41,13 @@ public class SettingsMenu extends SubMenu {
         Label solversLabel = new Label("Solver",StateManager.skin);
         content.add(solversLabel).pad(10f);
 
-        ArrayList<String> solver_arrayList = settings.getSolvers();
+        ArrayList<String> solver_arrayList = StateManager.settings.getSolvers();
         Array<String> solver_array = new Array<>();
         for (String s: solver_arrayList) solver_array.add(s);
 
         SelectBox<String> solvers = new SelectBox<>(StateManager.skin);
         solvers.setItems(solver_array);
-        solvers.setSelectedIndex(settings.getSelectedSolver());
+        solvers.setSelectedIndex(StateManager.settings.getSelectedSolver());
         content.add(solvers).fillX().pad(10f);
         content.row();
 
@@ -59,11 +56,12 @@ public class SettingsMenu extends SubMenu {
         content.add(inputMode).pad(10f);
 
         Array<String> inputmodes_array = new Array<>();
-        ArrayList<String> inputmodes_arrayList = settings.getSources();
+        ArrayList<String> inputmodes_arrayList = StateManager.settings.getSources();
         for (String s:inputmodes_arrayList) inputmodes_array.add(s);
 
         SelectBox<String> inputmodes = new SelectBox<>(StateManager.skin);
         inputmodes.setItems(inputmodes_array);
+        inputmodes.setSelectedIndex(StateManager.settings.getSelectedSource());
         content.add(inputmodes).pad(10f).fillX();
         content.row();
 
@@ -72,12 +70,12 @@ public class SettingsMenu extends SubMenu {
         apply.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                change = false;
-                settings.setMusicVolume(volume.getValue());
+                StateManager.settings.setMusicVolume(volume.getValue());
+                StateManager.settings.setSelectedSolver(solvers.getSelectedIndex());
+                StateManager.settings.setSelectedSource(inputmodes.getSelectedIndex());
+                DataIO.writeSettings(StateManager.settings);
                 StateManager.music.setVolume(volume.getValue());
-                settings.setSelectedSolver(solvers.getSelectedIndex());
-                DataIO.writeSettings(settings);
-                StateManager.music.setVolume(volume.getValue());
+                manager.pop();
             }
         });
         content.add(apply).expand().fillX().bottom().colspan(2);

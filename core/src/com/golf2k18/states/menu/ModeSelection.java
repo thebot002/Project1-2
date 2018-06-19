@@ -5,7 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.StateManager;
-import com.golf2k18.handlers.Human;
+import com.golf2k18.handlers.HumanDrag;
+import com.golf2k18.handlers.HumanManual;
 import com.golf2k18.objects.Course;
 import com.golf2k18.states.SubMenu;
 import com.golf2k18.states.game.Game;
@@ -29,7 +30,7 @@ public class ModeSelection extends SubMenu {
         single.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                manager.push(new Game(manager,course,new Human()));
+                manager.push(new Game(manager,course,StateManager.settings.getSelectedSource() == 0?new HumanManual():new HumanDrag()));
             }
         });
         content.add(single).fillX().expandX().left();
@@ -40,7 +41,7 @@ public class ModeSelection extends SubMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.print("To be implemented");
-                //manager.push(game.start(manager,new Human()));
+                //manager.push(game.start(manager,new HumanManual()));
             }
         });
         content.add(multi).fillX().padTop(10f).left();

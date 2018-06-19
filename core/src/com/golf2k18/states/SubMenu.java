@@ -51,7 +51,6 @@ public abstract class SubMenu extends MenuState {
         });
         table.add(back).pad(10f).padBottom(100f).bottom().width(Gdx.graphics.getWidth()/2).expandX();
 
-        table.debug();
         stage.addActor(table);
     }
 
