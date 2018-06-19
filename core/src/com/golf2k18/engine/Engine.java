@@ -19,7 +19,8 @@ public class Engine {
     //protected float dt = 0.01f;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
-
+    private float radius;
+    private float marginRadius;
 
     /**
      * The class' constructor
@@ -33,12 +34,23 @@ public class Engine {
         this.mass = ball.getMass();
         this.sherlock = solver;
         solver.setEngine(this);
+        marginRadius = .6f;
+        radius = terrain.getHOLE_DIAM() / 2 + marginRadius;
     }
 
     public float getDt() {
         return dt;
     }
 
+    public boolean isGoal() {
+        Vector3 pos = ball.getPosition();
+        boolean goal = false;
+        if ((pos.dst(terrain.getHole()) < radius)) {
+            if (ball.isStopped())
+                goal = true;
+        }
+        return goal;
+    }
 
     private Vector3 calcGravity(Vector3 position)
     {
@@ -104,25 +116,21 @@ public class Engine {
             Vector3 n = new Vector3(1,0,0);
             bounce(velocity, n);
             ball.getVelocity().set(n);
-            updateBall(dt);
         }
         if(position.x >= terrain.getWidth()){
             Vector3 n = new Vector3(-1,0,0);
             bounce(velocity, n);
             ball.getVelocity().set(n);
-            updateBall(dt);
         }
         if(position.y <= 0){
             Vector3 n = new Vector3(0,1,0);
             bounce(velocity, n);
             ball.getVelocity().set(n);
-            updateBall(dt);
-        }
+            }
         if(position.y >= terrain.getHeight()){
             Vector3 n = new Vector3(0,-1,0);
             bounce(velocity,n);
             ball.getVelocity().set(n);
-            updateBall(dt);
         }
 
         ball.getPosition().z = terrain.getFunction().evaluateF(position.x,position.y);

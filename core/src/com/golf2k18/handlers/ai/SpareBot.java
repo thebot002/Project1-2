@@ -9,7 +9,7 @@ import com.golf2k18.states.game.Game;
 /**
  * The 2nd ai that can play the game. It tries to find the hole while always hitting the ball from the starting position.
  */
-public class AI2 extends Bot {
+public class SpareBot extends Bot {
 
     private Vector3 fitness(Terrain terrain, Ball ball) {
         Vector3 coordinates = new Vector3();

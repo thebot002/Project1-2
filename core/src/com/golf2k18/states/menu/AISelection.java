@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.golf2k18.StateManager;
 import com.golf2k18.handlers.Bot;
 import com.golf2k18.handlers.Player;
-import com.golf2k18.handlers.ai.AI;
-import com.golf2k18.handlers.ai.AI2;
-import com.golf2k18.handlers.ai.AI3;
+import com.golf2k18.handlers.ai.HoleInOneAI;
+import com.golf2k18.handlers.ai.SpareBot;
+import com.golf2k18.handlers.ai.WIP;
 import com.golf2k18.objects.Course;
 import com.golf2k18.states.SubMenu;
 import com.golf2k18.states.game.Game;
@@ -17,7 +17,7 @@ import com.golf2k18.states.game.Game;
 import java.util.ArrayList;
 
 /**
- * The menu to select which ai the user wants to see playing the game, AI1 or AI2.
+ * The menu to select which ai the user wants to see playing the game, AI1 or SpareBot.
  */
 public class AISelection extends SubMenu {
     private Table content;
@@ -33,12 +33,12 @@ public class AISelection extends SubMenu {
 
         bots = new ArrayList<>();
         concreteBots = new ArrayList<>();
-        bots.add("AI");
-        concreteBots.add(new AI());
-        bots.add("AI2");
-        concreteBots.add(new AI2());
-        bots.add("AI3");
-        concreteBots.add(new AI3());
+        bots.add("HoleInOneAI");
+        concreteBots.add(new HoleInOneAI());
+        bots.add("SpareBot");
+        concreteBots.add(new SpareBot());
+        bots.add("WIP");
+        concreteBots.add(new WIP());
 
         this.course = course;
     }

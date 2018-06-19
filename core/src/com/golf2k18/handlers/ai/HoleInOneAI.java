@@ -15,7 +15,7 @@ import com.golf2k18.states.game.Game;
 import java.util.ArrayList;
 
 
-public class AI extends Bot {
+public class HoleInOneAI extends Bot {
     private Ball ball;
     private Terrain terrain;
    // private Vector3 ballDirection; = terrain.getHole().add(ball.getPosition().scl(-1));
