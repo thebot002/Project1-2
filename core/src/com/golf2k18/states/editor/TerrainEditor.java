@@ -23,10 +23,7 @@ import java.util.ArrayList;
  * This class is used to create the course, with all its properties
  */
 public class TerrainEditor extends State3D {
-
-    int startIndex;
-    ArrayList<Integer> selected;
-
+    private int startIndex;
     private Model nodeSelected;
     private Model nodeUnselected;
 
@@ -34,6 +31,8 @@ public class TerrainEditor extends State3D {
     private boolean ctrl = false;
 
     private Spline function;
+
+    private ArrayList<Integer> selected;
 
     public TerrainEditor(StateManager manager, Terrain terrain) {
         super(manager, terrain);
@@ -46,8 +45,9 @@ public class TerrainEditor extends State3D {
     public void create() {
         super.create();
 
-        if(terrain.getFunction() instanceof Spline)
-            function = (Spline) terrain.getFunction();
+        if(!(terrain.getFunction() instanceof Spline))
+            terrain.toSpline(1);
+        function = (Spline) terrain.getFunction();
 
         createPoints(1);
         selected = new ArrayList<>();
@@ -79,33 +79,21 @@ public class TerrainEditor extends State3D {
         }
     }
 
-    /**
-     *Input handler for the terrain editor class
-     * @param amount
-     * @return the slopes
-     */
     @Override
     public boolean scrolled(int amount) {
         ArrayList<Vector3> newData = new ArrayList<>();
         for (Integer aSelected : selected) {
-            Vector3 nd = d1ToD2(aSelected);
-            nd.z = function.evaluateF(nd.x, nd.y);
-            nd.z += amount;
-            newData.add(nd);
+            Vector3 pos = instances.get(startIndex + aSelected).transform.getTranslation(new Vector3());
+            //Vector3 nd = d1ToD2(aSelected);
+            pos.z = function.evaluateF(pos.x, pos.y);
+            pos.z += amount;
+            newData.add(pos);
         }
         function.update(newData);
         super.createTerrain();
         return super.scrolled(amount);
     }
 
-    /**
-     * Controls for the camera
-     * @param screenX x coordinate
-     * @param screenY y coordinate
-     * @param pointer mouse pointer
-     * @param button
-     * @return new camera position
-     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(button == 0) {
@@ -154,7 +142,7 @@ public class TerrainEditor extends State3D {
      * @param screenY y coordinate
      * @return the game coordinates
      */
-    public int getObject (int screenX, int screenY) {
+    private int getObject (int screenX, int screenY) {
         Ray ray = camera.getPickRay(screenX, screenY);
 
         int result = -1;
