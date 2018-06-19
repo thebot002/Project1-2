@@ -3,6 +3,7 @@ package com.golf2k18.handlers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.golf2k18.states.game.Game;
 
 /**
@@ -37,5 +38,11 @@ public abstract class Player extends InputAdapter {
 
     public void setState(Game gameState){
         this.gameState = gameState;
+    }
+
+    public abstract void renderInput();
+
+    public InputProcessor getInputProcessor(){
+        return this;
     }
 }

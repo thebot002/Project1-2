@@ -71,12 +71,28 @@ public class Settings implements Serializable {
         return selectedSolver;
     }
 
+    public void setSelectedSolver(int i){
+        selectedSolver = i;
+    }
+
     public ArrayList<String> getSources() {
         return sources;
     }
 
     public int getSelectedSource() {
         return selectedSource;
+    }
+
+    public void setSelectedSource(int i) {
+        selectedSource = i;
+    }
+
+    public void setMusicVolume(float volume){
+        musicVolume = volume;
+    }
+
+    public float getMusicVolume(){
+        return musicVolume;
     }
 
     public static Settings load(){
@@ -94,17 +110,5 @@ public class Settings implements Serializable {
         finally {
             return settings;
         }
-    }
-
-    public void setSelectedSolver(int i){
-        selectedSolver = i;
-    }
-
-    public void setMusicVolume(float volume){
-        musicVolume = volume;
-    }
-
-    public float getMusicVolume(){
-        return musicVolume;
     }
 }
