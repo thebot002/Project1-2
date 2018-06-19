@@ -14,12 +14,13 @@ public class Engine {
     private Ball ball;
     private float mass;
     private final float GRAVITY = 9.81f;
-    protected final double STOP_TOLERANCE = 0.2;
+    protected final double STOP_TOLERANCE = 0.1;
     protected final double GOAL_TOLERANCE = 10.0;
-    //protected float dt = 0.01f;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
 
+    private float radius;
+    private final float MARGIN_RADIUS;
 
     /**
      * The class' constructor
@@ -32,6 +33,10 @@ public class Engine {
         this.ball = ball;
         this.mass = ball.getMass();
         this.sherlock = solver;
+
+        MARGIN_RADIUS = .6f;
+        radius = (terrain.getHOLE_DIAM() / 2) + MARGIN_RADIUS;
+
         solver.setEngine(this);
     }
 
@@ -131,5 +136,15 @@ public class Engine {
         n.scl(dot);
         n.add(v.scl(-1));
         n.scl(-1);
+    }
+
+    public boolean isGoal() {
+        Vector3 pos = ball.getPosition();
+        boolean goal = false;
+        if ((pos.dst(terrain.getHole()) < radius)) {
+            if (ball.isStopped())
+                goal = true;
+        }
+        return goal;
     }
 }

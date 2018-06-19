@@ -9,6 +9,7 @@ import com.golf2k18.handlers.Bot;
 import com.golf2k18.handlers.Player;
 import com.golf2k18.handlers.ai.AI;
 import com.golf2k18.handlers.ai.AI2;
+import com.golf2k18.handlers.ai.simulatingBot;
 import com.golf2k18.objects.Course;
 import com.golf2k18.states.SubMenu;
 import com.golf2k18.states.game.Game;
@@ -36,6 +37,8 @@ public class AISelection extends SubMenu {
         concreteBots.add(new AI());
         bots.add("AI2");
         concreteBots.add(new AI2());
+        bots.add("Simulating Bot");
+        concreteBots.add(new simulatingBot());
 
         this.course = course;
     }

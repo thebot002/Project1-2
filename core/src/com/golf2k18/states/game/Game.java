@@ -34,8 +34,6 @@ public class Game extends State3D {
     public Stage hud;
     private Stage pause;
     public boolean paused = false;
-    private float radius;
-    private float marginRadius;
     private StateManager manager;
 
     public HashMap<String, Label> labels;
@@ -62,8 +60,6 @@ public class Game extends State3D {
 
         this.player = player;
         player.setState(this);
-        marginRadius = .6f;
-        radius = terrain.getHOLE_DIAM() / 2 + marginRadius;
         this.manager = manager;
     }
 
@@ -237,7 +233,7 @@ public class Game extends State3D {
         } else {
             player.handleInput(this);
         }
-        if(isGoal()) {
+        if(engine.isGoal()) {
             if(hole_number == course.getSize()) endState(new WinState(manager,this));
             else endState(new TerrainWinState(manager,this));
         }
@@ -252,16 +248,6 @@ public class Game extends State3D {
         String dist = "Distance to hole: " + String.valueOf(ball.getPosition().dst(terrain.getHole()) / 10) + "m";
         labels.get("distance").setText(dist);
         labels.get("speed").setText("Speed: " + String.valueOf(ball.getVelocity().len()/10) + "m/s");
-    }
-
-    private boolean isGoal() {
-        Vector3 pos = ball.getPosition();
-        boolean goal = false;
-        if ((pos.dst(terrain.getHole()) < radius)) {
-            if (ball.isStopped())
-                goal = true;
-        }
-        return goal;
     }
 
     //Setting inputProcessor that processes the key-events and stuff like that.
