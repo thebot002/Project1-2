@@ -43,10 +43,10 @@ public class StateManager extends ApplicationAdapter {
     public void create () {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         settings = Settings.load();
-        State start = new MainMenu(this);
+        //State start = new MainMenu(this);
         //State start = new TerrainEditor(this,DataIO.getTerrain("Plane"));
         //State start = new Game(this,new Course(DataIO.getTerrain("PlaneSpline")),new HumanDrag());
-        //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new simulatingBot());
+        State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new simulatingBot());
         start.create();
         states.push(start);
         Gdx.gl.glClearColor(1, 1, 1, 1);

@@ -52,9 +52,7 @@ public class SettingsMenu extends SubMenu {
         content.row();
 
         //input modes
-        Label inputMode = new Label("Input",StateManager.skin);
-        content.add(inputMode).pad(10f);
-
+        content.add(new Label("Input",StateManager.skin)).pad(10f);
         Array<String> inputmodes_array = new Array<>();
         ArrayList<String> inputmodes_arrayList = StateManager.settings.getSources();
         for (String s:inputmodes_arrayList) inputmodes_array.add(s);
@@ -65,6 +63,17 @@ public class SettingsMenu extends SubMenu {
         content.add(inputmodes).pad(10f).fillX();
         content.row();
 
+        //water shown
+        content.add(new Label("Water",StateManager.skin));
+        SelectBox<String> water = new SelectBox<>(StateManager.skin);
+        Array<String> waterStates = new Array<>();
+        waterStates.add("On");
+        waterStates.add("Off");
+        water.setItems(waterStates);
+        water.setSelectedIndex(StateManager.settings.isWater()?0:1);
+        content.add(water).pad(10f).fillX();
+        content.row();
+
         //apply button
         TextButton apply = new TextButton("Apply",StateManager.skin);
         apply.addListener(new ClickListener() {
@@ -73,8 +82,8 @@ public class SettingsMenu extends SubMenu {
                 StateManager.settings.setMusicVolume(volume.getValue());
                 StateManager.settings.setSelectedSolver(solvers.getSelectedIndex());
                 StateManager.settings.setSelectedSource(inputmodes.getSelectedIndex());
+                StateManager.settings.setWater(water.getSelectedIndex() == 0);
                 DataIO.writeSettings(StateManager.settings);
-                StateManager.music.setVolume(volume.getValue());
                 manager.pop();
             }
         });

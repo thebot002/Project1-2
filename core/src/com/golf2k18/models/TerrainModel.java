@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.golf2k18.StateManager;
 import com.golf2k18.objects.Terrain;
 
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class TerrainModel {
     public TerrainModel(Terrain terrain){
         this.terrain = terrain;
         world = new ArrayList<>();
-        map = new Array<HeightField>();
-        world = new ArrayList<ModelInstance>();
+        map = new Array<>();
+        world = new ArrayList<>();
         createWorld();
     }
 
@@ -71,7 +72,7 @@ public class TerrainModel {
                 0, terrain.getHeight(),0,
                 0,0,1,
                 new Material(TextureAttribute.createDiffuse(new Texture("Textures/water.png"))),attr);
-     //   world.add(new ModelInstance(water,0,0,0));
+        if(StateManager.settings.isWater()) world.add(new ModelInstance(water,0,0,0));
 
         float height_border = 20f;
         float width_border = 0.5f;
