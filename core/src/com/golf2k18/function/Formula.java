@@ -57,6 +57,8 @@ public class Formula implements Function, Serializable {
         xDeriv = xDerive(root);
         yDeriv = yDerive(root);
 
+		printTree(yDeriv);
+
         boolean x = false;
         boolean y = false;
         for (String s: postFix) {
@@ -66,6 +68,12 @@ public class Formula implements Function, Serializable {
         if(!x) xDeriv = new Node("0");
         if(!y) yDeriv = new Node("0");
     }
+
+    private void printTree(Node t){
+    	if(t.left != null) printTree(t.left);
+    	if(t.right != null) printTree(t.right);
+		System.out.println(t.value);
+	}
 
 	/**
 	 * Inner Class that is the nodes of the binary expression tree.
@@ -338,14 +346,13 @@ public class Formula implements Function, Serializable {
 			tempNode.right = new Node("^");
 			tempNode.left.left = new Node("*");
 			tempNode.left.right = new Node("*");
-			tempNode.right.right = new Node("^");
-			tempNode.right.right.right = new Node("2");
+			tempNode.right.right = new Node("2");
 			
 			tempNode.left.left.left = root.right;
 			tempNode.left.left.right = xDerive(root.left);
 			tempNode.left.right.left = root.left;
 			tempNode.left.right.right = xDerive(root.right);
-			tempNode.right.right.left = root.right;
+			tempNode.right.left = root.right;
 			
 			return tempNode;
 		}
@@ -459,14 +466,13 @@ public class Formula implements Function, Serializable {
 			tempNode.right = new Node("^");
 			tempNode.left.left = new Node("*");
 			tempNode.left.right = new Node("*");
-			tempNode.right.right = new Node("^");
-			tempNode.right.right.right = new Node("2");
+			tempNode.right.right = new Node("2");
 			
 			tempNode.left.left.left = root.right;
 			tempNode.left.left.right = yDerive(root.left);
 			tempNode.left.right.left = root.left;
 			tempNode.left.right.right = yDerive(root.right);
-			tempNode.right.right.left = root.right;
+			tempNode.right.left = root.right;
 			
 			return tempNode;
 		}
