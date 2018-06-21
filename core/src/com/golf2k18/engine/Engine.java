@@ -14,8 +14,8 @@ public class Engine {
     private Ball ball;
     private float mass;
     private final float GRAVITY = 9.81f;
-    protected final double STOP_TOLERANCE_VELOCITY = 0.03;
-    protected final double STOP_TOLERANCE_ACCELERATION = 4.0;
+    protected final double STOP_TOLERANCE_VELOCITY = 0.02;
+    protected final double STOP_TOLERANCE_ACCELERATION = 0.9;
     protected final double GOAL_TOLERANCE = 15.0;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
@@ -45,19 +45,22 @@ public class Engine {
         return dt;
     }
 
-
     private Vector3 calcGravity(Vector3 position)
     {
+        float dX = terrain.getFunction().evaluateXDeriv(position.x, position.y);
+        float dY = terrain.getFunction().evaluateYDeriv(position.x, position.y);
         Vector3 Fz = new Vector3();
-        Fz.x = -mass*GRAVITY* terrain.getFunction().evaluateXDeriv(position.x, position.y);
-        Fz.y = -mass*GRAVITY* terrain.getFunction().evaluateYDeriv(position.x, position.y);
+        Fz.x = -mass*GRAVITY*(float)Math.sin(Math.atan(dX));
+        Fz.y = -mass*GRAVITY*(float)Math.sin(Math.atan(dY));
         return Fz;
     }
-    private Vector3 calcFriction(Vector3 velocity)
+    private Vector3 calcFriction(Vector3 position, Vector3 velocity)
     {
+        float dX = terrain.getFunction().evaluateXDeriv(position.x, position.y);
+        float dY = terrain.getFunction().evaluateYDeriv(position.x, position.y);
         Vector3 v = new Vector3(velocity);
         if(v.len() != 0.0) v.scl(1/v.len());
-        v.scl(-terrain.getMU()*mass*GRAVITY);
+        v.scl(-terrain.getMU()*mass*GRAVITY * (float)Math.sqrt(Math.pow(Math.cos(Math.atan(dX)),2) + Math.pow(Math.cos(Math.atan(dY)),2)));
         return v;
     }
 
@@ -69,8 +72,10 @@ public class Engine {
      */
     public Vector3 getAcceleration(Vector3 position, Vector3 velocity)
     {
+        float dX = terrain.getFunction().evaluateXDeriv(position.x, position.y);
+        float dY = terrain.getFunction().evaluateYDeriv(position.x, position.y);
         Vector3 v = calcGravity(position);
-        v.add(calcFriction(velocity));
+        v.add(calcFriction(position, velocity));
         v.scl(1/mass);
         return v;
     }
@@ -97,9 +102,10 @@ public class Engine {
 
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
-        System.out.println("v: " + velocity.len());
-        System.out.println("a: " + calcGravity(position).len() / mass);
-        if(velocity.len() < STOP_TOLERANCE_VELOCITY && (calcGravity(position).len() / mass) < STOP_TOLERANCE_ACCELERATION){
+
+        System.out.println("al: " + velocity.len());
+        System.out.println("al: " + calcGravity(position).len());
+        if(velocity.len() < STOP_TOLERANCE_VELOCITY && calcGravity(position).len() < STOP_TOLERANCE_ACCELERATION){
             ball.setStopped();
         }
 
