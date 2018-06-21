@@ -102,9 +102,6 @@ public class Engine {
 
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
-
-        System.out.println("al: " + velocity.len());
-        System.out.println("al: " + calcGravity(position).len());
         if(velocity.len() < STOP_TOLERANCE_VELOCITY && calcGravity(position).len() < STOP_TOLERANCE_ACCELERATION){
             ball.setStopped();
         }
