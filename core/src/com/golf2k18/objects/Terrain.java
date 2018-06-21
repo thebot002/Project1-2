@@ -23,7 +23,7 @@ public class Terrain implements Serializable {
     private Vector3 offset;
     private String name;
 
-    private float MU = 0.5f;
+    private float MU = 0.15f;
     private Function function;
 
     /**

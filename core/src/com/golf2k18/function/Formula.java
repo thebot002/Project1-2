@@ -57,7 +57,7 @@ public class Formula implements Function, Serializable {
         xDeriv = xDerive(root);
         yDeriv = yDerive(root);
 
-		printTree(yDeriv);
+		printTree(xDeriv);
 
         boolean x = false;
         boolean y = false;
