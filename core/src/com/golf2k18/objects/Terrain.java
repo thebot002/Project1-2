@@ -60,6 +60,11 @@ public class Terrain implements Serializable {
     public String getName() {return name;}
 
     /**
+     * Setter for the name variable.
+     */
+    public void setName(String name) {this.name = name;}
+
+    /**
      * Getter for the width of the course.
      * @return int width.
      */

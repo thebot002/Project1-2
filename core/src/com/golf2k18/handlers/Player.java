@@ -1,7 +1,5 @@
 package com.golf2k18.handlers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.golf2k18.states.game.Game;
@@ -18,18 +16,10 @@ public abstract class Player extends InputAdapter {
     }
 
     public void handleInput(Game gameState){
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            if(!gameState.paused) gameState.pause();
-            else gameState.resume();
-        }
     }
 
     public int getHitCount() {
         return hitCount;
-    }
-
-    public void hit(){
-        hitCount++;
     }
 
     public void resetCount() {

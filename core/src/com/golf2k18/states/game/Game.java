@@ -1,6 +1,7 @@
 package com.golf2k18.states.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
@@ -76,7 +77,7 @@ public class Game extends State3D {
         engine = new Engine(terrain, ball, StateManager.settings.getSolver());
         createHUD();
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player.getInputProcessor(), controller));
+        setProcessors();
     }
 
     //Method which creates the HUD for the game.
@@ -214,7 +215,7 @@ public class Game extends State3D {
     public void pause() {
         paused = !paused;
         createPause();
-        Gdx.input.setInputProcessor(pause);
+        Gdx.input.setInputProcessor(new InputMultiplexer(pause, this));
     }
 
     @Override
@@ -226,7 +227,7 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
-
+        if (paused) return;
         if (!ball.isStopped()) {
             engine.updateBall(dt);
             ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
@@ -252,7 +253,7 @@ public class Game extends State3D {
 
     //Setting inputProcessor that processes the key-events and stuff like that.
     public void setProcessors() {
-        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player.getInputProcessor(), controller));
+        Gdx.input.setInputProcessor(new InputMultiplexer(hud, player.getInputProcessor(), this, controller));
     }
 
     public Ball getBall() {
@@ -275,6 +276,7 @@ public class Game extends State3D {
 
     public void restart(){
         ball.getPosition().set(terrain.getStart().cpy());
+        ball.setStopped();
         ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
         player.resetCount();
     }
@@ -284,5 +286,14 @@ public class Game extends State3D {
         terrain = course.getTerrain(hole_number-1);
         ball.getPosition().set(terrain.getStart().cpy());
         create();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.ESCAPE){
+            if(!paused) pause();
+            else resume();
+        }
+        return super.keyDown(keycode);
     }
 }
