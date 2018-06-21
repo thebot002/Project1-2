@@ -29,12 +29,12 @@ import java.util.HashMap;
  * Class where every object interacts with each other.
  */
 public class Game extends State3D {
-
     private Engine engine;
     private Ball ball;
     public Stage hud;
     private Stage pause;
-    public boolean paused = false;
+    private boolean paused = false;
+    private boolean inSettings = false;
     private StateManager manager;
 
     public HashMap<String, Label> labels;
@@ -137,6 +137,7 @@ public class Game extends State3D {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 manager.push(new SettingsMenu(manager));
+                inSettings = true;
             }
         });
         organizer.row();
@@ -227,6 +228,10 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
+        if(inSettings){
+            inSettings = false;
+            setProcessors();
+        }
         if (paused) return;
         if (!ball.isStopped()) {
             engine.updateBall(dt);

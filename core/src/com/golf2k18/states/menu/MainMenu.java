@@ -92,7 +92,6 @@ public class MainMenu extends MenuState
     @Override
     public void render() {
         super.render();
-        //courseList.setItems(DataIO.getTerrainNames());
     }
 
     @Override
