@@ -17,6 +17,8 @@ public class Settings implements Serializable {
 
     private float musicVolume;
 
+    private boolean water = false;
+
     public Settings(){
         selectedSolver = 1;
 
@@ -93,6 +95,14 @@ public class Settings implements Serializable {
 
     public float getMusicVolume(){
         return musicVolume;
+    }
+
+    public boolean isWater(){
+        return water;
+    }
+
+    public void setWater(boolean water){
+        this.water = water;
     }
 
     public static Settings load(){
