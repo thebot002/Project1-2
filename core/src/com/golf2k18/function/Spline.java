@@ -34,17 +34,13 @@ public class Spline implements Function, Serializable {
         this.yDeriv = yDeriv;
 
         xyDeriv = new float[data.length][data[0].length];
-        for (int i = 2; i < data.length - 2; i++) {
-            for (int j = 2; j < data[0].length-2; j++) {
-                if(i==2){
-                    xyDeriv[0][j] = forwardDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
-                    xyDeriv[1][j] = assymetricDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
-                }
-                if(i == data.length - 3){
-                    xyDeriv[data.length-1][j] = forwardDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
-                    xyDeriv[data.length-2][j] = assymetricDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
-                }
-                xyDeriv[i][j] = centeredDiff(1,yDeriv[i][j-2],yDeriv[i][j-1],yDeriv[i][j+1],yDeriv[i][j+2]);
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if(j == 0) xyDeriv[0][j] = forwardDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
+                else if(j == 1) xyDeriv[1][j] = assymetricDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
+                else if(j == data.length - 1) xyDeriv[data.length-1][j] = forwardDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
+                else if(j == data.length - 2) xyDeriv[data.length-2][j] = assymetricDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
+                else xyDeriv[i][j] = centeredDiff(1,yDeriv[i][j-2],yDeriv[i][j-1],yDeriv[i][j+1],yDeriv[i][j+2]);
             }
         }
         interpolate();
@@ -62,9 +58,13 @@ public class Spline implements Function, Serializable {
         yDeriv = new float[data.length][data[0].length];
         xyDeriv = new float[data.length][data[0].length];
 
-        //init of derivatives
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
+        deriv(0,0,data.length,data[0].length);
+        interpolate();
+    }
+
+    private void deriv(int x, int y, int x1, int y1){
+        for (int i = x; i < x1; i++) {
+            for (int j = y; j < y1; j++) {
                 if(i==0) xDeriv[0][j] = forwardDiff(1,data[0][j],data[1][j],data[2][j],data[3][j],data[4][j]);
                 else if(i==1) xDeriv[1][j] = assymetricDiff(1,data[0][j],data[1][j],data[2][j],data[3][j],data[4][j]);
                 else if(i == data.length-1) xDeriv[data.length-1][j] = forwardDiff(-1,data[data.length-1][j],data[data.length-2][j],data[data.length-3][j],data[data.length-4][j],data[data.length-5][j]);
@@ -78,8 +78,8 @@ public class Spline implements Function, Serializable {
                 else yDeriv[i][j] = centeredDiff(1,data[i][j-2],data[i][j-1],data[i][j+1],data[i][j+2]);
             }
         }
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
+        for (int i = x; i < x1; i++) {
+            for (int j = y; j < y1; j++) {
                 if(j == 0) xyDeriv[0][j] = forwardDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
                 else if(j == 1) xyDeriv[1][j] = assymetricDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
                 else if(j == data.length - 1) xyDeriv[data.length-1][j] = forwardDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
@@ -87,7 +87,6 @@ public class Spline implements Function, Serializable {
                 else xyDeriv[i][j] = centeredDiff(1,yDeriv[i][j-2],yDeriv[i][j-1],yDeriv[i][j+1],yDeriv[i][j+2]);
             }
         }
-        interpolate();
     }
 
     private void interpolate(int x, int y){
@@ -149,14 +148,28 @@ public class Spline implements Function, Serializable {
 
     public void update(ArrayList<Vector3> newData){
         boolean[][] toUpdate = new boolean[coefficients.length][coefficients[0].length];
-        for (int i = 0; i < newData.size(); i++) {
-            Vector3 nd = newData.get(i);
-            data[(int)nd.x][(int)nd.y] = nd.z;
-            toUpdate[((int)nd.x)-1][((int)nd.y)-1] = true;
-            if((int)nd.y != data.length) toUpdate[((int)nd.x)-1][(int)nd.y] = true;
-            if((int)nd.x != data[0].length) toUpdate[(int)nd.x][((int)nd.y)-1] = true;
-            if((int)nd.x != data.length && (int)nd.y != data[0].length) toUpdate[(int)nd.x][(int)nd.y] = true;
+        int xs = (int)newData.get(0).x - 2;
+        int xg = (int)newData.get(0).x + 2;
+        int ys = (int)newData.get(0).y - 2;
+        int yg = (int)newData.get(0).y + 2;
+
+        for (Vector3 nd : newData) {
+            int x = (int) nd.x;
+            int y = (int) nd.y;
+
+            if((x-2) < xs) xs = x-2;
+            if((x+2) > xg) xg = x+2;
+            if((y-2) < ys) ys = y-2;
+            if((y+2) > yg) yg = y+2;
+
+            float z = nd.z;
+            data[x][y] = z;
+            toUpdate[x - 1][y - 1] = true;
+            if (y != data[0].length) toUpdate[x - 1][y] = true;
+            if (x != data.length) toUpdate[x][y - 1] = true;
+            if (x != data.length && y != data[0].length) toUpdate[x][y] = true;
         }
+        deriv(xs < 0? 0:xs, ys < 0? 0:ys, xg >= data.length?data.length-1:xg, yg > data[0].length? data[0].length-1:yg);
         for (int i = 0; i < toUpdate.length; i++) {
             for (int j = 0; j < toUpdate[0].length; j++) {
                 if(toUpdate[i][j]) interpolate(i,j);
@@ -167,11 +180,12 @@ public class Spline implements Function, Serializable {
     private float forwardDiff(float h, float v0, float v1, float v2, float v3, float v4){
         return (-(25*v0) + (48*v1) - (36*v2) + (16*v3) - (3*v4)) / (12*h);
     }
+
     private float assymetricDiff(float h, float vm1, float v0, float v1, float v2, float v3){
         return (-(3*vm1) - (10*v0) + (18*v1) - (6*v2) + v3) / (12*h);
     }
+
     private float centeredDiff(float h, float vm2, float vm1, float v1, float v2){
         return (vm2 + (8*v1) - (8*vm1) - v2) / (12*h);
     }
-
 }

@@ -116,6 +116,9 @@ public class TerrainEditor extends State3D {
                     terrain.setName(name);
                     DataIO.writeTerrain(terrain);
                 }
+                else{
+                    JOptionPane.showMessageDialog(null,"Please fill in a name","Error",JOptionPane.ERROR_MESSAGE);
+                }
                 initNodes();
             }
         });
