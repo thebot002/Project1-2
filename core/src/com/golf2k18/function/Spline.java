@@ -34,11 +34,17 @@ public class Spline implements Function, Serializable {
         this.yDeriv = yDeriv;
 
         xyDeriv = new float[data.length][data[0].length];
-        for (int i = 1; i < data.length - 1; i++) {
-            for (int j = 1; j < data[0].length-1; j++) {
-                if(i == 1) xyDeriv[i][j] = (yDeriv[i][2] - yDeriv[i][0])/2;
-                if(i == data.length - 1) xyDeriv[i][j] = (yDeriv[data.length-3][j] - yDeriv[data.length-1][j])/2;
-                xyDeriv[i][j] = (yDeriv[i][j+1] - yDeriv[i][j-1])/2;
+        for (int i = 2; i < data.length - 2; i++) {
+            for (int j = 2; j < data[0].length-2; j++) {
+                if(i==2){
+                    xyDeriv[0][j] = forwardDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
+                    xyDeriv[1][j] = assymetricDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
+                }
+                if(i == data.length - 3){
+                    xyDeriv[data.length-1][j] = forwardDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
+                    xyDeriv[data.length-2][j] = assymetricDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
+                }
+                xyDeriv[i][j] = centeredDiff(1,yDeriv[i][j-2],yDeriv[i][j-1],yDeriv[i][j+1],yDeriv[i][j+2]);
             }
         }
         interpolate();
@@ -57,22 +63,28 @@ public class Spline implements Function, Serializable {
         xyDeriv = new float[data.length][data[0].length];
 
         //init of derivatives
-        for (int i = 1; i < data.length - 1; i++) {
-            for (int j = 1; j < data[0].length-1; j++) {
-                if(i == 1) yDeriv[i][j] = (data[2][j] - data[0][j])/2;
-                if(i == data.length - 1) yDeriv[i][j] = (data[data.length-3][j] - data[data.length-1][j])/2;
-                yDeriv[i][j] = (data[i+1][j] - data[i-1][j])/2;
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if(i==0) xDeriv[0][j] = forwardDiff(1,data[0][j],data[1][j],data[2][j],data[3][j],data[4][j]);
+                else if(i==1) xDeriv[1][j] = assymetricDiff(1,data[0][j],data[1][j],data[2][j],data[3][j],data[4][j]);
+                else if(i == data.length-1) xDeriv[data.length-1][j] = forwardDiff(-1,data[data.length-1][j],data[data.length-2][j],data[data.length-3][j],data[data.length-4][j],data[data.length-5][j]);
+                else if(i == data.length-2) xDeriv[data.length-2][j] = assymetricDiff(-1,data[data.length-1][j],data[data.length-2][j],data[data.length-3][j],data[data.length-4][j],data[data.length-5][j]);
+                else xDeriv[i][j] = centeredDiff(1,data[i-2][j],data[i-1][j],data[i+1][j],data[i+2][j]);
 
-                if(j == 1) xDeriv[i][j] = (data[i][2] - data[i][0])/2;
-                if(j == data[0].length - 1) xDeriv[i][j] = (data[i][data[0].length-3] - data[i][data[0].length-1])/2;
-                xDeriv[i][j] = (data[i][j+1] - data[i][j-1])/2;
+                if(j == 0) yDeriv[i][0] = forwardDiff(1,data[i][0],data[i][1],data[i][2],data[i][3],data[i][4]);
+                else if(j == 1) yDeriv[i][1] = assymetricDiff(1,data[i][0],data[i][1],data[i][2],data[i][3],data[i][4]);
+                else if(j == data[0].length - 1) yDeriv[i][data[0].length-1] = forwardDiff(-1,data[i][data[0].length-1],data[i][data[0].length-2],data[i][data[0].length-3],data[i][data[0].length-4],data[i][data[0].length-5]);
+                else if(j == data[0].length - 2) yDeriv[i][data[0].length-2] = assymetricDiff(-1,data[i][data[0].length-1],data[i][data[0].length-2],data[i][data[0].length-3],data[i][data[0].length-4],data[i][data[0].length-5]);
+                else yDeriv[i][j] = centeredDiff(1,data[i][j-2],data[i][j-1],data[i][j+1],data[i][j+2]);
             }
         }
-        for (int i = 1; i < data.length - 1; i++) {
-            for (int j = 1; j < data[0].length-1; j++) {
-                if(i == 1) xyDeriv[i][j] = (yDeriv[i][2] - yDeriv[i][0])/2;
-                if(i == data.length - 1) xyDeriv[i][j] = (yDeriv[data.length-3][j] - yDeriv[data.length-1][j])/2;
-                xyDeriv[i][j] = (yDeriv[i][j+1] - yDeriv[i][j-1])/2;
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if(j == 0) xyDeriv[0][j] = forwardDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
+                else if(j == 1) xyDeriv[1][j] = assymetricDiff(1,yDeriv[i][0],yDeriv[i][1],yDeriv[i][2],yDeriv[i][3],yDeriv[i][4]);
+                else if(j == data.length - 1) xyDeriv[data.length-1][j] = forwardDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
+                else if(j == data.length - 2) xyDeriv[data.length-2][j] = assymetricDiff(-1,yDeriv[i][data[0].length-1],yDeriv[i][data[0].length-2],yDeriv[i][data[0].length-3],yDeriv[i][data[0].length-4],yDeriv[i][data[0].length-5]);
+                else xyDeriv[i][j] = centeredDiff(1,yDeriv[i][j-2],yDeriv[i][j-1],yDeriv[i][j+1],yDeriv[i][j+2]);
             }
         }
         interpolate();
@@ -128,15 +140,6 @@ public class Spline implements Function, Serializable {
         return evaluate(new Matrix(xVector),new Matrix(yVector),x,y);
     }
 
-    public float evaluateXYDeriv(float x, float y) {
-        float nx = x%1;
-        float ny = y%1;
-
-        float[][] xVector = {{0,1,2*nx,(float)(3*Math.pow(nx,2))}};
-        float[][] yVector = {{0},{1},{2*ny},{(float)(3*Math.pow(ny,2))}};
-        return evaluate(new Matrix(xVector),new Matrix(yVector),x,y);
-    }
-
     private float evaluate(Matrix xVector, Matrix yVector, float x, float y){
         if(x > coefficients.length-1) x = coefficients.length-1;
         if(y > coefficients[0].length-1) y = coefficients[0].length-1;
@@ -160,4 +163,15 @@ public class Spline implements Function, Serializable {
             }
         }
     }
+
+    private float forwardDiff(float h, float v0, float v1, float v2, float v3, float v4){
+        return (-(25*v0) + (48*v1) - (36*v2) + (16*v3) - (3*v4)) / (12*h);
+    }
+    private float assymetricDiff(float h, float vm1, float v0, float v1, float v2, float v3){
+        return (-(3*vm1) - (10*v0) + (18*v1) - (6*v2) + v3) / (12*h);
+    }
+    private float centeredDiff(float h, float vm2, float vm1, float v1, float v2){
+        return (vm2 + (8*v1) - (8*vm1) - v2) / (12*h);
+    }
+
 }

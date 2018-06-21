@@ -45,7 +45,7 @@ public class StateManager extends ApplicationAdapter {
         settings = Settings.load();
         State start = new MainMenu(this);
         //State start = new TerrainEditor(this,DataIO.getTerrain("Plane"));
-        //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new HumanDrag());
+        //State start = new Game(this,new Course(DataIO.getTerrain("PlaneSpline")),new HumanDrag());
         //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new simulatingBot());
         start.create();
         states.push(start);
@@ -133,7 +133,7 @@ public class StateManager extends ApplicationAdapter {
         flatinter[11][10] = 2;
         flatinter[10][11] = 2;
 		flatinter[10][10] = 3;
-        Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter,xDeriv,yDeriv),"PlaneSpline");
+        Terrain c6 = new Terrain(width,height,start,goal,new Spline(flatinter/*,xDeriv,yDeriv*/),"PlaneSpline");
 		DataIO.writeTerrain(c6);
 
         ArrayList<Terrain> terrains = new ArrayList<>();
