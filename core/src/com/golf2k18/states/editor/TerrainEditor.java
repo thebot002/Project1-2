@@ -132,7 +132,7 @@ public class TerrainEditor extends State3D {
 
     @Override
     public boolean scrolled(int amount) {
-        if(ctrl) return false;
+        if(ctrl || selected.isEmpty()) return false;
         ArrayList<Vector3> newData = new ArrayList<>();
         for (Integer aSelected : selected) {
             if(!change) change = true;
