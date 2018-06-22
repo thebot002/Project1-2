@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Class that contains all the necessary information about the ball
  */
-public class Ball {
+public class Ball implements Collider{
     private final float DIAMETER = 0.42f; //dm
 	private final float MASS = 0.45f; //g
 
@@ -95,5 +95,10 @@ public class Ball {
     public void updateInstance(float z){
         position.z = z;
         model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
+    }
+
+    @Override
+    public void collide(Collider c) {
+
     }
 }

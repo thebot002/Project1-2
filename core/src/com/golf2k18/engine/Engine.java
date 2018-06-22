@@ -47,20 +47,16 @@ public class Engine {
 
     private Vector3 calcGravity(Vector3 position)
     {
-        float dX = terrain.getFunction().evaluateXDeriv(position.x, position.y);
-        float dY = terrain.getFunction().evaluateYDeriv(position.x, position.y);
         Vector3 Fz = new Vector3();
-        Fz.x = -mass*GRAVITY*(float)Math.sin(Math.atan(dX));
-        Fz.y = -mass*GRAVITY*(float)Math.sin(Math.atan(dY));
+        Fz.x = -mass*GRAVITY*terrain.getFunction().evaluateXDeriv(position.x,position.y);
+        Fz.y = -mass*GRAVITY*terrain.getFunction().evaluateYDeriv(position.x,position.y);
         return Fz;
     }
-    private Vector3 calcFriction(Vector3 position, Vector3 velocity)
+    private Vector3 calcFriction(Vector3 velocity)
     {
-        float dX = terrain.getFunction().evaluateXDeriv(position.x, position.y);
-        float dY = terrain.getFunction().evaluateYDeriv(position.x, position.y);
         Vector3 v = new Vector3(velocity);
         if(v.len() != 0.0) v.scl(1/v.len());
-        v.scl(-terrain.getMU()*mass*GRAVITY * (float)Math.sqrt(Math.pow(Math.cos(Math.atan(dX)),2) + Math.pow(Math.cos(Math.atan(dY)),2)));
+        v.scl(-terrain.getMU()*mass*GRAVITY);
         return v;
     }
 
@@ -72,10 +68,8 @@ public class Engine {
      */
     public Vector3 getAcceleration(Vector3 position, Vector3 velocity)
     {
-        float dX = terrain.getFunction().evaluateXDeriv(position.x, position.y);
-        float dY = terrain.getFunction().evaluateYDeriv(position.x, position.y);
         Vector3 v = calcGravity(position);
-        v.add(calcFriction(position, velocity));
+        v.add(calcFriction(velocity));
         v.scl(1/mass);
         return v;
     }
