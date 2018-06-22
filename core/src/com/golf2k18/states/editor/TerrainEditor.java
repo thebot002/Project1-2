@@ -3,6 +3,7 @@ package com.golf2k18.states.editor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -54,10 +55,9 @@ public class TerrainEditor extends State3D {
     private ArrayList<Integer> selected;
 
     private Stage hud;
-    private Stage startHUD;
-    private Stage holeHUD;
-    private Stage obstacleHUD;
-    private Stage sizeHUD;
+    private Stage tempHUD;
+
+    private InputProcessor thisProcessor = this;
 
     public TerrainEditor(StateManager manager, Terrain terrain) {
         super(manager, terrain);
@@ -82,111 +82,6 @@ public class TerrainEditor extends State3D {
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, controller, hud));
         controller.toggleScroll();
-    }
-
-    private void createHUD(){
-        hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-
-        Table content = new Table();
-        content.setFillParent(true);
-
-        content.add(new Label("TERRAIN EDITION",StateManager.skin,"title")).center().expandX().top().pad(10f).colspan(3);
-        content.row();
-
-        TextButton obstacles = new TextButton("Add obstacles",StateManager.skin);
-        obstacles.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                setStart = true;
-                initNodes();
-            }
-        });
-        content.add(obstacles).fillX().pad(10f).expandY().bottom();
-
-        content.add();
-        content.add();
-        content.row();
-
-        TextButton size = new TextButton("Modify terrain size",StateManager.skin);
-        size.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                setStart = true;
-                initNodes();
-            }
-        });
-        content.add(size).fillX().pad(10f);
-
-        content.add();
-        Table nameTable = new Table();
-        nameTable.add(new Label("Name: ",StateManager.skin));
-        TextField nameField = new TextField("",StateManager.skin);
-        nameTable.add(nameField).expandX().fillX().padLeft(10f);
-        content.add(nameTable).fillX().pad(10f);
-        content.row();
-
-        TextButton start = new TextButton("Modify start position",StateManager.skin);
-        start.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                setStart = true;
-                initNodes();
-            }
-        });
-        content.add(start).fillX().pad(10f);
-
-        content.add();
-        TextButton save = new TextButton("Save",StateManager.skin);
-        save.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String name = nameField.getText();
-                if(name.length() > 0){
-                    terrain.setName(name);
-                    DataIO.writeTerrain(terrain);
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"Please fill in a name","Error",JOptionPane.ERROR_MESSAGE);
-                }
-                initNodes();
-            }
-        });
-        content.add(save).fillX().pad(10f);
-        content.row();
-
-        TextButton hole = new TextButton("Modify hole position",StateManager.skin);
-        hole.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                setHole = true;
-                initNodes();
-            }
-        });
-        content.add(hole).fillX().pad(10f);
-
-        content.add();
-        TextButton home = new TextButton("Home",StateManager.skin);
-        home.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if(change) {
-                    int n = JOptionPane.showConfirmDialog(
-                            null,
-                            "There are some unsaved changes.\nReturn?",
-                            "Warning",
-                            JOptionPane.YES_NO_OPTION);
-                    if(n == 0) manager.home();
-                }
-                else manager.home();
-            }
-        });
-        content.add(home).fillX().pad(10f).right();
-
-        hud.addActor(content);
-    }
-
-    private void createObstacleHud(){
-        obstacleHUD = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
     }
 
     private void createNodes(){
@@ -354,25 +249,13 @@ public class TerrainEditor extends State3D {
     @Override
     public void render() {
         super.render();
-        if(setStart){
-            startHUD.act();
-            startHUD.draw();
-        }
-        else if(setHole){
-            holeHUD.act();
-            holeHUD.draw();
-        }
-        else if(setSize){
-            sizeHUD.act();
-            sizeHUD.draw();
-        }
-        else if(setObstacles){
-            obstacleHUD.act();
-            obstacleHUD.draw();
-        }
-        else{
+        if(!setObstacles && !setHole && !setSize && !setStart){
             hud.act();
             hud.draw();
+        }
+        else{
+            tempHUD.act();
+            tempHUD.draw();
         }
     }
 
@@ -384,5 +267,152 @@ public class TerrainEditor extends State3D {
     @Override
     public void resume() {
 
+    }
+
+    private void createHUD(){
+        hud = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+        Table content = new Table();
+        content.setFillParent(true);
+
+        content.add(new Label("TERRAIN EDITION",StateManager.skin,"title")).center().expandX().top().pad(10f).colspan(3);
+        content.row();
+
+        TextButton obstacles = new TextButton("Add obstacles",StateManager.skin);
+        obstacles.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setObstacles = true;
+                initNodes();
+                createTempHud("OBSTACLE EDITION");
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,tempHUD));
+            }
+        });
+        content.add(obstacles).fillX().pad(10f).expandY().bottom();
+
+        content.add();
+        content.add();
+        content.row();
+
+        TextButton size = new TextButton("Modify terrain size",StateManager.skin);
+        size.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setSize = true;
+                initNodes();
+                createTempHud("SIZE EDITION");
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,tempHUD));
+            }
+        });
+        content.add(size).fillX().pad(10f);
+
+        content.add();
+        Table nameTable = new Table();
+        nameTable.add(new Label("Name: ",StateManager.skin));
+        TextField nameField = new TextField("",StateManager.skin);
+        nameTable.add(nameField).expandX().fillX().padLeft(10f);
+        content.add(nameTable).fillX().pad(10f);
+        content.row();
+
+        TextButton start = new TextButton("Modify start position",StateManager.skin);
+        start.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setStart = true;
+                initNodes();
+                createTempHud("START EDITION");
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,tempHUD));
+            }
+        });
+        content.add(start).fillX().pad(10f);
+
+        content.add();
+        TextButton save = new TextButton("Save",StateManager.skin);
+        save.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String name = nameField.getText();
+                if(name.length() > 0){
+                    terrain.setName(name);
+                    DataIO.writeTerrain(terrain);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"Please fill in a name","Error",JOptionPane.ERROR_MESSAGE);
+                }
+                initNodes();
+            }
+        });
+        content.add(save).fillX().pad(10f);
+        content.row();
+
+        TextButton hole = new TextButton("Modify hole position",StateManager.skin);
+        hole.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setHole = true;
+                initNodes();
+                createTempHud("HOLE EDITION");
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,tempHUD));
+            }
+        });
+        content.add(hole).fillX().pad(10f);
+
+        content.add();
+        TextButton home = new TextButton("Home",StateManager.skin);
+        home.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(change) {
+                    int n = JOptionPane.showConfirmDialog(
+                            null,
+                            "There are some unsaved changes.\nReturn?",
+                            "Warning",
+                            JOptionPane.YES_NO_OPTION);
+                    if(n == 0) manager.home();
+                }
+                else manager.home();
+            }
+        });
+        content.add(home).fillX().pad(10f).right();
+
+        hud.addActor(content);
+    }
+
+    private void createTempHud(String title){
+        tempHUD = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+
+        Table content = new Table();
+        content.setFillParent(true);
+        content.add(new Label(title,StateManager.skin,"title")).colspan(2);
+        content.row();
+
+        TextButton cancel = new TextButton("Cancel",StateManager.skin);
+        cancel.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setObstacles = false;
+                setHole = false;
+                setStart = false;
+                setSize = false;
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));
+            }
+        });
+        content.add(cancel).expandY().fillX().pad(10f).bottom();
+
+        TextButton apply = new TextButton("Apply",StateManager.skin);
+        apply.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setObstacles = false;
+                setHole = false;
+                setStart = false;
+                setSize = false;
+
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));
+            }
+        });
+        content.add(apply).fillX().pad(10f).bottom();
+
+        tempHUD.addActor(content);
     }
 }
