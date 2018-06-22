@@ -47,11 +47,17 @@ public class TerrainEditor extends State3D {
     private boolean change = false;
     private boolean setStart = false;
     private boolean setHole = false;
+    private boolean setSize = false;
+    private boolean setObstacles = false;
 
     private Spline function;
     private ArrayList<Integer> selected;
 
     private Stage hud;
+    private Stage startHUD;
+    private Stage holeHUD;
+    private Stage obstacleHUD;
+    private Stage sizeHUD;
 
     public TerrainEditor(StateManager manager, Terrain terrain) {
         super(manager, terrain);
@@ -87,13 +93,36 @@ public class TerrainEditor extends State3D {
         content.add(new Label("TERRAIN EDITION",StateManager.skin,"title")).center().expandX().top().pad(10f).colspan(3);
         content.row();
 
+        TextButton obstacles = new TextButton("Add obstacles",StateManager.skin);
+        obstacles.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setStart = true;
+                initNodes();
+            }
+        });
+        content.add(obstacles).fillX().pad(10f).expandY().bottom();
+
         content.add();
+        content.add();
+        content.row();
+
+        TextButton size = new TextButton("Modify terrain size",StateManager.skin);
+        size.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setStart = true;
+                initNodes();
+            }
+        });
+        content.add(size).fillX().pad(10f);
+
         content.add();
         Table nameTable = new Table();
         nameTable.add(new Label("Name: ",StateManager.skin));
         TextField nameField = new TextField("",StateManager.skin);
         nameTable.add(nameField).expandX().fillX().padLeft(10f);
-        content.add(nameTable).expandY().fillX().pad(10f).bottom().right();
+        content.add(nameTable).fillX().pad(10f);
         content.row();
 
         TextButton start = new TextButton("Modify start position",StateManager.skin);
@@ -154,6 +183,10 @@ public class TerrainEditor extends State3D {
         content.add(home).fillX().pad(10f).right();
 
         hud.addActor(content);
+    }
+
+    private void createObstacleHud(){
+        obstacleHUD = new Stage(new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
     }
 
     private void createNodes(){
@@ -321,8 +354,26 @@ public class TerrainEditor extends State3D {
     @Override
     public void render() {
         super.render();
-        hud.act();
-        hud.draw();
+        if(setStart){
+            startHUD.act();
+            startHUD.draw();
+        }
+        else if(setHole){
+            holeHUD.act();
+            holeHUD.draw();
+        }
+        else if(setSize){
+            sizeHUD.act();
+            sizeHUD.draw();
+        }
+        else if(setObstacles){
+            obstacleHUD.act();
+            obstacleHUD.draw();
+        }
+        else{
+            hud.act();
+            hud.draw();
+        }
     }
 
     @Override

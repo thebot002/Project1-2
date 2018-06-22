@@ -26,6 +26,8 @@ public class TerrainModel {
     private float max = 1f;
     private Terrain terrain;
 
+    private int attr;
+
     public Array<HeightField> map;
 
     /**
@@ -38,6 +40,9 @@ public class TerrainModel {
         world = new ArrayList<>();
         map = new Array<>();
         world = new ArrayList<>();
+
+        attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
+
         createWorld();
     }
 
@@ -45,25 +50,11 @@ public class TerrainModel {
      * Method which creates all the models that make up the "world" and joins them in one group.
      */
     private void createWorld(){
-        int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
-
         for (int i = 0; i < terrain.getWidth(); i+=CHUNK_SIZE) {
             for (int j = 0; j < terrain.getHeight(); j+=CHUNK_SIZE) {
-                HeightField field = new HeightField(true,createHeights(i,j,CHUNK_SIZE,CHUNK_SIZE),(CHUNK_SIZE*DIV_SIZE)+1,(CHUNK_SIZE*DIV_SIZE)+1,true,attr);
-                field.corner00.set(i, j, 0);
-                field.corner01.set(i+CHUNK_SIZE, j, 0);
-                field.corner10.set(i, j+CHUNK_SIZE, 0);
-                field.corner11.set(i+CHUNK_SIZE,j+CHUNK_SIZE,0);
-                field.color00.set(0, 0, 1, 1);
-                field.color01.set(0, 1, 1, 1);
-                field.color10.set(1, 0, 1, 1);
-                field.color11.set(1, 1, 1, 1);
-                field.magnitude.set(0,0,1f);
-                field.update();
-                map.add(field);
+                map.add(createField(i,j));
             }
         }
-
         ModelBuilder modelBuilder = new ModelBuilder();
 
         Model water = modelBuilder.createRect(0,0,0,
@@ -89,11 +80,26 @@ public class TerrainModel {
         world.add(new ModelInstance(border_d,terrain.getWidth() + (width_border/2),terrain.getHeight()/2,(-height_border/2)+max));
     }
 
+    private HeightField createField(int x, int y){
+        HeightField field = new HeightField(true,createHeights(x,y,CHUNK_SIZE,CHUNK_SIZE),(CHUNK_SIZE*DIV_SIZE)+1,(CHUNK_SIZE*DIV_SIZE)+1,true,attr);
+        field.corner00.set(x, y, 0);
+        field.corner01.set(x+CHUNK_SIZE, y, 0);
+        field.corner10.set(x, y+CHUNK_SIZE, 0);
+        field.corner11.set(x+CHUNK_SIZE,y+CHUNK_SIZE,0);
+        field.color00.set(0, 0, 1, 1);
+        field.color01.set(0, 1, 1, 1);
+        field.color10.set(1, 0, 1, 1);
+        field.color11.set(1, 1, 1, 1);
+        field.magnitude.set(0,0,1f);
+        field.update();
+        return field;
+    }
+
     /**
      * Method which calculates the height of the course according to the given function.
      * @return float[] heights.
      */
-   private float[] createHeights(int x0,int y0, int width, int height){
+    private float[] createHeights(int x0,int y0, int width, int height){
         float[] heights = new float[((width*DIV_SIZE)+1)*((height*DIV_SIZE)+1)]; //width and height +1 because we want to include the edge
         int ih = 0;
         float division = 1/(DIV_SIZE*1.0f);

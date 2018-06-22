@@ -230,7 +230,7 @@ public class Game extends State3D {
         super.update(dt);
         if(inSettings){
             inSettings = false;
-            setProcessors();
+            Gdx.input.setInputProcessor(new InputMultiplexer(pause, this));
         }
         if (paused) return;
         if (!ball.isStopped()) {

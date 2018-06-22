@@ -9,12 +9,15 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.golf2k18.StateManager;
 import com.golf2k18.models.HeightField;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.models.TerrainModel;
 import com.golf2k18.camera.GameCameraController;
+
+import java.util.ArrayList;
 
 /**
  * This abstract class is used to create the 3-dimensional states.
@@ -130,10 +133,6 @@ public abstract class State3D extends State {
 
     public PerspectiveCamera getCamera() {
         return camera;
-    }
-
-    public Array<ModelInstance> getInstances() {
-        return instances;
     }
 
     public Terrain getTerrain() {
