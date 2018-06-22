@@ -163,7 +163,7 @@ public class TerrainEditor extends State3D {
                 }
                 selected.clear();
             }
-            if (pointI > startIndex) {
+            if (pointI >= 0) {
                 Vector3 pos = d1ToD2(pointI);
                 if(setStart){
                     terrain.getStart().set(pos.x,pos.y,function.evaluateF(pos.x,pos.y));

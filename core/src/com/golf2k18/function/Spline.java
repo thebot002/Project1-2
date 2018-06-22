@@ -112,7 +112,7 @@ public class Spline implements Function, Serializable {
         float ny = y%1;
 
         if(x > coefficients.length-1) nx = 1;
-        if(y > coefficients[0].length) ny = 1;
+        if(y > coefficients[0].length-1) ny = 1;
 
         float[][] xVector = {{1,nx,(float)Math.pow(nx,2),(float)Math.pow(nx,3)}};
         float[][] yVector = {{1},{ny},{(float)Math.pow(ny,2)},{(float)Math.pow(ny,3)}};
@@ -164,10 +164,12 @@ public class Spline implements Function, Serializable {
 
             float z = nd.z;
             data[x][y] = z;
-            toUpdate[x - 1][y - 1] = true;
-            if (y != data[0].length) toUpdate[x - 1][y] = true;
-            if (x != data.length) toUpdate[x][y - 1] = true;
-            if (x != data.length && y != data[0].length) toUpdate[x][y] = true;
+
+            for (int i = x-3; i < x+3; i++) {
+                for (int j = y-3; j < y+3; j++) {
+                    if(i>=0 && j>=0 && i<coefficients.length && j<coefficients[0].length) toUpdate[i][j] = true;
+                }
+            }
         }
         deriv(xs < 0? 0:xs, ys < 0? 0:ys, xg >= data.length?data.length-1:xg, yg > data[0].length? data[0].length-1:yg);
         for (int i = 0; i < toUpdate.length; i++) {
