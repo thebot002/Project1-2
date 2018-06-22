@@ -34,7 +34,9 @@ public class Game extends State3D {
     public Stage hud;
     private Stage pause;
     private boolean paused = false;
-    private boolean inSettings = false;
+    private boolean isPushed = false;
+    private boolean isSettings = false;
+
     private StateManager manager;
 
     public HashMap<String, Label> labels;
@@ -137,7 +139,7 @@ public class Game extends State3D {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 manager.push(new SettingsMenu(manager));
-                inSettings = true;
+                isSettings = true;
             }
         });
         organizer.row();
@@ -228,9 +230,13 @@ public class Game extends State3D {
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(inSettings){
-            inSettings = false;
-            Gdx.input.setInputProcessor(new InputMultiplexer(pause, this));
+        if(isPushed){
+            isPushed = false;
+            setProcessors();
+        }
+        if(isSettings){
+            isSettings = false;
+            Gdx.input.setInputProcessor(new InputMultiplexer(pause,this));
         }
         if (paused) return;
         if (!ball.isStopped()) {
@@ -268,6 +274,7 @@ public class Game extends State3D {
     private void endState(EndState state){
         course.setScore(hole_number-1,player.getHitCount());
         this.player.resetCount();
+        isPushed = true;
         manager.push(state);
     }
 
