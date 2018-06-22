@@ -18,7 +18,6 @@ import com.golf2k18.states.game.Game;
 public class simulatingBot extends Bot {
     private Ball simuBall;
     private Engine engine;
-
     private Vector3 velocity;
 
     private final float SCALAR = 1.01f;
@@ -49,7 +48,7 @@ public class simulatingBot extends Bot {
 
     @Override
     public void handleInput(Game gameState) {
-        if(simuBall.isStopped()){
+        if(simuBall.isStopped() || engine.isGoal()){
             System.out.println(simuBall.getPosition());
             running_label.setText("Simulating..."+String.valueOf(ballCounter));
             if(engine != null && engine.isGoal()){
@@ -63,11 +62,25 @@ public class simulatingBot extends Bot {
             ballCounter++;
             if(velocity.len() == 0){
                 velocity = gameState.getTerrain().getHole().cpy().sub(gameState.getBall().getPosition());
+                velocity.scl(.5f);
             }
             else {
-                velocity.scl(SCALAR);
+                if(simuBall.getPosition().x - gameState.getTerrain().getHole().cpy().x >=0 && simuBall.getPosition().y - gameState.getTerrain().getHole().cpy().y <=0 ){
+                    velocity.scl(.95f,1.05f,1f);
+                }
+                if(simuBall.getPosition().x - gameState.getTerrain().getHole().cpy().x <=0 && simuBall.getPosition().y - gameState.getTerrain().getHole().cpy().y <=0 ){
+                    velocity.scl(1.05f,1.05f,1f);
+                }
+                if(simuBall.getPosition().x - gameState.getTerrain().getHole().cpy().x <=0 && simuBall.getPosition().y - gameState.getTerrain().getHole().cpy().y >=0 ){
+                    velocity.scl(1.05f,.95f,1f);
+                }
+                if(simuBall.getPosition().x - gameState.getTerrain().getHole().cpy().x >=0 && simuBall.getPosition().y - gameState.getTerrain().getHole().cpy().y >=0 ){
+                    velocity.scl(.95f,.95f,1f);
+                }
+                //velocity.scl(SCALAR);
             }
             simuBall.hit(velocity);
+
         }
         else {
             engine.updateBall(Gdx.graphics.getDeltaTime());
