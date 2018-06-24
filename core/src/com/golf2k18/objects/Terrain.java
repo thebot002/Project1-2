@@ -124,16 +124,16 @@ public class Terrain implements Serializable {
         if(function instanceof Spline) return;
 
         float[][] data = new float[(width*interval)+1][(height*interval)+1];
-        float[][] xDeriv = new float[(width*interval)+1][(height*interval)+1];
-        float[][] yDeriv = new float[(width*interval)+1][(height*interval)+1];
 
         for (int i = 0; i <= width ; i++) {
             for (int j = 0; j <=height ; j++) {
                 data[i][j] = function.evaluateF(i,j);
-                xDeriv[i][j] = function.evaluateXDeriv(i,j);
-                yDeriv[i][j] = function.evaluateYDeriv(i,j);
             }
         }
-        function = new Spline(data/*,xDeriv,yDeriv*/);
+        function = new Spline(data);
+    }
+
+    public ArrayList<Wall> getObstacles() {
+        return obstacles;
     }
 }
