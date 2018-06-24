@@ -68,11 +68,12 @@ public class TerrainEditor extends State3D {
      */
     @Override
     public void create() {
-        super.create();
-
-        if(!(terrain.getFunction() instanceof Spline))
+        if(!(terrain.getFunction() instanceof Spline)) {
             terrain.toSpline(1);
+        }
         function = (Spline) terrain.getFunction();
+
+        super.create();
 
         createNodes();
         initNodes();

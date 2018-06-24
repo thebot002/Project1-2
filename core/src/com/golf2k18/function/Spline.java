@@ -1,7 +1,6 @@
 package com.golf2k18.function;
 
 import com.badlogic.gdx.math.Vector3;
-import com.golf2k18.models.Matrix;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,12 +9,12 @@ import java.util.ArrayList;
  *This class is used to make splines interpolations.
  */
 public class Spline implements Function, Serializable {
-    private float[][] data;
-    private Matrix[][] coefficients;
+    protected float[][] data;
+    protected Matrix[][] coefficients;
 
-    private float[][] xDeriv;
-    private float[][] yDeriv;
-    private float[][] xyDeriv;
+    protected float[][] xDeriv;
+    protected float[][] yDeriv;
+    protected float[][] xyDeriv;
 
     private float[][] A1 = {{1,0,0,0},{0,0,1,0},{-3,3,-2,-1},{2,-2,1,1}};
     private float[][] A2 = {{1,0,-3,2},{0,0,3,-2},{0,1,-2,1},{0,0,-1,1}};
@@ -54,11 +53,10 @@ public class Spline implements Function, Serializable {
         this.data = data;
         coefficients = new Matrix[data.length-1][data[0].length-1];
 
-        xDeriv = new float[data.length][data[0].length];
-        yDeriv = new float[data.length][data[0].length];
-        xyDeriv = new float[data.length][data[0].length];
+        xDeriv = xDeriv(data);
+        yDeriv = yDeriv(data);
+        xyDeriv = xDeriv(yDeriv);
 
-        deriv(0,0,data.length,data[0].length);
         interpolate();
     }
 
@@ -88,6 +86,35 @@ public class Spline implements Function, Serializable {
             }
         }
     }
+
+    protected float[][] xDeriv(float[][] data){
+        float[][] xDeriv = new float[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if(i==0) xDeriv[0][j] = forwardDiff(1,data[0][j],data[1][j],data[2][j],data[3][j],data[4][j]);
+                else if(i==1) xDeriv[1][j] = assymetricDiff(1,data[0][j],data[1][j],data[2][j],data[3][j],data[4][j]);
+                else if(i == data.length-1) xDeriv[data.length-1][j] = forwardDiff(-1,data[data.length-1][j],data[data.length-2][j],data[data.length-3][j],data[data.length-4][j],data[data.length-5][j]);
+                else if(i == data.length-2) xDeriv[data.length-2][j] = assymetricDiff(-1,data[data.length-1][j],data[data.length-2][j],data[data.length-3][j],data[data.length-4][j],data[data.length-5][j]);
+                else xDeriv[i][j] = centeredDiff(1,data[i-2][j],data[i-1][j],data[i+1][j],data[i+2][j]);
+            }
+        }
+        return xDeriv;
+    }
+
+    protected float[][] yDeriv(float[][] data){
+        float[][] yDeriv = new float[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if(j == 0) yDeriv[i][0] = forwardDiff(1,data[i][0],data[i][1],data[i][2],data[i][3],data[i][4]);
+                else if(j == 1) yDeriv[i][1] = assymetricDiff(1,data[i][0],data[i][1],data[i][2],data[i][3],data[i][4]);
+                else if(j == data[0].length - 1) yDeriv[i][data[0].length-1] = forwardDiff(-1,data[i][data[0].length-1],data[i][data[0].length-2],data[i][data[0].length-3],data[i][data[0].length-4],data[i][data[0].length-5]);
+                else if(j == data[0].length - 2) yDeriv[i][data[0].length-2] = assymetricDiff(-1,data[i][data[0].length-1],data[i][data[0].length-2],data[i][data[0].length-3],data[i][data[0].length-4],data[i][data[0].length-5]);
+                else yDeriv[i][j] = centeredDiff(1,data[i][j-2],data[i][j-1],data[i][j+1],data[i][j+2]);
+            }
+        }
+        return yDeriv;
+    }
+
 
     private void interpolate(int x, int y){
         float[][] fMatrix = {
@@ -139,7 +166,7 @@ public class Spline implements Function, Serializable {
         return evaluate(new Matrix(xVector),new Matrix(yVector),x,y);
     }
 
-    private float evaluate(Matrix xVector, Matrix yVector, float x, float y){
+    protected float evaluate(Matrix xVector, Matrix yVector, float x, float y){
         if(x > coefficients.length-1) x = coefficients.length-1;
         if(y > coefficients[0].length-1) y = coefficients[0].length-1;
         Matrix result = Matrix.multiplication(Matrix.multiplication(xVector,coefficients[(int)x][(int)y]),yVector);
@@ -179,15 +206,15 @@ public class Spline implements Function, Serializable {
         }
     }
 
-    private float forwardDiff(float h, float v0, float v1, float v2, float v3, float v4){
+    protected float forwardDiff(float h, float v0, float v1, float v2, float v3, float v4){
         return (-(25*v0) + (48*v1) - (36*v2) + (16*v3) - (3*v4)) / (12*h);
     }
 
-    private float assymetricDiff(float h, float vm1, float v0, float v1, float v2, float v3){
+    protected float assymetricDiff(float h, float vm1, float v0, float v1, float v2, float v3){
         return (-(3*vm1) - (10*v0) + (18*v1) - (6*v2) + v3) / (12*h);
     }
 
-    private float centeredDiff(float h, float vm2, float vm1, float v1, float v2){
+    protected float centeredDiff(float h, float vm2, float vm1, float v1, float v2){
         return (vm2 + (8*v1) - (8*vm1) - v2) / (12*h);
     }
 }

@@ -1,6 +1,7 @@
 package com.golf2k18.objects;
 
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.function.BiquinticSpline;
 import com.golf2k18.function.Function;
 import com.golf2k18.function.Spline;
 
@@ -133,6 +134,6 @@ public class Terrain implements Serializable {
                 yDeriv[i][j] = function.evaluateYDeriv(i,j);
             }
         }
-        function = new Spline(data,xDeriv,yDeriv);
+        function = new Spline(data/*,xDeriv,yDeriv*/);
     }
 }
