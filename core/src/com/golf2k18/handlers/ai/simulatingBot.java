@@ -20,8 +20,6 @@ public class simulatingBot extends Bot {
     private Engine engine;
     private Vector3 velocity;
 
-    private final float SCALAR = 1.01f;
-
     private Stage running;
     private Label running_label;
 
