@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.states.game.Game;
 
 /**
  * Class that contains all the necessary information about the ball
@@ -98,7 +99,23 @@ public class Ball implements Collider{
     }
 
     @Override
-    public void collide(Collider c) {
+    public Wall collide(Game game) {
+        for (Wall wall : game.getTerrain().getObstacles()) {
+            if (wall.getBottomRightCorner().x < getTopLeftCorner().x || getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < getTopLeftCorner().y || getBottomRightCorner().y < wall.getTopLeftCorner().y) {
+                return wall;
+            }
+        }
+        return null;
 
+    }
+
+    @Override
+    public Vector3 getTopLeftCorner() {
+        return new Vector3(position.x - DIAMETER/2, position.y + DIAMETER/2,1);
+    }
+
+    @Override
+    public Vector3 getBottomRightCorner() {
+        return new Vector3(position.x + DIAMETER/2, position.y - DIAMETER/2,1);
     }
 }

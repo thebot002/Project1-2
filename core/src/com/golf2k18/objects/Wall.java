@@ -10,8 +10,9 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.states.game.Game;
 
-public class Wall {
+public class Wall implements Collider {
     private Vector3 p00, p10, p01, p11;
 
     private float thickness = .2f;
@@ -22,7 +23,7 @@ public class Wall {
 
 
     public Wall(Vector3 p0, Vector3 p1) {
-        if(p0.equals(p1)){
+            if(p0.equals(p1)){
             p00 = new Vector3(p0.x - thickness,p0.y - thickness,p0.z);
             p01 = new Vector3(p0.x + thickness,p0.y - thickness,p0.z);
             p10 = new Vector3(p0.x - thickness,p0.y + thickness,p0.z);
@@ -43,5 +44,19 @@ public class Wall {
 
     public ModelInstance getInstance() {
         return instance;
+    }
+
+    @Override
+    public Wall collide(Game game) {
+        return game.getTerrain().getObstacles().get(0);
+    }
+    @Override
+    public Vector3 getTopLeftCorner() {
+        return p01;
+    }
+
+    @Override
+    public Vector3 getBottomRightCorner() {
+        return p10;
     }
 }
