@@ -63,9 +63,9 @@ public class EditorMenu extends SubMenu {
         splineTerrain.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Terrain defaultTerrain = DataIO.getTerrain("Plane");
-                defaultTerrain.toSpline(1);
-                manager.push(new TerrainEditor(manager,defaultTerrain));
+                /*Terrain defaultTerrain = DataIO.getTerrain("Plane");
+                defaultTerrain.toSpline(1);*/
+                manager.push(new BasisChoiceMenu(manager));
             }
         });
         content.add(splineTerrain).pad(10f).fillX();

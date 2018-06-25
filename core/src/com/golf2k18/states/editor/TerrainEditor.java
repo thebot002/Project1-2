@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.golf2k18.function.Spline;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.objects.Terrain;
+import com.golf2k18.objects.Wall;
 import com.golf2k18.states.State3D;
 import com.golf2k18.StateManager;
 
@@ -39,9 +40,11 @@ public class TerrainEditor extends State3D {
     private Model nodeSelected;
     private Model nodeUnselected;
     private Model startNode;
-    private int startPosIndex;
-    private int goalPosIndex;
-    private Model goalNode;
+    private Model holeNode;
+    private Vector3 savedStart;
+    private Vector3 savedHole;
+    private Vector3 wallStart;
+    private int savedWall;
 
     private final float NODE_DIAM = 0.2f;
     private boolean ctrl = false;
@@ -68,15 +71,20 @@ public class TerrainEditor extends State3D {
      */
     @Override
     public void create() {
-        super.create();
-
-        if(!(terrain.getFunction() instanceof Spline))
+        if(!(terrain.getFunction() instanceof Spline)) {
             terrain.toSpline(1);
+        }
         function = (Spline) terrain.getFunction();
+
+        super.create();
 
         createNodes();
         initNodes();
         selected = new ArrayList<>();
+
+        savedStart = terrain.getStart().cpy();
+        savedHole = terrain.getHole().cpy();
+        savedWall = terrain.getObstacles().size();
 
         createHUD();
 
@@ -93,7 +101,7 @@ public class TerrainEditor extends State3D {
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
 
-        goalNode = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
+        holeNode = builder.createSphere(NODE_DIAM, NODE_DIAM, NODE_DIAM,
                 50,50,
                 new Material(ColorAttribute.createDiffuse(Color.RED)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
@@ -118,12 +126,10 @@ public class TerrainEditor extends State3D {
         for (float i = 0; i <=terrain.getWidth() ; i++) {
             for (float j = 0; j <= terrain.getHeight() ; j++) {
                 if(i == terrain.getStart().x && j == terrain.getStart().y){
-                    startPosIndex = instances.size;
                     instances.add(new ModelInstance(startNode,i,j,function.evaluateF(i,j)));
                 }
                 else if(i == terrain.getHole().x && j == terrain.getHole().y){
-                    goalPosIndex = instances.size;
-                    instances.add(new ModelInstance(goalNode,i,j,function.evaluateF(i,j)));
+                    instances.add(new ModelInstance(holeNode,i,j,function.evaluateF(i,j)));
                 }
                 else instances.add(new ModelInstance(nodeUnselected,i,j,function.evaluateF(i,j)));
             }
@@ -132,7 +138,7 @@ public class TerrainEditor extends State3D {
 
     @Override
     public boolean scrolled(int amount) {
-        if(ctrl) return false;
+        if(ctrl || selected.isEmpty()) return false;
         ArrayList<Vector3> newData = new ArrayList<>();
         for (Integer aSelected : selected) {
             if(!change) change = true;
@@ -157,13 +163,20 @@ public class TerrainEditor extends State3D {
                     if(pos.x == terrain.getStart().x && pos.y == terrain.getStart().y)
                         instances.set(i + startIndex, new ModelInstance(startNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
                     else if(pos.x == terrain.getStart().x && pos.y == terrain.getStart().y)
-                        instances.set(i + startIndex, new ModelInstance(goalNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
+                        instances.set(i + startIndex, new ModelInstance(holeNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
+                    else if(setObstacles){
+                        if(wallStart == null) wallStart = pos;
+                        else {
+                            terrain.getObstacles().add(new Wall(wallStart,pos));
+                            wallStart = pos;
+                        }
+                    }
                     else
                         instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
                 }
                 selected.clear();
             }
-            if (pointI > startIndex) {
+            if (pointI >= 0) {
                 Vector3 pos = d1ToD2(pointI);
                 if(setStart){
                     terrain.getStart().set(pos.x,pos.y,function.evaluateF(pos.x,pos.y));
@@ -173,13 +186,19 @@ public class TerrainEditor extends State3D {
                     terrain.getHole().set(pos.x,pos.y,function.evaluateF(pos.x,pos.y));
                     initNodes();
                 }
+                else if(setObstacles){
+                    if(wallStart == null) wallStart = pos;
+                    else {
+                        terrain.getObstacles().add(new Wall(wallStart,pos));
+                        wallStart = null;
+                    }
+                }
                 else{
                     instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
                     selected.add(pointI);
                 }
             }
-            if(setStart) setStart = false;
-            if(setHole) setHole = false;
+            else wallStart = null;
         }
         return super.touchDown(screenX, screenY, pointer, button);
     }
@@ -390,9 +409,25 @@ public class TerrainEditor extends State3D {
         cancel.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setObstacles = false;
-                setHole = false;
-                setStart = false;
+                if(setObstacles){
+                    ArrayList<Wall> walls = terrain.getObstacles();
+                    int i = walls.size()-1;
+                    while(walls.size() > savedWall && i >= 0){
+                        walls.remove(i);
+                        i--;
+                    }
+                    setObstacles = false;
+                }
+                if(setHole){
+                    terrain.getHole().set(savedHole.x, savedHole.y,function.evaluateF(savedHole.x, savedHole.y));
+                    initNodes();
+                    setHole = false;
+                }
+                if(setStart){
+                    terrain.getStart().set(savedStart.x,savedStart.y,function.evaluateF(savedStart.x,savedStart.y));
+                    initNodes();
+                    setStart = false;
+                }
                 setSize = false;
                 Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));
             }
@@ -403,9 +438,18 @@ public class TerrainEditor extends State3D {
         apply.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setObstacles = false;
-                setHole = false;
-                setStart = false;
+                if(setObstacles){
+                    savedWall = terrain.getObstacles().size();
+                    setObstacles = false;
+                }
+                if(setHole){
+                    savedHole = terrain.getHole().cpy();
+                    setHole = false;
+                }
+                if(setStart){
+                    savedStart = terrain.getStart().cpy();
+                    setStart = false;
+                }
                 setSize = false;
 
                 Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));

@@ -16,6 +16,7 @@ import com.golf2k18.models.HeightField;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.models.TerrainModel;
 import com.golf2k18.camera.GameCameraController;
+import com.golf2k18.objects.Wall;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,7 @@ public abstract class State3D extends State {
     protected Terrain terrain;
     private TerrainModel terrainModel;
     private Array<Renderable> fields;
+    private ArrayList<Wall> obstacles;
 
     public State3D(StateManager manager, Terrain terrain) {
         super(manager);
@@ -87,6 +89,9 @@ public abstract class State3D extends State {
         for (Renderable r: fields) {
             batch.render(r);
         }
+        for (Wall w: obstacles) {
+            batch.render(w.getInstance(),environment);
+        }
         batch.end();
     }
 
@@ -125,6 +130,8 @@ public abstract class State3D extends State {
             field.material = new Material(TextureAttribute.createDiffuse(new Texture("Textures/grass_texture_better.jpg")));
             fields.add(field);
         }
+
+        obstacles = terrain.getObstacles();
     }
 
     public void update(float dt){

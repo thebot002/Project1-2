@@ -102,15 +102,14 @@ public class TerrainModel {
     private float[] createHeights(int x0,int y0, int width, int height){
         float[] heights = new float[((width*DIV_SIZE)+1)*((height*DIV_SIZE)+1)]; //width and height +1 because we want to include the edge
         int ih = 0;
-        float division = 1/(DIV_SIZE*1.0f);
         float hole_rad = terrain.getHOLE_DIAM()/2;
         final float hole_depth = 3;
-        for (float i = 0; i <= width ; i+=division) {
-            for (float j = 0; j <= height ; j+=division) {
-                if(terrain.getHole().dst(new Vector3(x0+i,y0+j,0)) <= hole_rad){
-                    heights[ih] = terrain.getFunction().evaluateF(x0+i ,y0+j)-hole_depth;
+        for (float i = 0; i <= width*DIV_SIZE ; i++) {
+            for (float j = 0; j <= height*DIV_SIZE ; j++) {
+                if(terrain.getHole().dst(new Vector3(x0+(i/DIV_SIZE),y0+(j/DIV_SIZE),0)) <= hole_rad){
+                    heights[ih] = terrain.getFunction().evaluateF(x0+(i/DIV_SIZE) ,y0+(j/DIV_SIZE))-hole_depth;
                 }
-                else heights[ih] =  terrain.getFunction().evaluateF(x0+i ,y0+j);
+                else heights[ih] =  terrain.getFunction().evaluateF(x0+(i/DIV_SIZE) ,y0+(j/DIV_SIZE));
                 ih++;
             }
         }

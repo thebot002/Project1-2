@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.golf2k18.function.BiquinticSpline;
 import com.golf2k18.function.Formula;
 import com.golf2k18.function.Spline;
 import com.golf2k18.handlers.HumanDrag;
@@ -31,7 +32,6 @@ public class StateManager extends ApplicationAdapter {
     public static Music music;
     public static Skin skin;
 
-
     public StateManager() {
 		states = new Stack<>();
 	}
@@ -44,7 +44,7 @@ public class StateManager extends ApplicationAdapter {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         settings = Settings.load();
         State start = new MainMenu(this);
-        //State start = new TerrainEditor(this,DataIO.getTerrain("Plane"));
+        //State start = new TerrainEditor(this,DataIO.getTerrain("CosY"));
         //State start = new Game(this,new Course(DataIO.getTerrain("PlaneSpline")),new HumanDrag());
         //State start = new Game(this,DataIO.getCourse("Default"),new HumanDrag());
         //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new simulatingBot());
@@ -53,20 +53,19 @@ public class StateManager extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
     }
 
-    public StateManager push(State state)
-	{
+    public StateManager push(State state){
         state.create();
 		states.push(state);
 		return this;
 	}
-	public StateManager pop()
-	{
+
+	public StateManager pop() {
 	    states.peek().dispose();
 		states.pop();
 		return this;
 	}
-	public void set(State state)
-	{
+
+	public void set(State state){
 		states.pop();
 		state.create();
 		states.push(state);
