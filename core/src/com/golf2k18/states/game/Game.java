@@ -36,6 +36,7 @@ public class Game extends State3D {
     private boolean paused = false;
     private boolean isPushed = false;
     private boolean isSettings = false;
+    private boolean moving = false;
 
     private StateManager manager;
 
@@ -231,6 +232,7 @@ public class Game extends State3D {
     public void update(float dt) {
         super.update(dt);
         if(isPushed){
+            paused = false;
             isPushed = false;
             setProcessors();
         }
@@ -240,8 +242,17 @@ public class Game extends State3D {
         }
         if (paused) return;
         if (!ball.isStopped()) {
+            if(!moving){
+                moving = true;
+                Gdx.input.setInputProcessor(new InputMultiplexer(this,hud));
+            }
             ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y),engine.updateBall(dt));
-        } else {
+        }
+        else {
+            if(moving){
+                moving = false;
+                setProcessors();
+            }
             player.handleInput(this);
         }
         if(engine.isGoal()) {
