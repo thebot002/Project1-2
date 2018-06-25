@@ -51,7 +51,7 @@ public class HumanDrag extends Human {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if(down && button == 0){
-            Vector3 velocity = getTerrainMousePos(screenX,screenY,gameState.getBall().getPosition().z).scl(-1f).add(gameState.getBall().getPosition()).scl(3);
+            Vector3 velocity = getTerrainMousePos(screenX,screenY,gameState.getBall().getPosition().z).scl(-1f).add(gameState.getBall().getPosition()).scl(2);
             gameState.getBall().hit(velocity);
             hitCount++;
         }

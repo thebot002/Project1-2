@@ -23,23 +23,30 @@ public class Wall implements Collider {
 
 
     public Wall(Vector3 p0, Vector3 p1) {
-            if(p0.equals(p1)){
-            p00 = new Vector3(p0.x - thickness,p0.y - thickness,p0.z);
-            p01 = new Vector3(p0.x + thickness,p0.y - thickness,p0.z);
-            p10 = new Vector3(p0.x - thickness,p0.y + thickness,p0.z);
-            p11 = new Vector3(p0.x + thickness,p0.y + thickness,p0.z);
+        if(p0.equals(p1)){
+            p00 = new Vector3(p0.x - thickness,p0.y - thickness,0);
+            p01 = new Vector3(p0.x + thickness,p0.y - thickness,0);
+            p10 = new Vector3(p0.x - thickness,p0.y + thickness,0);
+            p11 = new Vector3(p0.x + thickness,p0.y + thickness,0);
         }
         else {
-            p00 = new Vector3(p0.x - thickness,p0.y - thickness,p0.z);
-            p01 = new Vector3(p1.x + thickness,p0.y - thickness,p0.z);
-            p10 = new Vector3(p0.x - thickness,p1.y + thickness,p0.z);
-            p11 = new Vector3(p1.x + thickness,p1.y + thickness,p0.z);
+            p00 = new Vector3(p0.x - thickness,p0.y - thickness,0);
+            p01 = new Vector3(p1.x + thickness,p0.y - thickness,0);
+            p10 = new Vector3(p0.x - thickness,p1.y + thickness,0);
+            p11 = new Vector3(p1.x + thickness,p1.y + thickness,0);
         }
 
+        Vector3 p0p1 = p1.cpy().sub(p0);
+        float angle = (float) Math.acos(p0p1.dot(1,0,0) / p0p1.len());
+
+        Quaternion orientation = new Quaternion(p0p1.cpy().crs(-1,0,0),(float)Math.toDegrees(angle));
+
+        Vector3 position = p0.cpy().add(p0p1.cpy().scl(.5f));
+
         ModelBuilder builder = new ModelBuilder();
-        Model wall = builder.createBox(p0.dst(p1)+(2*thickness),2*thickness,2*thickness,
+        Model wall = builder.createBox(p0p1.len()+(2*thickness),2*thickness,2*thickness,
                 new Material(TextureAttribute.createDiffuse(brick)),attr);
-        instance = new ModelInstance(wall, new Matrix4(new Vector3(p0).sub(thickness),new Quaternion(p1.sub(p0),1f),new Vector3(1,1,1)));
+        instance = new ModelInstance(wall, new Matrix4(position,orientation,new Vector3(1,1,1)));
     }
 
     public ModelInstance getInstance() {

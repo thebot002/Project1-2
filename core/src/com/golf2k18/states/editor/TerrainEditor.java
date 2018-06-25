@@ -53,9 +53,11 @@ public class TerrainEditor extends State3D {
     private boolean setHole = false;
     private boolean setSize = false;
     private boolean setObstacles = false;
+    private boolean deleteObstacles = false;
 
     private Spline function;
     private ArrayList<Integer> selected;
+    private ArrayList<Wall> deletedObstacles = new ArrayList<>();
 
     private Stage hud;
     private Stage tempHUD;
@@ -89,7 +91,10 @@ public class TerrainEditor extends State3D {
         createHUD();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, controller, hud));
+
         controller.toggleScroll();
+
+        createTempHud("obstacles");
     }
 
     private void createNodes(){
@@ -118,11 +123,11 @@ public class TerrainEditor extends State3D {
                 new Material(ColorAttribute.createDiffuse(Color.GRAY)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates
         );
-        startIndex = instances.size;
+        startIndex = instances.size();
     }
 
     private void initNodes(){
-        if(instances.size > startIndex)instances.removeRange(startIndex,instances.size-1);
+        while(instances.size() > startIndex) instances.remove(instances.size()-1);
         for (float i = 0; i <=terrain.getWidth() ; i++) {
             for (float j = 0; j <= terrain.getHeight() ; j++) {
                 if(i == terrain.getStart().x && j == terrain.getStart().y){
@@ -138,7 +143,7 @@ public class TerrainEditor extends State3D {
 
     @Override
     public boolean scrolled(int amount) {
-        if(ctrl || selected.isEmpty()) return false;
+        if(!ctrl || selected.isEmpty()) return false;
         ArrayList<Vector3> newData = new ArrayList<>();
         for (Integer aSelected : selected) {
             if(!change) change = true;
@@ -156,28 +161,21 @@ public class TerrainEditor extends State3D {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(button == 0) {
-            int pointI = getObject(screenX, screenY) - startIndex;
+            if(deleteObstacles){
+                int obstacle = getObject(screenX,screenY, terrain.getObstacleInstances());
+                deletedObstacles.add(terrain.getObstacles().remove(obstacle));
+                return true;
+            }
+            int pointI = getObject(screenX, screenY,instances) - startIndex;
             if (!ctrl) {
                 for (int i : selected) {
-                    Vector3 pos = d1ToD2(i);
-                    if(pos.x == terrain.getStart().x && pos.y == terrain.getStart().y)
-                        instances.set(i + startIndex, new ModelInstance(startNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
-                    else if(pos.x == terrain.getStart().x && pos.y == terrain.getStart().y)
-                        instances.set(i + startIndex, new ModelInstance(holeNode, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
-                    else if(setObstacles){
-                        if(wallStart == null) wallStart = pos;
-                        else {
-                            terrain.getObstacles().add(new Wall(wallStart,pos));
-                            wallStart = pos;
-                        }
-                    }
-                    else
-                        instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
+                    Vector3 pos = instances.get(i + startIndex).transform.getTranslation(new Vector3());
+                    instances.set(i + startIndex, new ModelInstance(nodeUnselected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
                 }
                 selected.clear();
             }
             if (pointI >= 0) {
-                Vector3 pos = d1ToD2(pointI);
+                Vector3 pos = instances.get(pointI + startIndex).transform.getTranslation(new Vector3());
                 if(setStart){
                     terrain.getStart().set(pos.x,pos.y,function.evaluateF(pos.x,pos.y));
                     initNodes();
@@ -187,10 +185,11 @@ public class TerrainEditor extends State3D {
                     initNodes();
                 }
                 else if(setObstacles){
-                    if(wallStart == null) wallStart = pos;
+                    if(wallStart == null) wallStart = pos.cpy();
                     else {
-                        terrain.getObstacles().add(new Wall(wallStart,pos));
-                        wallStart = null;
+                        terrain.getObstacles().add(new Wall(wallStart,pos.cpy()));
+                        if(ctrl) wallStart = pos.cpy();
+                        else wallStart = null;
                     }
                 }
                 else{
@@ -217,29 +216,20 @@ public class TerrainEditor extends State3D {
         return super.keyUp(keycode);
     }
 
-    private Vector3 d1ToD2(int point){
-        float yAmount = terrain.getHeight() +1;
-
-        float y = point % yAmount;
-        float x = (point - y)/yAmount;
-
-        return new Vector3(x,y,0);
-    }
-
     /**
      * Converts the screen's (X,Y) coordinates into actual game coordinates for the camera
      * @param screenX x coordinate
      * @param screenY y coordinate
      * @return the game coordinates
      */
-    private int getObject (int screenX, int screenY) {
+    private int getObject (int screenX, int screenY, ArrayList<ModelInstance> instances) {
         Ray ray = camera.getPickRay(screenX, screenY);
 
         int result = -1;
         float distance = -1;
         Vector3 position = new Vector3();
 
-        for (int i = startIndex; i < instances.size; ++i) {
+        for (int i = startIndex; i < instances.size(); ++i) {
             final ModelInstance point = instances.get(i);
 
             point.transform.getTranslation(position);
@@ -308,8 +298,23 @@ public class TerrainEditor extends State3D {
             }
         });
         content.add(obstacles).fillX().pad(10f).expandY().bottom();
-
         content.add();
+        content.add();
+        content.row();
+
+        TextButton obstaclesDeletion = new TextButton("Delete obstacles",StateManager.skin);
+        obstaclesDeletion.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                deleteObstacles = true;
+                initNodes();
+                createTempHud("OBSTACLE DELETE");
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,tempHUD));
+            }
+        });
+        content.add(obstaclesDeletion).fillX().pad(10f);
+
+        content.add().padLeft(130f).padRight(130f);
         content.add();
         content.row();
 
@@ -376,7 +381,16 @@ public class TerrainEditor extends State3D {
         });
         content.add(hole).fillX().pad(10f);
 
-        content.add();
+        TextButton walls = new TextButton(isHideWalls()?"Show obstacles":"Hide obstacles",StateManager.skin);
+        walls.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toggleHideWalls();
+                walls.setText(isHideWalls()?"Show obstacles":"Hide obstacles");
+            }
+        });
+        content.add(walls).fillX().pad(10f);
+
         TextButton home = new TextButton("Home",StateManager.skin);
         home.addListener(new ClickListener(){
             @Override
@@ -418,6 +432,12 @@ public class TerrainEditor extends State3D {
                     }
                     setObstacles = false;
                 }
+                if (deleteObstacles){
+                    while(!deletedObstacles.isEmpty()){
+                        terrain.getObstacles().add(deletedObstacles.remove(deletedObstacles.size()-1));
+                    }
+                    deleteObstacles = false;
+                }
                 if(setHole){
                     terrain.getHole().set(savedHole.x, savedHole.y,function.evaluateF(savedHole.x, savedHole.y));
                     initNodes();
@@ -442,6 +462,10 @@ public class TerrainEditor extends State3D {
                     savedWall = terrain.getObstacles().size();
                     setObstacles = false;
                 }
+                if(deleteObstacles){
+                    deletedObstacles.clear();
+                    deleteObstacles = false;
+                }
                 if(setHole){
                     savedHole = terrain.getHole().cpy();
                     setHole = false;
@@ -456,6 +480,17 @@ public class TerrainEditor extends State3D {
             }
         });
         content.add(apply).fillX().pad(10f).bottom();
+        content.row();
+
+        TextButton walls = new TextButton(isHideWalls()?"Show obstacles":"Hide obstacles",StateManager.skin);
+        walls.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toggleHideWalls();
+                walls.setText(isHideWalls()?"Show obstacles":"Hide obstacles");
+            }
+        });
+        content.add(walls).fillX().colspan(2).pad(10f);
 
         tempHUD.addActor(content);
     }
