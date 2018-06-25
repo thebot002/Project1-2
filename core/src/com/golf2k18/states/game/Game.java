@@ -171,21 +171,19 @@ public class Game extends State3D {
         givUp.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(course.getSize() != hole_number){
-                    course.setScore(hole_number,17);
-                    endState(new LoseState(manager,g));
-                }
+                player.giveUp();
+                endState(course.getSize()>hole_number?new LoseState(manager,g):new WinState(manager,g));
             }
         });
         organizer.row();
         organizer.add(givUp).top().pad(10f);
-
 
         TextButton restart = new TextButton("Restart", StateManager.skin);
         restart.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 restart();
+                resume();
             }
         });
         organizer.row();
@@ -259,7 +257,7 @@ public class Game extends State3D {
             if(hole_number == course.getSize()) endState(new WinState(manager,this));
             else endState(new TerrainWinState(manager,this));
         }
-        if(player.getHitCount() > 17) endState(new LoseState(manager,this));
+        if(player.getHitCount() >= 17) endState(new LoseState(manager,this));
         updateLabels();
     }
 

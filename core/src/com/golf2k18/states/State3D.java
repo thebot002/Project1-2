@@ -35,6 +35,8 @@ public abstract class State3D extends State {
     private TerrainModel terrainModel;
     private Array<Renderable> fields;
     private ArrayList<Wall> obstacles;
+    private ArrayList<ModelInstance> walls;
+    private ModelInstance water;
 
     private boolean hideWalls = false;
 
@@ -69,12 +71,7 @@ public abstract class State3D extends State {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1.f));
         environment.add(light);
 
-
         createTerrain();
-        //add the terrain to the list of models to display
-        for (ModelInstance m: terrainModel.world) {
-            instances.add(m);
-        }
     }
 
     public abstract void pause();
@@ -88,9 +85,11 @@ public abstract class State3D extends State {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
         for (Renderable r: fields) batch.render(r);
+        if(StateManager.settings.hasWater()) batch.render(water,environment);
         if(!hideWalls)
             for (Wall w: obstacles)
                 batch.render(w.getInstance(),environment);
+        batch.render(walls,environment);
         batch.end();
     }
 
@@ -131,6 +130,9 @@ public abstract class State3D extends State {
         }
 
         obstacles = terrain.getObstacles();
+
+        walls = terrainModel.getEdges();
+        water = terrainModel.getWater();
     }
 
     public void update(float dt){

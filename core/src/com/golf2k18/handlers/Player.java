@@ -35,4 +35,8 @@ public abstract class Player extends InputAdapter {
     public InputProcessor getInputProcessor(){
         return this;
     }
+
+    public void giveUp(){
+        hitCount = 17;
+    }
 }
