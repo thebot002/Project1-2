@@ -73,7 +73,7 @@ public class Game extends State3D {
     public void create() {
         super.create();
 
-        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
+        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y),0);
         controller.initFocus(ball.getPosition());
 
         engine = new Engine(terrain, ball, StateManager.settings.getSolver());
@@ -240,8 +240,7 @@ public class Game extends State3D {
         }
         if (paused) return;
         if (!ball.isStopped()) {
-            engine.updateBall(dt);
-            ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
+            ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y),engine.updateBall(dt));
         } else {
             player.handleInput(this);
         }
@@ -289,7 +288,7 @@ public class Game extends State3D {
     public void restart(){
         ball.getPosition().set(terrain.getStart().cpy());
         ball.setStopped();
-        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
+        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y),0);
         player.resetCount();
     }
 

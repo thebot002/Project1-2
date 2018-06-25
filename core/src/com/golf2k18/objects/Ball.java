@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.states.game.Game;
 
@@ -93,9 +94,16 @@ public class Ball implements Collider{
         model = new ModelInstance(tempSphere,position.x,position.y,position.z+(DIAMETER/2));
     }
 
-    public void updateInstance(float z){
+    public void updateInstance(float z,float displacement){
         position.z = z;
         model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
+        float rotAngle = (float) ((180 * displacement) / (Math.PI * (DIAMETER/2)));
+        Quaternion sys = model.transform.getRotation(new Quaternion());
+        Vector3 worldAxis = new Vector3(0,0,1).crs(velocity);
+        worldAxis.rotate(sys.getPitch(),1,0,0);
+        worldAxis.rotate(sys.getYaw(),0,1,0);
+        worldAxis.rotate(sys.getRoll(),0,0,1);
+        model.transform.rotate(new Quaternion(worldAxis,rotAngle/40));
     }
 
     @Override

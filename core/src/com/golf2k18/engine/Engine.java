@@ -77,7 +77,7 @@ public class Engine {
     /**
      * Updates the ball's position
      */
-    public void updateBall(float dt){
+    public float updateBall(float dt){
         this.dt = dt;
 
         Vector3 position = ball.getPosition();
@@ -89,9 +89,8 @@ public class Engine {
         ball.getPosition().set(newPos);
 
         updateBall(newPos,newVel);
-//        if(ball.getPosition().z <= 0){
-//            ball.getPosition().set(position);
-//        }
+
+        return position.dst(newPos);
     }
 
     protected void updateBall(Vector3 position, Vector3 velocity){
