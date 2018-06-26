@@ -1,4 +1,4 @@
-package com.golf2k18.models;
+package com.golf2k18.function;
 
 import java.io.Serializable;
 
@@ -94,5 +94,21 @@ public class Matrix implements Serializable {
             result += "\n";
         }
         System.out.print(result);
+    }
+
+    public void toSquare(){
+        if(col_amount == 1 && Math.sqrt(row_amount)%1 == 0){
+            col_amount = (int) Math.sqrt(row_amount);
+            row_amount = col_amount;
+
+            float[][] nMatrix = new float[row_amount][col_amount];
+            for (int i = 0; i < row_amount; i++) {
+                for (int j = 0; j < col_amount; j++) {
+                    nMatrix[i][j] = matrix[(j*col_amount)+i][0];
+                }
+            }
+            matrix = nMatrix;
+        }
+        else System.out.println("Not able to transform the matrix to a square matrix...");
     }
 }

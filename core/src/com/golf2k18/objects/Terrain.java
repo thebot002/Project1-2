@@ -1,10 +1,13 @@
 package com.golf2k18.objects;
 
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.function.BiquinticSpline;
 import com.golf2k18.function.Function;
 import com.golf2k18.function.Spline;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Class that contains the information about the course.
@@ -23,8 +26,10 @@ public class Terrain implements Serializable {
     private Vector3 offset;
     private String name;
 
-    private float MU = 0.15f;
+    private final float MU = 0.15f;
     private Function function;
+
+    private ArrayList<Wall> obstacles;
 
     /**
      * Constructor for the Terrain class, which takes a width and height specifying the area of the course,
@@ -45,6 +50,7 @@ public class Terrain implements Serializable {
         this.name = name;
         offset = new Vector3(0,0,0);
         this.function = function;
+        obstacles = new ArrayList<>();
     }
 
     /**
@@ -115,21 +121,28 @@ public class Terrain implements Serializable {
         return HOLE_DIAM;
     }
 
-
     public void toSpline(int interval){
         if(function instanceof Spline) return;
 
         float[][] data = new float[(width*interval)+1][(height*interval)+1];
-        float[][] xDeriv = new float[(width*interval)+1][(height*interval)+1];
-        float[][] yDeriv = new float[(width*interval)+1][(height*interval)+1];
 
         for (int i = 0; i <= width ; i++) {
             for (int j = 0; j <=height ; j++) {
                 data[i][j] = function.evaluateF(i,j);
-                xDeriv[i][j] = function.evaluateXDeriv(i,j);
-                yDeriv[i][j] = function.evaluateYDeriv(i,j);
             }
         }
-        function = new Spline(data,xDeriv,yDeriv);
+        function = new Spline(data);
+    }
+
+    public ArrayList<Wall> getObstacles() {
+        return obstacles;
+    }
+
+    public ArrayList<ModelInstance> getObstacleInstances(){
+        ArrayList<ModelInstance> array = new ArrayList<>();
+        for (Wall w: obstacles) {
+            array.add(w.getInstance());
+        }
+        return array;
     }
 }
