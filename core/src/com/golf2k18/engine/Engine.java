@@ -170,7 +170,11 @@ public class Engine {
 
     public Wall collide() {
         for (Wall wall : terrain.getObstacles()) {
-            if (wall.getBottomRightCorner().x < ball.getTopLeftCorner().x || ball.getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < ball.getTopLeftCorner().y || ball.getBottomRightCorner().y < wall.getTopLeftCorner().y) {
+            if ((wall.getBottomRightCorner().x < ball.getTopLeftCorner().x || ball.getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < ball.getTopLeftCorner().y || ball.getBottomRightCorner().y < wall.getTopLeftCorner().y)) {
+                System.out.println("Returned a wall");
+                return null;
+            }
+            else{
                 return wall;
             }
         }
@@ -181,29 +185,37 @@ public class Engine {
     public Vector3 findWallSide(){
         Wall wall = collide();
         if(wall != null) {
-            if(wall.getBottomRightCorner().x > ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x <  ball.getTopLeftCorner().x && wall.getTopRightCorner().y > ball.getTopLeftCorner().y && wall.getBottomRightCorner().y < ball.getTopLeftCorner().y){
+            //Vertical left wall
+            if(wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getTopRightCorner().x >  ball.getBottomRightCorner().x && wall.getBottomRightCorner().y < ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y > ball.getBottomRightCorner().y){
                 return wall.getBottomRightCorner().sub(wall.getBottomLeftCorner());
             }
-            if(wall.getTopRightCorner().x > ball.getBottomRightCorner().x && wall.getTopLeftCorner().x <  ball.getBottomRightCorner().x && wall.getTopRightCorner().y > ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y < ball.getBottomRightCorner().y){
+           // Vertical Right wall
+            if(wall.getTopRightCorner().x >= ball.getTopLeftCorner().x && wall.getBottomRightCorner().x <= ball.getBottomRightCorner().x && wall.getTopRightCorner().y <= ball.getTopLeftCorner().y && wall.getTopLeftCorner().y >= ball.getTopLeftCorner().y){
                 return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
             }
-            if(wall.getBottomLeftCorner().y > ball.getBottomRightCorner().y && wall.getBottomRightCorner().y <  ball.getBottomRightCorner().y && wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getTopRightCorner().x > ball.getBottomRightCorner().x){
-                return wall.getBottomLeftCorner().sub(wall.getBottomRightCorner());
+            //Vertical Top wall
+            if(wall.getBottomLeftCorner().x <= ball.getBottomRightCorner().x && wall.getTopLeftCorner().x >=  ball.getBottomRightCorner().x && wall.getBottomLeftCorner().y >= ball.getBottomRightCorner().y && wall.getBottomRightCorner().y <= ball.getBottomRightCorner().y){
+                return wall.getBottomLeftCorner().sub(wall.getTopLeftCorner());
             }
-            if(wall.getTopLeftCorner().y > ball.getTopLeftCorner().y && wall.getTopRightCorner().y <  ball.getTopLeftCorner().y && wall.getBottomRightCorner().x < ball.getTopLeftCorner().x && wall.getTopRightCorner().x > ball.getTopLeftCorner().x){
-                return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
+            //Vertical Bottom wall
+            if(wall.getBottomRightCorner().x <= ball.getTopLeftCorner().x && wall.getTopRightCorner().x >=  ball.getTopLeftCorner().x && wall.getBottomRightCorner().y <= ball.getTopLeftCorner().y && wall.getBottomLeftCorner().y >= ball.getTopLeftCorner().y){
+                return wall.getBottomRightCorner().sub(wall.getBottomRightCorner());
             }
-            if (wall.getBottomRightCorner().x > ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x < ball.getTopLeftCorner().x) {
+            //Horizontal Right wall
+            if (wall.getBottomRightCorner().x >= ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x <= ball.getTopLeftCorner().x && wall.getBottomRightCorner().y <= ball.getTopLeftCorner().y && wall.getTopRightCorner().y >= ball.getTopLeftCorner().y) {
                 return wall.getTopRightCorner().sub(wall.getBottomRightCorner());
             }
-            if (wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getBottomLeftCorner().x > ball.getBottomRightCorner().x) {
+            //Horizontal Left wall
+            if (wall.getBottomLeftCorner().x <= ball.getBottomRightCorner().x && wall.getBottomRightCorner().x >= ball.getBottomRightCorner().x && wall.getBottomLeftCorner().y <= ball.getBottomRightCorner().y && wall.getTopLeftCorner().y >= ball.getBottomRightCorner().y) {
                 return wall.getTopLeftCorner().sub(wall.getBottomLeftCorner());
             }
-            if (wall.getBottomRightCorner().y < ball.getTopLeftCorner().y && wall.getBottomLeftCorner().y > ball.getTopLeftCorner().y) {
-                return wall.getBottomRightCorner().sub(wall.getTopRightCorner());
+            //Horizontal Top wall
+            if (wall.getTopLeftCorner().x  <= ball.getBottomRightCorner().x && wall.getTopRightCorner().x >= ball.getBottomRightCorner().x && wall.getTopLeftCorner().y >= ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y <= ball.getBottomRightCorner().y) {
+                return wall.getTopLeftCorner().sub(wall.getTopRightCorner());
             }
-            if (wall.getBottomRightCorner().y > ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y < ball.getBottomRightCorner().y) {
-                return wall.getBottomLeftCorner().sub(wall.getTopLeftCorner());
+            //Horizontal Bottom wall
+            if (wall.getBottomLeftCorner().x <= ball.getTopLeftCorner().x && wall.getBottomRightCorner().x >= ball.getTopLeftCorner().x && wall.getBottomLeftCorner().y <= ball.getTopLeftCorner().y && wall.getTopLeftCorner().y >= ball.getTopLeftCorner().y) {
+                return wall.getBottomLeftCorner().sub(wall.getBottomRightCorner());
             }
 
         }
