@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
+import com.golf2k18.objects.Wall;
+import com.golf2k18.states.game.Game;
 import java.util.Random;
 
 
@@ -21,7 +23,6 @@ public class Engine {
     protected final double GOAL_TOLERANCE = 15.0;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
-
 
     private float radius;
     private final float MARGIN_RADIUS;
@@ -87,9 +88,17 @@ public class Engine {
         Vector3 velocity = ball.getVelocity();
 
         Vector3 newVel = sherlock.solveVel(new Vector3(position),new Vector3(velocity));
-        ball.getVelocity().set(newVel);
+        ball.getVelocity().set(newVel.cpy());
         Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(velocity));
         ball.getPosition().set(newPos);
+        Vector3 w = findWallSide();
+        if(w != null){
+            Vector3 normalVector = w.crs(0,0,1).nor();
+            bounce(newVel,normalVector);
+            ball.getVelocity().set(normalVector);
+        }
+
+
 
         updateBall(newPos,newVel);
 
@@ -166,4 +175,60 @@ public class Engine {
         ball.getVelocity().set(vel);
 
     }
+
+    public Wall collide() {
+        for (Wall wall : terrain.getObstacles()) {
+            if (wall.getBottomRightCorner().x < ball.getTopLeftCorner().x || ball.getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < ball.getTopLeftCorner().y || ball.getBottomRightCorner().y < wall.getTopLeftCorner().y) {
+                return wall;
+            }
+        }
+        return null;
+
+    }
+
+    public Vector3 findWallSide(){
+        Wall wall = collide();
+        if(wall != null) {
+            if(wall.getBottomRightCorner().x > ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x <  ball.getTopLeftCorner().x && wall.getTopRightCorner().y > ball.getTopLeftCorner().y && wall.getBottomRightCorner().y < ball.getTopLeftCorner().y){
+                return wall.getBottomRightCorner().sub(wall.getBottomLeftCorner());
+            }
+            if(wall.getTopRightCorner().x > ball.getBottomRightCorner().x && wall.getTopLeftCorner().x <  ball.getBottomRightCorner().x && wall.getTopRightCorner().y > ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y < ball.getBottomRightCorner().y){
+                return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
+            }
+            if(wall.getBottomLeftCorner().y > ball.getBottomRightCorner().y && wall.getBottomRightCorner().y <  ball.getBottomRightCorner().y && wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getTopRightCorner().x > ball.getBottomRightCorner().x){
+                return wall.getBottomLeftCorner().sub(wall.getBottomRightCorner());
+            }
+            if(wall.getTopLeftCorner().y > ball.getTopLeftCorner().y && wall.getTopRightCorner().y <  ball.getTopLeftCorner().y && wall.getBottomRightCorner().x < ball.getTopLeftCorner().x && wall.getTopRightCorner().x > ball.getTopLeftCorner().x){
+                return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
+            }
+            if (wall.getBottomRightCorner().x > ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x < ball.getTopLeftCorner().x) {
+                return wall.getTopRightCorner().sub(wall.getBottomRightCorner());
+            }
+            if (wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getBottomLeftCorner().x > ball.getBottomRightCorner().x) {
+                return wall.getTopLeftCorner().sub(wall.getBottomLeftCorner());
+            }
+            if (wall.getBottomRightCorner().y < ball.getTopLeftCorner().y && wall.getBottomLeftCorner().y > ball.getTopLeftCorner().y) {
+                return wall.getBottomRightCorner().sub(wall.getTopRightCorner());
+            }
+            if (wall.getBottomRightCorner().y > ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y < ball.getBottomRightCorner().y) {
+                return wall.getBottomLeftCorner().sub(wall.getTopLeftCorner());
+            }
+
+        }
+        return null;
+
+
+
+    }
+
+    public Vector3 crossProduct(Vector3 wallSide, Vector3 zVector){
+        zVector = new Vector3(0f,0f,1f);
+        Vector3 product = new Vector3();
+        product.x = (wallSide.y * zVector.z) - (wallSide.z * zVector.y);
+        product.y = (wallSide.z * zVector.x) - (wallSide.x * zVector.z);
+        product.z = (wallSide.x * zVector.y) - (wallSide.y * zVector.x);
+        return product;
+
+    }
+
 }

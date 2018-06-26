@@ -34,11 +34,13 @@ public abstract class State3D extends State {
     protected Terrain terrain;
     private TerrainModel terrainModel;
     private Array<Renderable> fields;
-    private ArrayList<Wall> obstacles;
+    private ArrayList<ModelInstance> obstacles;
     private ArrayList<ModelInstance> walls;
+    private ArrayList<ModelInstance> skeleton;
     private ModelInstance water;
 
     private boolean hideWalls = false;
+    private boolean showSkeleton = false;
 
     public State3D(StateManager manager, Terrain terrain) {
         super(manager);
@@ -84,11 +86,10 @@ public abstract class State3D extends State {
     public void render (final ArrayList<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
-        for (Renderable r: fields) batch.render(r);
+        if(showSkeleton) batch.render(skeleton,environment);
+        else for (Renderable r: fields) batch.render(r);
         if(StateManager.settings.hasWater()) batch.render(water,environment);
-        if(!hideWalls)
-            for (Wall w: obstacles)
-                batch.render(w.getInstance(),environment);
+        if(!hideWalls) batch.render(obstacles,environment);
         batch.render(walls,environment);
         batch.end();
     }
@@ -129,8 +130,7 @@ public abstract class State3D extends State {
             fields.add(field);
         }
 
-        obstacles = terrain.getObstacles();
-
+        obstacles = terrainModel.generateObstacles();
         walls = terrainModel.getEdges();
         water = terrainModel.getWater();
     }
@@ -153,5 +153,18 @@ public abstract class State3D extends State {
 
     protected void toggleHideWalls(){
         hideWalls = !hideWalls;
+    }
+
+    protected void toggleSkeleton(){
+        if(!showSkeleton) skeleton = terrainModel.generateSkeleton();
+        showSkeleton = !showSkeleton;
+    }
+
+    protected void updateWalls(){
+        obstacles = terrainModel.generateObstacles();
+    }
+
+    public ArrayList<ModelInstance> getObstacles() {
+        return obstacles;
     }
 }

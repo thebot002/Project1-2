@@ -12,7 +12,9 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.states.game.Game;
 
-public class Wall implements Collider {
+import java.io.Serializable;
+
+public class Wall implements Collider,Serializable {
     private Vector3 p00, p10, p01, p11;
 
     private float thickness = .2f;
@@ -54,16 +56,21 @@ public class Wall implements Collider {
     }
 
     @Override
-    public Wall collide(Game game) {
-        return game.getTerrain().getObstacles().get(0);
-    }
-    @Override
     public Vector3 getTopLeftCorner() {
         return p01;
     }
+
+    public Vector3 getBottomLeftCorner(){return p00;}
 
     @Override
     public Vector3 getBottomRightCorner() {
         return p10;
     }
+
+    public Vector3 getTopRightCorner(){ return p11;}
+
+
+
+
+
 }

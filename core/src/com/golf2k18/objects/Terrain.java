@@ -137,12 +137,4 @@ public class Terrain implements Serializable {
     public ArrayList<Wall> getObstacles() {
         return obstacles;
     }
-
-    public ArrayList<ModelInstance> getObstacleInstances(){
-        ArrayList<ModelInstance> array = new ArrayList<>();
-        for (Wall w: obstacles) {
-            array.add(w.getInstance());
-        }
-        return array;
-    }
 }
