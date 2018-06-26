@@ -22,11 +22,11 @@ public class AStar {
             @Override
             public int compare(Node node1, Node node2) {
                 if (node1.distanceTo(goal) > node2.distanceTo(node2)) {
-                    return 1;
+                    return -1;
                 } else if (node1 == node2) {
                     return 0;
                 } else {
-                    return -1;
+                    return 1;
                 }
             }
         };
@@ -39,6 +39,7 @@ public class AStar {
     public ArrayList getShortestPath() {
         while (openSet.isEmpty() != true) {
             Node pointer = openSet.poll();
+
 
             if (pointer == goal) {
                 return reconstruct_path(pointer.getCameFrom(),pointer);
