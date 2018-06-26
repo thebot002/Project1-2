@@ -107,17 +107,6 @@ public class Ball implements Collider{
     }
 
     @Override
-    public Wall collide(Game game) {
-        for (Wall wall : game.getTerrain().getObstacles()) {
-            if (wall.getBottomRightCorner().x < getTopLeftCorner().x || getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < getTopLeftCorner().y || getBottomRightCorner().y < wall.getTopLeftCorner().y) {
-                return wall;
-            }
-        }
-        return null;
-
-    }
-
-    @Override
     public Vector3 getTopLeftCorner() {
         return new Vector3(position.x - DIAMETER/2, position.y + DIAMETER/2,1);
     }

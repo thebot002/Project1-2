@@ -6,7 +6,6 @@ import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.Wall;
-import com.golf2k18.states.game.Game;
 import java.util.Random;
 
 
@@ -160,7 +159,6 @@ public class Engine {
         return goal;
     }
 
-    public Vector3 noise(){
     public void noise(){
         Random r = new Random();
         Vector3 vel = ball.getVelocity();
@@ -210,19 +208,5 @@ public class Engine {
 
         }
         return null;
-
-
-
     }
-
-    public Vector3 crossProduct(Vector3 wallSide, Vector3 zVector){
-        zVector = new Vector3(0f,0f,1f);
-        Vector3 product = new Vector3();
-        product.x = (wallSide.y * zVector.z) - (wallSide.z * zVector.y);
-        product.y = (wallSide.z * zVector.x) - (wallSide.x * zVector.z);
-        product.z = (wallSide.x * zVector.y) - (wallSide.y * zVector.x);
-        return product;
-
-    }
-
 }
