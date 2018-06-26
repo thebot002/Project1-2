@@ -98,8 +98,6 @@ public class Engine {
             ball.getVelocity().set(normalVector);
         }
 
-
-
         updateBall(newPos,newVel);
 
         return position.dst(newPos);
@@ -161,6 +159,8 @@ public class Engine {
         }
         return goal;
     }
+
+    public Vector3 noise(){
     public void noise(){
         Random r = new Random();
         Vector3 vel = ball.getVelocity();
