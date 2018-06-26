@@ -56,7 +56,9 @@ public class AI extends Bot {
             if(engine != null && engine.isGoal()){
                 running_label.setText("");
                 gameState.getBall().hit(velocity);
-                velocity = null;
+                velocity = new Vector3();
+                engine = null;
+                simuBall = new Ball(gameState.getTerrain().getStart());
                 hitCount++;
                 return;
             }
