@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
-public class Node<E> {
+public class Node {
 
     private Vector3 location;
     private ArrayList<Node> cameFrom;
@@ -13,7 +13,7 @@ public class Node<E> {
     public Node(Vector3 location, ArrayList<Node> cameFrom){
         this.location = location;
         this.cameFrom = cameFrom;
-
+        this.neighbours = new ArrayList<>();
     }
 
     public float distanceTo(Node to){
@@ -22,6 +22,10 @@ public class Node<E> {
 
     public void connectTo(Node neighbour){
         this.neighbours.add(neighbour);
+       // neighbour.addNeighbour(this);
+    }
+    private void addNeighbour(Node n){
+        this.neighbours.add(n);
     }
 
     public ArrayList getNeighbours(){
