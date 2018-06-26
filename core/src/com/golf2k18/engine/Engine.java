@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
+import java.util.Random;
+
 
 /**
  * Our physics engine
@@ -19,6 +21,7 @@ public class Engine {
     protected final double GOAL_TOLERANCE = 15.0;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
+
 
     private float radius;
     private final float MARGIN_RADIUS;
@@ -149,5 +152,11 @@ public class Engine {
         }
         return goal;
     }
-
+    public void  noise(){
+        Random r = new Random();
+        Vector3 vel = ball.getVelocity();
+        float noiseX = (float)r.nextGaussian();
+        float noiseY = (float)r.nextGaussian();
+        vel.add(noiseX, noiseY, 0);
+    }
 }
