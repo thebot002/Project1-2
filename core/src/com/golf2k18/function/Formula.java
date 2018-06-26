@@ -1,5 +1,7 @@
 package com.golf2k18.function;
 
+import com.badlogic.gdx.graphics.Color;
+
 import java.io.Serializable;
 import java.util.Stack;
 
@@ -536,5 +538,10 @@ public class Formula implements Function, Serializable {
             post += s;
         }
         return infix == null?post:infix;
+    }
+
+    @Override
+    public Color getSkelColor() {
+        return Color.BLACK;
     }
 }

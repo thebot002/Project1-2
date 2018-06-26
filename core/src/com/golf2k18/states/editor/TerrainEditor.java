@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -54,6 +55,7 @@ public class TerrainEditor extends State3D {
     private boolean setSize = false;
     private boolean setObstacles = false;
     private boolean deleteObstacles = false;
+    private boolean skeletonView = false;
 
     private Spline function;
     private ArrayList<Integer> selected;
@@ -143,7 +145,7 @@ public class TerrainEditor extends State3D {
 
     @Override
     public boolean scrolled(int amount) {
-        if(!ctrl || selected.isEmpty()) return false;
+        if(!ctrl || selected.isEmpty() || skeletonView) return false;
         ArrayList<Vector3> newData = new ArrayList<>();
         for (Integer aSelected : selected) {
             if(!change) change = true;
@@ -162,8 +164,9 @@ public class TerrainEditor extends State3D {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(button == 0) {
             if(deleteObstacles){
-                int obstacle = getObject(screenX,screenY, terrain.getObstacleInstances());
+                int obstacle = getObject(screenX,screenY, getObstacles());
                 if(obstacle >= 0) deletedObstacles.add(terrain.getObstacles().remove(obstacle));
+                updateWalls();
                 return super.touchDown(screenX, screenY, pointer, button);
             }
             int pointI = getObject(screenX, screenY,instances) - startIndex;
@@ -191,6 +194,7 @@ public class TerrainEditor extends State3D {
                         if(ctrl) wallStart = pos.cpy();
                         else wallStart = null;
                     }
+                    updateWalls();
                 }
                 else{
                     instances.set(pointI + startIndex, new ModelInstance(nodeSelected, pos.x, pos.y, function.evaluateF(pos.x, pos.y)));
@@ -242,7 +246,12 @@ public class TerrainEditor extends State3D {
             if (distance >= 0f && dist2 > distance)
                 continue;
 
-            if (dist2 <= (NODE_DIAM/2) * (NODE_DIAM/2)) {
+            BoundingBox bounds = new BoundingBox();
+            point.calculateBoundingBox(bounds);
+            Vector3 dim = new Vector3();
+            bounds.getDimensions(dim);
+            float radius = dim.len() / 2f;
+            if (dist2 <= radius * radius) {
                 result = i;
                 distance = dist2;
             }
@@ -258,7 +267,7 @@ public class TerrainEditor extends State3D {
     @Override
     public void render() {
         super.render();
-        if(!setObstacles && !setHole && !setSize && !setStart && !deleteObstacles){
+        if(!setObstacles && !setHole && !setSize && !setStart && !deleteObstacles && !skeletonView){
             hud.act();
             hud.draw();
         }
@@ -350,7 +359,16 @@ public class TerrainEditor extends State3D {
         });
         content.add(start).fillX().pad(10f);
 
-        content.add();
+        TextButton walls = new TextButton(isHideWalls()?"Show obstacles":"Hide obstacles",StateManager.skin);
+        walls.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toggleHideWalls();
+                walls.setText(isHideWalls()?"Show obstacles":"Hide obstacles");
+            }
+        });
+        content.add(walls).fillX().pad(10f);
+
         TextButton save = new TextButton("Save",StateManager.skin);
         save.addListener(new ClickListener(){
             @Override
@@ -381,15 +399,19 @@ public class TerrainEditor extends State3D {
         });
         content.add(hole).fillX().pad(10f);
 
-        TextButton walls = new TextButton(isHideWalls()?"Show obstacles":"Hide obstacles",StateManager.skin);
-        walls.addListener(new ClickListener(){
+        TextButton skeleton = new TextButton("Show terrain skeleton",StateManager.skin);
+        skeleton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                toggleHideWalls();
-                walls.setText(isHideWalls()?"Show obstacles":"Hide obstacles");
+                toggleSkeleton();
+                if(!isHideWalls()) toggleHideWalls();
+                skeletonView = true;
+                initNodes();
+                createTempHud("TERRAIN SKELETON");
+                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,tempHUD));
             }
         });
-        content.add(walls).fillX().pad(10f);
+        content.add(skeleton).fillX().pad(10f);
 
         TextButton home = new TextButton("Home",StateManager.skin);
         home.addListener(new ClickListener(){
@@ -430,6 +452,7 @@ public class TerrainEditor extends State3D {
                         walls.remove(i);
                         i--;
                     }
+                    updateWalls();
                     setObstacles = false;
                 }
                 if (deleteObstacles){
@@ -448,49 +471,59 @@ public class TerrainEditor extends State3D {
                     initNodes();
                     setStart = false;
                 }
+                if(skeletonView){
+                    toggleSkeleton();
+                    skeletonView = false;
+                }
                 setSize = false;
                 Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));
             }
         });
         content.add(cancel).expandY().fillX().pad(10f).bottom();
 
-        TextButton apply = new TextButton("Apply",StateManager.skin);
-        apply.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if(setObstacles){
-                    savedWall = terrain.getObstacles().size();
-                    setObstacles = false;
-                }
-                if(deleteObstacles){
-                    deletedObstacles.clear();
-                    deleteObstacles = false;
-                }
-                if(setHole){
-                    savedHole = terrain.getHole().cpy();
-                    setHole = false;
-                }
-                if(setStart){
-                    savedStart = terrain.getStart().cpy();
-                    setStart = false;
-                }
-                setSize = false;
+        if(!skeletonView){
+            TextButton apply = new TextButton("Apply",StateManager.skin);
+            apply.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if(setObstacles){
+                        savedWall = terrain.getObstacles().size();
+                        setObstacles = false;
+                    }
+                    if(deleteObstacles){
+                        deletedObstacles.clear();
+                        deleteObstacles = false;
+                    }
+                    if(setHole){
+                        savedHole = terrain.getHole().cpy();
+                        setHole = false;
+                    }
+                    if(setStart){
+                        savedStart = terrain.getStart().cpy();
+                        setStart = false;
+                    }
+                    if(skeletonView){
+                        toggleSkeleton();
+                        skeletonView = false;
+                    }
+                    setSize = false;
 
-                Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));
-            }
-        });
-        content.add(apply).fillX().pad(10f).bottom();
-        content.row();
+                    Gdx.input.setInputProcessor(new InputMultiplexer(thisProcessor, controller ,hud));
+                }
+            });
+            content.add(apply).fillX().pad(10f).bottom();
+            content.row();
 
-        TextButton walls = new TextButton(isHideWalls()?"Show obstacles":"Hide obstacles",StateManager.skin);
-        walls.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                toggleHideWalls();
-                walls.setText(isHideWalls()?"Show obstacles":"Hide obstacles");
-            }
-        });
-        content.add(walls).fillX().colspan(2).pad(10f);
+            TextButton walls = new TextButton(isHideWalls()?"Show obstacles":"Hide obstacles",StateManager.skin);
+            walls.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    toggleHideWalls();
+                    walls.setText(isHideWalls()?"Show obstacles":"Hide obstacles");
+                }
+            });
+            content.add(walls).fillX().colspan(2).pad(10f);
+        }
 
         tempHUD.addActor(content);
     }
