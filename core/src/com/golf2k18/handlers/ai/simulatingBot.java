@@ -46,10 +46,10 @@ public class simulatingBot extends Bot {
 
     @Override
     public void handleInput(Game gameState) {
-        if(simuBall.isStopped() || engine.isBotGoal()){
+        if(simuBall.isStopped() || engine.isGoal()){
             System.out.println(simuBall.getPosition());
             running_label.setText("Simulating..."+String.valueOf(ballCounter));
-            if(engine != null && engine.isBotGoal()){
+            if(engine != null && engine.isGoal()){
                 running_label.setText("");
                 gameState.getBall().hit(velocity);
                 hitCount++;
