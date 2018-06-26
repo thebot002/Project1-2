@@ -15,6 +15,8 @@ package com.golf2k18.handlers.ai;
         import com.golf2k18.objects.Ball;
         import com.golf2k18.states.game.Game;
 
+        //comment
+
 public class AI extends Bot {
     private Ball simuBall;
     private Engine engine;
