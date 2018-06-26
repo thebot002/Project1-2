@@ -1,5 +1,6 @@
 package com.golf2k18.function;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 
 import java.io.Serializable;
@@ -216,5 +217,14 @@ public class Spline implements Function, Serializable {
 
     protected float centeredDiff(float h, float vm2, float vm1, float v1, float v2){
         return (vm2 + (8*v1) - (8*vm1) - v2) / (12*h);
+    }
+
+    public BiquinticSpline toBiquintic(){
+        return new BiquinticSpline(data);
+    }
+
+    @Override
+    public Color getSkelColor() {
+        return Color.GREEN;
     }
 }
