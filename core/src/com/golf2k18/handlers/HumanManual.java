@@ -46,7 +46,7 @@ public class HumanManual extends Human {
         HorizontalGroup intensityGroup = new HorizontalGroup();
         Label intensityText = new Label("Intensity: ", StateManager.skin);
         intensityGroup.addActor(intensityText);
-        intensityInput = new Slider(1f, 20f, 1, false, StateManager.skin);
+        intensityInput = new Slider(4f, 20f, 1, false, StateManager.skin);
         intensityGroup.addActor(intensityInput);
         inputGroup.addActor(intensityGroup);
 

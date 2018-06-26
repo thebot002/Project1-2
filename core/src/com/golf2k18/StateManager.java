@@ -12,6 +12,7 @@ import com.golf2k18.function.BiquinticSpline;
 import com.golf2k18.function.Formula;
 import com.golf2k18.function.Spline;
 import com.golf2k18.handlers.HumanDrag;
+import com.golf2k18.handlers.HumanManual;
 import com.golf2k18.handlers.ai.simulatingBot;
 import com.golf2k18.io.DataIO;
 import com.golf2k18.io.Settings;
@@ -45,7 +46,7 @@ public class StateManager extends ApplicationAdapter {
         settings = Settings.load();
         State start = new MainMenu(this);
         //State start = new TerrainEditor(this,DataIO.getTerrain("Cos"));
-        //State start = new Game(this,new Course(DataIO.getTerrain("PlaneSpline")),new HumanDrag());
+        //State start = new Game(this,new Course(DataIO.getTerrain("PlaneSpline")),new HumanManual());
         //State start = new Game(this,DataIO.getCourse("Default"),new HumanDrag());
         //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new simulatingBot());
         start.create();

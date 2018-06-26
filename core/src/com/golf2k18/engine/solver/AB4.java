@@ -11,7 +11,21 @@ public class AB4 implements Solver{
     private ArrayList<Vector3> positions = new ArrayList<>();
     private ArrayList<Vector3> velocities = new ArrayList<>();
 
+    private boolean bootstrapping = true;
     private Solver bootstrapper = new RK4();
+
+    @Override
+    public Vector3 solvePos(Vector3 position, Vector3 velocity) {
+        if(bootstrapping) return bootstrapper.solvePos(position,velocity);
+        else{
+            Vector3 f1 = new Vector3(solveVel(positions.get(3),velocities.get(3))).scl(55f);
+            Vector3 f2 = new Vector3(solveVel(positions.get(2),velocities.get(2))).scl(-59f);
+            Vector3 f3 = new Vector3(solveVel(positions.get(1),velocities.get(1))).scl(37f);
+            Vector3 f4 = new Vector3(solveVel(positions.get(0),velocities.get(0))).scl(-9f);
+
+            return velocities.get(3).add(new Vector3(f1.add(f2.add(f3.add(f4)))).scl(engine.getDt()/24f));
+        }
+    }
 
     @Override
     public Vector3 solveVel(Vector3 position, Vector3 velocity) {
@@ -42,11 +56,6 @@ public class AB4 implements Solver{
 
             return velocities.get(3).add(new Vector3(f1.add(f2.add(f3.add(f4)))).scl(engine.getDt()/24f));
         }
-    }
-
-    @Override
-    public Vector3 solvePos(Vector3 position, Vector3 velocity) {
-        return new Vector3(position.x + engine.getDt()*velocity.x,position.y + engine.getDt()*velocity.y,0);
     }
 
     @Override
