@@ -25,7 +25,6 @@ public class Engine {
     private Solver sherlock;
 
     private float radius;
-    private final float MARGIN_RADIUS;
 
     /**
      * The class' constructor
@@ -39,8 +38,7 @@ public class Engine {
         this.mass = ball.getMass();
         this.sherlock = solver;
 
-        MARGIN_RADIUS = 0f;
-        radius = (terrain.getHOLE_DIAM() / 2) + MARGIN_RADIUS;
+        radius = (terrain.getHOLE_DIAM() / 2);
 
         solver.setEngine(this);
     }
@@ -156,6 +154,21 @@ public class Engine {
         hol.z = 0f;
         boolean goal = false;
         if ((pos.dst(hol) < radius) && vel.len() < GOAL_TOLERANCE)
+        {
+            goal = true;
+        }
+        return goal;
+    }
+
+    public boolean isBotGoal() {
+        Vector3 pos = ball.getPosition().cpy();
+        Vector3 vel = ball.getVelocity().cpy();
+        Vector3 hol = terrain.getHole().cpy();
+        pos.z = 0f;
+        vel.z = 0f;
+        hol.z = 0f;
+        boolean goal = false;
+        if ((pos.dst(hol) < radius*.5) && vel.len() < GOAL_TOLERANCE*.95)
         {
             goal = true;
         }

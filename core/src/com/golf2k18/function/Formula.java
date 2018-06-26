@@ -57,7 +57,7 @@ public class Formula implements Function, Serializable {
         root = nodeStack.peek();
 
         xDeriv = xDerive(root);
-        printTree(xDeriv);
+//        printTree(xDeriv);
         yDeriv = yDerive(root);
 
         boolean x = false;

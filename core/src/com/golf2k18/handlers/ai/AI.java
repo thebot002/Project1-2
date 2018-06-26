@@ -49,11 +49,11 @@ public class AI extends Bot {
     @Override
     public void handleInput(Game gameState) {
         Vector3 closestPos = simuBall.getPosition().cpy();
-        if(simuBall.isStopped() || engine.isGoal())
+        if(simuBall.isStopped() || engine.isBotGoal())
         {
             System.out.println(closestPos);
             running_label.setText("Simulating..."+String.valueOf(ballCounter));
-            if(engine != null && engine.isGoal()){
+            if(engine != null && engine.isBotGoal()){
                 running_label.setText("");
                 gameState.getBall().hit(velocity);
                 hitCount++;
