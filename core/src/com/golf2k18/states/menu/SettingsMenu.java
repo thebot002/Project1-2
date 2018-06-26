@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.golf2k18.StateManager;
 import com.golf2k18.io.DataIO;
-import com.golf2k18.io.Settings;
 import com.golf2k18.states.SubMenu;
 
 import javax.swing.*;
@@ -74,16 +73,34 @@ public class SettingsMenu extends SubMenu {
         content.add(water).pad(10f).fillX();
         content.row();
 
-        //noise shown
-        content.add(new Label("Noise",StateManager.skin));
-        SelectBox<String> noise = new SelectBox<>(StateManager.skin);
-        Array<String> noiseStates = new Array<>();
-        noiseStates.add("On");
-        noiseStates.add("Off");
-        noise.setItems(noiseStates);
-        noise.setSelectedIndex(StateManager.settings.hasNoise()?0:1);
-        content.add(noise).pad(10f).fillX();
+        //wind shown
+        content.add(new Label("Wind",StateManager.skin));
+        SelectBox<String> wind = new SelectBox<>(StateManager.skin);
+        Array<String> windStates = new Array<>();
+        windStates.add("On");
+        windStates.add("Off");
+        wind.setItems(windStates);
+        wind.setSelectedIndex(StateManager.settings.hasNoise()?0:1);
+        content.add(wind).pad(10f).fillX();
         content.row();
+
+        //wind intensity
+        Label intensityLabel = new Label("Wind intensity",StateManager.skin);
+        content.add(intensityLabel);
+        Slider intensity = new Slider(0.1f,5f,0.1f,false,StateManager.skin);
+        intensity.setValue(StateManager.settings.getWindIntensity());
+        content.add(intensity).pad(10f).expandX().fillX();
+        intensity.setVisible(StateManager.settings.hasNoise());
+        intensityLabel.setVisible(StateManager.settings.hasNoise());
+        content.row();
+
+        wind.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                intensity.setVisible(wind.getSelectedIndex() == 0);
+                intensityLabel.setVisible(wind.getSelectedIndex() == 0);
+            }
+        });
 
         //apply button
         TextButton apply = new TextButton("Apply",StateManager.skin);
@@ -95,7 +112,8 @@ public class SettingsMenu extends SubMenu {
                 StateManager.settings.setSelectedSolver(solvers.getSelectedIndex());
                 StateManager.settings.setSelectedSource(inputmodes.getSelectedIndex());
                 StateManager.settings.setWater(water.getSelectedIndex() == 0);
-                StateManager.settings.setNoise(noise.getSelectedIndex() == 0);
+                StateManager.settings.setWind(wind.getSelectedIndex() == 0);
+                StateManager.settings.setWindIntensity(intensity.getValue());
                 DataIO.writeSettings(StateManager.settings);
                 manager.pop();
             }

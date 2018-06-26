@@ -18,7 +18,8 @@ public class Settings implements Serializable {
     private float musicVolume;
 
     private boolean water = false;
-    private boolean noise = false;
+    private boolean wind = false;
+    private float windIntensity = 1f;
 
     public Settings(){
         selectedSolver = 1;
@@ -107,11 +108,19 @@ public class Settings implements Serializable {
     }
 
     public boolean hasNoise() {
-        return noise;
+        return wind;
     }
 
-    public void setNoise(boolean noise) {
-        this.noise = noise;
+    public void setWind(boolean wind) {
+        this.wind = wind;
+    }
+
+    public float getWindIntensity() {
+        return windIntensity;
+    }
+
+    public void setWindIntensity(float windIntensity) {
+        this.windIntensity = windIntensity;
     }
 
     public static Settings load(){

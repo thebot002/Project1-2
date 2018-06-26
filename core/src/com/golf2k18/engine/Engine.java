@@ -178,7 +178,6 @@ public class Engine {
 
         float noiseX = nW.get(0,0);
         float noiseY = nW.get(1,0);
-        System.out.println(new Vector3(noiseX*windIntensity,noiseY*windIntensity,0));
 
         Vector3 v = new Vector3(noiseX*windIntensity,noiseY*windIntensity,0).add(vel);
         return v.scl((float)(-1.225f*0.47f*vel.len()*Math.PI*Math.pow(ball.getDiameter()/2,2))/2);
