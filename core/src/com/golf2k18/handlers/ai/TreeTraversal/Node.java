@@ -14,6 +14,10 @@ public class Node {
         this.location = location;
         this.cameFrom = cameFrom;
         this.neighbours = new ArrayList<>();
+        if(cameFrom == null)
+        {
+            this.cameFrom = new ArrayList<>();
+        }
     }
 
     public float distanceTo(Node to){
