@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.StateManager;
 import com.golf2k18.engine.solver.Solver;
+import com.golf2k18.function.Matrix;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.Wall;
@@ -26,6 +27,9 @@ public class Engine {
 
     private float radius;
 
+    private float[][] wind;
+    private float windIntensity = 2;
+
     /**
      * The class' constructor
      * @param terrain the terrain
@@ -41,21 +45,24 @@ public class Engine {
         radius = (terrain.getHOLE_DIAM() / 2);
 
         solver.setEngine(this);
+
+        double r = Math.random();
+        float[][] w = {{(float)Math.cos(r*2*Math.PI)},{(float)Math.sin(r*2*Math.PI)}};
+        setWind(w);
     }
 
     public float getDt() {
         return dt;
     }
 
-    private Vector3 calcGravity(Vector3 position)
-    {
+    private Vector3 calcGravity(Vector3 position) {
         Vector3 Fz = new Vector3();
         Fz.x = -mass*GRAVITY*terrain.getFunction().evaluateXDeriv(position.x,position.y);
         Fz.y = -mass*GRAVITY*terrain.getFunction().evaluateYDeriv(position.x,position.y);
         return Fz;
     }
-    private Vector3 calcFriction(Vector3 velocity)
-    {
+
+    private Vector3 calcFriction(Vector3 velocity) {
         Vector3 v = new Vector3(velocity);
         if(v.len() != 0.0) v.scl(1/v.len());
         v.scl(-terrain.getMU()*mass*GRAVITY);
@@ -68,10 +75,10 @@ public class Engine {
      * @param velocity the ball's velocity at a certain time
      * @return the ball's acceleration
      */
-    public Vector3 getAcceleration(Vector3 position, Vector3 velocity)
-    {
+    public Vector3 getAcceleration(Vector3 position, Vector3 velocity) {
         Vector3 v = calcGravity(position);
         v.add(calcFriction(velocity));
+        if(StateManager.settings.hasNoise()) v.add(noise(velocity));
         v.scl(1/mass);
         return v;
     }
@@ -96,7 +103,6 @@ public class Engine {
             ball.getVelocity().set(normalVector);
         }
 
-        if(StateManager.settings.hasNoise()) noise(newVel);
         updateBall(newPos,newVel);
 
         return position.dst(newPos);
@@ -104,7 +110,7 @@ public class Engine {
 
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
-        if(velocity.len() < STOP_TOLERANCE_VELOCITY && calcGravity(position).len() < STOP_TOLERANCE_ACCELERATION){
+        if(velocity.len() < STOP_TOLERANCE_VELOCITY+windIntensity && calcGravity(position).len() < STOP_TOLERANCE_ACCELERATION){
             ball.setStopped();
         }
 
@@ -153,11 +159,29 @@ public class Engine {
         vel.z = 0f;
         hol.z = 0f;
         boolean goal = false;
-        if ((pos.dst(hol) < radius) && vel.len() < GOAL_TOLERANCE)
-        {
+        if ((pos.dst(hol) < radius) && vel.len() < GOAL_TOLERANCE) {
             goal = true;
         }
         return goal;
+    }
+
+    public Vector3 noise(Vector3 vel){
+        double r = new Random().nextGaussian()/10;
+
+        float[][] rotArr = {
+                {(float)Math.cos(r),(float)-Math.sin(r)},
+                {(float)Math.sin(r),(float)Math.cos(r)}};
+        Matrix rot = new Matrix(rotArr);
+        Matrix w = new Matrix(wind);
+
+        Matrix nW = Matrix.multiplication(rot,w);
+
+        float noiseX = nW.get(0,0);
+        float noiseY = nW.get(1,0);
+        System.out.println(new Vector3(noiseX*windIntensity,noiseY*windIntensity,0));
+
+        Vector3 v = new Vector3(noiseX*windIntensity,noiseY*windIntensity,0).add(vel);
+        return v.scl((float)(-1.225f*0.47f*vel.len()*Math.PI*Math.pow(ball.getDiameter()/2,2))/2);
     }
 
     public boolean isBotGoal() {
@@ -180,12 +204,6 @@ public class Engine {
         return GOAL_TOLERANCE;
     }
 
-    public void noise(Vector3 vel){
-        Random r = new Random();
-        float noiseX = (float)r.nextGaussian();
-        float noiseY = (float)r.nextGaussian();
-        vel.add(noiseX, noiseY, 0);
-    }
 
     public Wall collide() {
         for (Wall wall : terrain.getObstacles()) {
@@ -243,5 +261,9 @@ public class Engine {
 
     public void sclDt(float scl){
         dt = dt * scl;
+    }
+
+    public void setWind(float[][] wind){
+        this.wind = wind;
     }
 }

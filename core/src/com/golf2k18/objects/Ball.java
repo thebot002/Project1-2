@@ -22,6 +22,7 @@ public class Ball implements Collider{
 	private Vector3 position;
 
     private boolean stopped = true;
+    private boolean justHit = false;
 
     private Texture ballTexture = new Texture("Textures/ball_texture.jpg");
     private ModelInstance model;
@@ -41,6 +42,7 @@ public class Ball implements Collider{
      */
     public void hit(Vector3 vector) {
 	    stopped = false;
+	    justHit = true;
 		this.velocity = vector.cpy();
 	}
 
@@ -95,6 +97,7 @@ public class Ball implements Collider{
     }
 
     public void updateInstance(float z,float displacement){
+        if(displacement != 0) justHit = false;
         position.z = z;
         model.transform.setTranslation(position.x,position.y,position.z+(DIAMETER/2));
         float rotAngle = (float) ((180 * displacement) / (Math.PI * (DIAMETER/2)));
@@ -114,5 +117,9 @@ public class Ball implements Collider{
     @Override
     public Vector3 getBottomRightCorner() {
         return new Vector3(position.x + DIAMETER/2, position.y - DIAMETER/2,1);
+    }
+
+    public boolean justHit(){
+        return justHit;
     }
 }
