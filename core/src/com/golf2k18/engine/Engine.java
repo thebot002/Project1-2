@@ -28,7 +28,6 @@ public class Engine {
     private float radius;
 
     private float[][] wind;
-    private float windIntensity = 2;
 
     /**
      * The class' constructor
@@ -110,7 +109,7 @@ public class Engine {
 
     protected void updateBall(Vector3 position, Vector3 velocity){
         //stop the ball
-        if(velocity.len() < STOP_TOLERANCE_VELOCITY+windIntensity && calcGravity(position).len() < STOP_TOLERANCE_ACCELERATION){
+        if(velocity.len() < STOP_TOLERANCE_VELOCITY+StateManager.settings.getWindIntensity() && calcGravity(position).len() < STOP_TOLERANCE_ACCELERATION){
             ball.setStopped();
         }
 
@@ -179,7 +178,7 @@ public class Engine {
         float noiseX = nW.get(0,0);
         float noiseY = nW.get(1,0);
 
-        Vector3 v = new Vector3(noiseX*windIntensity,noiseY*windIntensity,0).add(vel);
+        Vector3 v = new Vector3(noiseX,noiseY,0).scl(StateManager.settings.getWindIntensity()).add(vel);
         return v.scl((float)(-1.225f*0.47f*vel.len()*Math.PI*Math.pow(ball.getDiameter()/2,2))/2);
     }
 
