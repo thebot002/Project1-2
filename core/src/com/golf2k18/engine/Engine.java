@@ -38,7 +38,7 @@ public class Engine {
         this.mass = ball.getMass();
         this.sherlock = solver;
 
-        MARGIN_RADIUS = .6f;
+        MARGIN_RADIUS = 0f;
         radius = (terrain.getHOLE_DIAM() / 2) + MARGIN_RADIUS;
 
         solver.setEngine(this);
@@ -102,10 +102,6 @@ public class Engine {
             ball.setStopped();
         }
 
-        if(ball.getPosition().dst(terrain.getHole()) < (terrain.getHOLE_DIAM()/2) && (velocity.len() <= GOAL_TOLERANCE)){
-            ball.setStopped();
-        }
-
         //check for collisions
         if(position.x <= 0){
             Vector3 n = new Vector3(1,0,0);
@@ -144,14 +140,25 @@ public class Engine {
     }
 
     public boolean isGoal() {
-        Vector3 pos = ball.getPosition();
+        Vector3 pos = ball.getPosition().cpy();
+        Vector3 vel = ball.getVelocity().cpy();
+        Vector3 hol = terrain.getHole().cpy();
+        pos.z = 0f;
+        vel.z = 0f;
+        hol.z = 0f;
         boolean goal = false;
-        if ((pos.dst(terrain.getHole()) < radius)) {
-            if (ball.isStopped())
-                goal = true;
+        if ((pos.dst(hol) < radius) && vel.len() < GOAL_TOLERANCE)
+        {
+            goal = true;
         }
         return goal;
     }
+
+    public double getGoalTolerance()
+    {
+        return GOAL_TOLERANCE;
+    }
+
     public Vector3 noise(){
         Random r = new Random();
         Vector3 vel = ball.getVelocity();

@@ -63,6 +63,7 @@ public class simulatingBot extends Bot {
                 velocity.scl(.5f);
             }
             else {
+
                 if(simuBall.getPosition().x - gameState.getTerrain().getHole().cpy().x >=0 && simuBall.getPosition().y - gameState.getTerrain().getHole().cpy().y <=0 ){
                     velocity.scl(.95f,1.05f,1f);
                 }
@@ -75,6 +76,7 @@ public class simulatingBot extends Bot {
                 if(simuBall.getPosition().x - gameState.getTerrain().getHole().cpy().x >=0 && simuBall.getPosition().y - gameState.getTerrain().getHole().cpy().y >=0 ){
                     velocity.scl(.95f,.95f,1f);
                 }
+
                 //velocity.scl(SCALAR);
             }
             simuBall.hit(velocity);
