@@ -10,6 +10,7 @@ public class AStar {
     private ArrayList<Node> closedSet = new ArrayList();
     private HashMap<Node, Float> gScore = new HashMap<>();
     private HashMap<Node, Float> fScore = new HashMap<>();
+    private HashMap<Node, Node> cameFrom = new HashMap<>();
     private final int initAmount = 200;
     private Node goal;
     private Node start;
@@ -22,11 +23,11 @@ public class AStar {
             @Override
             public int compare(Node node1, Node node2) {
                 if (node1.distanceTo(goal) > node2.distanceTo(node2)) {
-                    return 1;
+                    return -1;
                 } else if (node1 == node2) {
                     return 0;
                 } else {
-                    return -1;
+                    return 1;
                 }
             }
         };
@@ -36,12 +37,13 @@ public class AStar {
         gScore.put(start, start.distanceTo(start));
     }
 
-    public ArrayList getShortestPath() {
+    public String getShortestPath() {
         while (openSet.isEmpty() != true) {
             Node pointer = openSet.poll();
 
+
             if (pointer == goal) {
-                return reconstruct_path(pointer.getCameFrom(),pointer);
+                return reconstruct_path(pointer);
             }
 
             closedSet.add(pointer);
@@ -57,7 +59,7 @@ public class AStar {
                 if (optionalDST >= gScore.get(neighbour)) {
                     continue;
                 }
-                neighbour.addPrevious(pointer);
+                cameFrom.put(neighbour,pointer);
                 gScore.put(neighbour, optionalDST);
                 fScore.put(neighbour, gScore.get(neighbour) + neighbour.distanceTo(goal));
 
@@ -66,11 +68,12 @@ public class AStar {
         return null;
     }
 
-    public ArrayList reconstruct_path(ArrayList<Node> cameFrom, Node pointer) {
-        ArrayList<Node> path = new ArrayList<>();
-        path.add(pointer);
-        for (int i = 0; i < cameFrom.size(); i++) {
-            path.add(cameFrom.get(i));
+    public String reconstruct_path(Node pointer) {
+       String path = new String();
+       path.concat(pointer.toString());
+       while(cameFrom.containsKey(pointer)){
+           pointer = cameFrom.get(pointer);
+            path.concat(pointer.toString());
         }
         return path;
     }

@@ -9,8 +9,9 @@ public class TestAStar {
     public static void main(String[] args){
         initNetwork();
         AStar pathfinder = new AStar(nodes.get(0),nodes.get(10));
-        ArrayList<Node> path = pathfinder.getShortestPath();
-        System.out.println(path.toString());
+        String path = pathfinder.getShortestPath();
+        System.out.println(path);
+
     }
     public static void initNetwork(){
         Node n00 = new Node(new Vector3(0,0,0),null);

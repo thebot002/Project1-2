@@ -1,5 +1,6 @@
 package com.golf2k18.function;
 
+import com.badlogic.gdx.graphics.Color;
 import com.jmatio.io.MatFileReader;
 import com.jmatio.types.MLArray;
 import com.jmatio.types.MLDouble;
@@ -129,5 +130,10 @@ public class BiquinticSpline extends Spline {
         float[][] xVector = {{1,nx,(float)Math.pow(nx,2),(float)Math.pow(nx,3),(float)Math.pow(nx,4),(float)Math.pow(nx,5)}};
         float[][] yVector = {{0},{1},{2*ny},{(float)(3*Math.pow(ny,2))},{(float)(4*Math.pow(ny,3))},{(float)(5*Math.pow(ny,4))}};
         return evaluate(new Matrix(xVector),new Matrix(yVector),x,y);
+    }
+
+    @Override
+    public Color getSkelColor() {
+        return Color.BLUE;
     }
 }

@@ -34,7 +34,7 @@ public abstract class State3D extends State {
     protected Terrain terrain;
     private TerrainModel terrainModel;
     private Array<Renderable> fields;
-    private ArrayList<Wall> obstacles;
+    private ArrayList<ModelInstance> obstacles;
     private ArrayList<ModelInstance> walls;
     private ArrayList<ModelInstance> skeleton;
     private ModelInstance water;
@@ -89,9 +89,7 @@ public abstract class State3D extends State {
         if(showSkeleton) batch.render(skeleton,environment);
         else for (Renderable r: fields) batch.render(r);
         if(StateManager.settings.hasWater()) batch.render(water,environment);
-        if(!hideWalls)
-            for (Wall w: obstacles)
-                batch.render(w.getInstance(),environment);
+        if(!hideWalls) batch.render(obstacles,environment);
         batch.render(walls,environment);
         batch.end();
     }
@@ -132,11 +130,9 @@ public abstract class State3D extends State {
             fields.add(field);
         }
 
-        obstacles = terrain.getObstacles();
-
+        obstacles = terrainModel.generateObstacles();
         walls = terrainModel.getEdges();
         water = terrainModel.getWater();
-        skeleton = terrainModel.getSkeleton();
     }
 
     public void update(float dt){
@@ -159,11 +155,16 @@ public abstract class State3D extends State {
         hideWalls = !hideWalls;
     }
 
-    protected boolean isSkeleton(){
-        return showSkeleton;
+    protected void toggleSkeleton(){
+        if(!showSkeleton) skeleton = terrainModel.generateSkeleton();
+        showSkeleton = !showSkeleton;
     }
 
-    protected void toggleSkeleton(){
-        showSkeleton = !showSkeleton;
+    protected void updateWalls(){
+        obstacles = terrainModel.generateObstacles();
+    }
+
+    public ArrayList<ModelInstance> getObstacles() {
+        return obstacles;
     }
 }

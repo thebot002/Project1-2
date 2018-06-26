@@ -2,9 +2,11 @@ package com.golf2k18.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.StateManager;
 import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
+import com.golf2k18.objects.Wall;
 import java.util.Random;
 
 
@@ -21,7 +23,6 @@ public class Engine {
     protected final double GOAL_TOLERANCE = 15.0;
     protected float dt = Gdx.graphics.getDeltaTime();
     private Solver sherlock;
-
 
     private float radius;
     private final float MARGIN_RADIUS;
@@ -87,10 +88,17 @@ public class Engine {
         Vector3 velocity = ball.getVelocity();
 
         Vector3 newVel = sherlock.solveVel(new Vector3(position),new Vector3(velocity));
-        ball.getVelocity().set(newVel);
+        ball.getVelocity().set(newVel.cpy());
         Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(velocity));
         ball.getPosition().set(newPos);
+        Vector3 w = findWallSide();
+        if(w != null){
+            Vector3 normalVector = w.crs(0,0,1).nor();
+            bounce(newVel,normalVector);
+            ball.getVelocity().set(normalVector);
+        }
 
+        if(StateManager.settings.hasNoise()) noise(newVel);
         updateBall(newPos,newVel);
 
         return position.dst(newPos);
@@ -159,12 +167,56 @@ public class Engine {
         return GOAL_TOLERANCE;
     }
 
-    public Vector3 noise(){
+    public void noise(Vector3 vel){
         Random r = new Random();
-        Vector3 vel = ball.getVelocity();
         float noiseX = (float)r.nextGaussian();
         float noiseY = (float)r.nextGaussian();
         vel.add(noiseX, noiseY, 0);
-        return vel;
+    }
+
+    public Wall collide() {
+        for (Wall wall : terrain.getObstacles()) {
+            if (wall.getBottomRightCorner().x < ball.getTopLeftCorner().x || ball.getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < ball.getTopLeftCorner().y || ball.getBottomRightCorner().y < wall.getTopLeftCorner().y) {
+                return wall;
+            }
+        }
+        return null;
+
+    }
+
+    public Vector3 findWallSide(){
+        Wall wall = collide();
+        if(wall != null) {
+            if(wall.getBottomRightCorner().x > ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x <  ball.getTopLeftCorner().x && wall.getTopRightCorner().y > ball.getTopLeftCorner().y && wall.getBottomRightCorner().y < ball.getTopLeftCorner().y){
+                return wall.getBottomRightCorner().sub(wall.getBottomLeftCorner());
+            }
+            if(wall.getTopRightCorner().x > ball.getBottomRightCorner().x && wall.getTopLeftCorner().x <  ball.getBottomRightCorner().x && wall.getTopRightCorner().y > ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y < ball.getBottomRightCorner().y){
+                return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
+            }
+            if(wall.getBottomLeftCorner().y > ball.getBottomRightCorner().y && wall.getBottomRightCorner().y <  ball.getBottomRightCorner().y && wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getTopRightCorner().x > ball.getBottomRightCorner().x){
+                return wall.getBottomLeftCorner().sub(wall.getBottomRightCorner());
+            }
+            if(wall.getTopLeftCorner().y > ball.getTopLeftCorner().y && wall.getTopRightCorner().y <  ball.getTopLeftCorner().y && wall.getBottomRightCorner().x < ball.getTopLeftCorner().x && wall.getTopRightCorner().x > ball.getTopLeftCorner().x){
+                return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
+            }
+            if (wall.getBottomRightCorner().x > ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x < ball.getTopLeftCorner().x) {
+                return wall.getTopRightCorner().sub(wall.getBottomRightCorner());
+            }
+            if (wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getBottomLeftCorner().x > ball.getBottomRightCorner().x) {
+                return wall.getTopLeftCorner().sub(wall.getBottomLeftCorner());
+            }
+            if (wall.getBottomRightCorner().y < ball.getTopLeftCorner().y && wall.getBottomLeftCorner().y > ball.getTopLeftCorner().y) {
+                return wall.getBottomRightCorner().sub(wall.getTopRightCorner());
+            }
+            if (wall.getBottomRightCorner().y > ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y < ball.getBottomRightCorner().y) {
+                return wall.getBottomLeftCorner().sub(wall.getTopLeftCorner());
+            }
+
+        }
+        return null;
+    }
+
+    public void sclDt(float scl){
+        dt = dt * scl;
     }
 }
