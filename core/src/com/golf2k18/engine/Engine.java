@@ -152,11 +152,12 @@ public class Engine {
         }
         return goal;
     }
-    public void  noise(){
+    public Vector3 noise(){
         Random r = new Random();
         Vector3 vel = ball.getVelocity();
         float noiseX = (float)r.nextGaussian();
         float noiseY = (float)r.nextGaussian();
         vel.add(noiseX, noiseY, 0);
+        return vel;
     }
 }
