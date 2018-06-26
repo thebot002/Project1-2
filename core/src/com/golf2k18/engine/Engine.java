@@ -2,6 +2,7 @@ package com.golf2k18.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
+import com.golf2k18.StateManager;
 import com.golf2k18.engine.solver.Solver;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
@@ -97,6 +98,7 @@ public class Engine {
             ball.getVelocity().set(normalVector);
         }
 
+        if(StateManager.settings.hasNoise()) noise(newVel);
         updateBall(newPos,newVel);
 
         return position.dst(newPos);
@@ -108,7 +110,7 @@ public class Engine {
             ball.setStopped();
         }
 
-        if(ball.getPosition().dst(terrain.getHole()) < (terrain.getHOLE_DIAM()/2) && (velocity.len() <= GOAL_TOLERANCE)){
+        if(position.dst(terrain.getHole()) < (terrain.getHOLE_DIAM()/2) && (velocity.len() <= GOAL_TOLERANCE)){
             ball.setStopped();
         }
 
@@ -159,13 +161,11 @@ public class Engine {
         return goal;
     }
 
-    public void noise(){
+    public void noise(Vector3 vel){
         Random r = new Random();
-        Vector3 vel = ball.getVelocity();
         float noiseX = (float)r.nextGaussian();
         float noiseY = (float)r.nextGaussian();
         vel.add(noiseX, noiseY, 0);
-        ball.getVelocity().set(vel);
     }
 
     public Wall collide() {
@@ -220,5 +220,9 @@ public class Engine {
 
         }
         return null;
+    }
+
+    public void sclDt(float scl){
+        dt = dt * scl;
     }
 }
