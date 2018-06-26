@@ -1,11 +1,13 @@
 package com.golf2k18.models;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 public class TerrainModel {
     private ArrayList<ModelInstance> field;
     private ArrayList<ModelInstance> edges;
+    private ArrayList<ModelInstance> skeleton;
     private ModelInstance water;
 
     private final int DIV_SIZE = 10;
@@ -39,6 +42,7 @@ public class TerrainModel {
     public TerrainModel(Terrain terrain){
         this.terrain = terrain;
         field = new ArrayList<>();
+        skeleton = new ArrayList<>();
         edges = new ArrayList<>();
         map = new Array<>();
 
@@ -82,7 +86,8 @@ public class TerrainModel {
     }
 
     private HeightField createField(int x, int y){
-        HeightField field = new HeightField(true,createHeights(x,y,CHUNK_SIZE,CHUNK_SIZE),(CHUNK_SIZE*DIV_SIZE)+1,(CHUNK_SIZE*DIV_SIZE)+1,true,attr);
+        float[] heights = createHeights(x,y,CHUNK_SIZE,CHUNK_SIZE);
+        HeightField field = new HeightField(true,heights,(CHUNK_SIZE*DIV_SIZE)+1,(CHUNK_SIZE*DIV_SIZE)+1,true,attr);
         field.corner00.set(x, y, 0);
         field.corner01.set(x+CHUNK_SIZE, y, 0);
         field.corner10.set(x, y+CHUNK_SIZE, 0);
@@ -93,6 +98,31 @@ public class TerrainModel {
         field.color11.set(1, 1, 1, 1);
         field.magnitude.set(0,0,1f);
         field.update();
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+
+        for (float i = x; i < x + CHUNK_SIZE-(1f/DIV_SIZE); i+= (1f/DIV_SIZE)) {
+            for (int j = y; j < y + CHUNK_SIZE; j++) {
+                modelBuilder.begin();
+                MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
+                builder.setColor(Color.RED);
+                builder.line(i, j, terrain.getFunction().evaluateF(i,j), i+(1f/DIV_SIZE), j, terrain.getFunction().evaluateF(i+(1f/DIV_SIZE),j));
+                Model lineModel = modelBuilder.end();
+                skeleton.add(new ModelInstance(lineModel));
+            }
+        }
+
+        for (int i = x; i < x + CHUNK_SIZE; i++) {
+            for (float j = y; j < y + CHUNK_SIZE - (1f/DIV_SIZE); j+=(1f/DIV_SIZE)) {
+                modelBuilder.begin();
+                MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
+                builder.setColor(Color.RED);
+                builder.line(i, j, terrain.getFunction().evaluateF(i,j), i, j+(1f/DIV_SIZE), terrain.getFunction().evaluateF(i,j+(1f/DIV_SIZE)));
+                Model lineModel = modelBuilder.end();
+                skeleton.add(new ModelInstance(lineModel));
+            }
+        }
+
         return field;
     }
 
@@ -127,5 +157,9 @@ public class TerrainModel {
 
     public ModelInstance getWater() {
         return water;
+    }
+
+    public ArrayList<ModelInstance> getSkeleton() {
+        return skeleton;
     }
 }

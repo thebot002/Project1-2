@@ -36,9 +36,11 @@ public abstract class State3D extends State {
     private Array<Renderable> fields;
     private ArrayList<Wall> obstacles;
     private ArrayList<ModelInstance> walls;
+    private ArrayList<ModelInstance> skeleton;
     private ModelInstance water;
 
     private boolean hideWalls = false;
+    private boolean showSkeleton = false;
 
     public State3D(StateManager manager, Terrain terrain) {
         super(manager);
@@ -84,7 +86,8 @@ public abstract class State3D extends State {
     public void render (final ArrayList<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
-        for (Renderable r: fields) batch.render(r);
+        if(showSkeleton) batch.render(skeleton,environment);
+        else for (Renderable r: fields) batch.render(r);
         if(StateManager.settings.hasWater()) batch.render(water,environment);
         if(!hideWalls)
             for (Wall w: obstacles)
@@ -133,6 +136,7 @@ public abstract class State3D extends State {
 
         walls = terrainModel.getEdges();
         water = terrainModel.getWater();
+        skeleton = terrainModel.getSkeleton();
     }
 
     public void update(float dt){
@@ -153,5 +157,13 @@ public abstract class State3D extends State {
 
     protected void toggleHideWalls(){
         hideWalls = !hideWalls;
+    }
+
+    protected boolean isSkeleton(){
+        return showSkeleton;
+    }
+
+    protected void toggleSkeleton(){
+        showSkeleton = !showSkeleton;
     }
 }

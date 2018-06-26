@@ -163,8 +163,8 @@ public class TerrainEditor extends State3D {
         if(button == 0) {
             if(deleteObstacles){
                 int obstacle = getObject(screenX,screenY, terrain.getObstacleInstances());
-                deletedObstacles.add(terrain.getObstacles().remove(obstacle));
-                return true;
+                if(obstacle >= 0) deletedObstacles.add(terrain.getObstacles().remove(obstacle));
+                return super.touchDown(screenX, screenY, pointer, button);
             }
             int pointI = getObject(screenX, screenY,instances) - startIndex;
             if (!ctrl) {
@@ -258,7 +258,7 @@ public class TerrainEditor extends State3D {
     @Override
     public void render() {
         super.render();
-        if(!setObstacles && !setHole && !setSize && !setStart){
+        if(!setObstacles && !setHole && !setSize && !setStart && !deleteObstacles){
             hud.act();
             hud.draw();
         }
