@@ -70,8 +70,19 @@ public class SettingsMenu extends SubMenu {
         waterStates.add("On");
         waterStates.add("Off");
         water.setItems(waterStates);
-        water.setSelectedIndex(StateManager.settings.isWater()?0:1);
+        water.setSelectedIndex(StateManager.settings.hasWater()?0:1);
         content.add(water).pad(10f).fillX();
+        content.row();
+
+        //noise shown
+        content.add(new Label("Noise",StateManager.skin));
+        SelectBox<String> noise = new SelectBox<>(StateManager.skin);
+        Array<String> noiseStates = new Array<>();
+        noiseStates.add("On");
+        noiseStates.add("Off");
+        noise.setItems(noiseStates);
+        noise.setSelectedIndex(StateManager.settings.hasNoise()?0:1);
+        content.add(noise).pad(10f).fillX();
         content.row();
 
         //apply button
@@ -80,9 +91,11 @@ public class SettingsMenu extends SubMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 StateManager.settings.setMusicVolume(volume.getValue());
+                StateManager.music.setVolume(volume.getValue());
                 StateManager.settings.setSelectedSolver(solvers.getSelectedIndex());
                 StateManager.settings.setSelectedSource(inputmodes.getSelectedIndex());
                 StateManager.settings.setWater(water.getSelectedIndex() == 0);
+                StateManager.settings.setNoise(noise.getSelectedIndex() == 0);
                 DataIO.writeSettings(StateManager.settings);
                 manager.pop();
             }

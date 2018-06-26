@@ -34,9 +34,9 @@ public class HumanDrag extends Human {
     @Override
     public boolean touchDown (int screenX, int screenY, int pointer, int button) {
         if(!gameState.getBall().isStopped() || button != 0) return false;
-        if(ballTouched(screenX, screenY)){
+        ball = ballTouched(screenX,screenY);
+        if(ball != null){
             down = true;
-            ball = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
             mouse = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
         }
         return false;
@@ -51,7 +51,7 @@ public class HumanDrag extends Human {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if(down && button == 0){
-            Vector3 velocity = getTerrainMousePos(screenX,screenY,gameState.getBall().getPosition().z).scl(-1f).add(gameState.getBall().getPosition()).scl(3);
+            Vector3 velocity = getTerrainMousePos(screenX,screenY,gameState.getBall().getPosition().z).scl(-1f).add(gameState.getBall().getPosition()).scl(2);
             gameState.getBall().hit(velocity);
             hitCount++;
         }
@@ -69,14 +69,19 @@ public class HumanDrag extends Human {
         return intersect;
     }
 
-    private boolean ballTouched (int screenX, int screenY) {
+    private Vector2 ballTouched (int screenX, int screenY) {
         Vector3 position = new Vector3();
+        Vector2 pos = null;
         Ray ray = gameState.getCamera().getPickRay(screenX, screenY);
 
         final ModelInstance instance = gameState.getBall().getModel();
         instance.transform.getTranslation(position);
         final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
         float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
-        return dist2 <= (gameState.getBall().getDiameter() / 2) * (gameState.getBall().getDiameter() / 2);
+        if(dist2 <= (gameState.getBall().getDiameter() / 2) * (gameState.getBall().getDiameter() / 2)){
+            Vector3 screenPos = gameState.getCamera().project(position);
+            pos = new Vector2(screenPos.x,screenPos.y);
+        }
+        return pos;
     }
 }

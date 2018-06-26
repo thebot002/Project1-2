@@ -1,5 +1,6 @@
 package com.golf2k18.objects;
 
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.golf2k18.function.BiquinticSpline;
 import com.golf2k18.function.Function;
@@ -135,5 +136,13 @@ public class Terrain implements Serializable {
 
     public ArrayList<Wall> getObstacles() {
         return obstacles;
+    }
+
+    public ArrayList<ModelInstance> getObstacleInstances(){
+        ArrayList<ModelInstance> array = new ArrayList<>();
+        for (Wall w: obstacles) {
+            array.add(w.getInstance());
+        }
+        return array;
     }
 }

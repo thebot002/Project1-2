@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.golf2k18.StateManager;
 import com.golf2k18.models.HeightField;
@@ -27,7 +26,7 @@ public abstract class State3D extends State {
     protected PerspectiveCamera camera;
     public GameCameraController controller;
     private ModelBatch batch;
-    protected Array<ModelInstance> instances = new Array<>();
+    protected ArrayList<ModelInstance> instances = new ArrayList<>();
 
     private Color bgColor = new Color(.8f,.8f,.8f,1f);
     private Environment environment;
@@ -36,6 +35,10 @@ public abstract class State3D extends State {
     private TerrainModel terrainModel;
     private Array<Renderable> fields;
     private ArrayList<Wall> obstacles;
+    private ArrayList<ModelInstance> walls;
+    private ModelInstance water;
+
+    private boolean hideWalls = false;
 
     public State3D(StateManager manager, Terrain terrain) {
         super(manager);
@@ -68,12 +71,7 @@ public abstract class State3D extends State {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1.f));
         environment.add(light);
 
-
         createTerrain();
-        //add the terrain to the list of models to display
-        for (ModelInstance m: terrainModel.world) {
-            instances.add(m);
-        }
     }
 
     public abstract void pause();
@@ -83,15 +81,15 @@ public abstract class State3D extends State {
      * Shows on the screen all the different instances of the game
      * @param instances instances of the game
      */
-    public void render (final Array<ModelInstance> instances) {
+    public void render (final ArrayList<ModelInstance> instances) {
         batch.begin(camera);
         if (instances != null) batch.render(instances, environment);
-        for (Renderable r: fields) {
-            batch.render(r);
-        }
-        for (Wall w: obstacles) {
-            batch.render(w.getInstance(),environment);
-        }
+        for (Renderable r: fields) batch.render(r);
+        if(StateManager.settings.hasWater()) batch.render(water,environment);
+        if(!hideWalls)
+            for (Wall w: obstacles)
+                batch.render(w.getInstance(),environment);
+        batch.render(walls,environment);
         batch.end();
     }
 
@@ -132,6 +130,9 @@ public abstract class State3D extends State {
         }
 
         obstacles = terrain.getObstacles();
+
+        walls = terrainModel.getEdges();
+        water = terrainModel.getWater();
     }
 
     public void update(float dt){
@@ -144,5 +145,13 @@ public abstract class State3D extends State {
 
     public Terrain getTerrain() {
         return terrain;
+    }
+
+    public boolean isHideWalls() {
+        return hideWalls;
+    }
+
+    protected void toggleHideWalls(){
+        hideWalls = !hideWalls;
     }
 }

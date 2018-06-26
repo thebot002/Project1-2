@@ -18,6 +18,7 @@ public class Settings implements Serializable {
     private float musicVolume;
 
     private boolean water = false;
+    private boolean noise = false;
 
     public Settings(){
         selectedSolver = 1;
@@ -37,7 +38,7 @@ public class Settings implements Serializable {
         sources.add("Manual");
         sources.add("Arrow");
 
-        musicVolume = 0.5f;
+        musicVolume = 0f;
     }
 
     public ArrayList<String> getSolvers() {
@@ -97,12 +98,20 @@ public class Settings implements Serializable {
         return musicVolume;
     }
 
-    public boolean isWater(){
+    public boolean hasWater(){
         return water;
     }
 
     public void setWater(boolean water){
         this.water = water;
+    }
+
+    public boolean hasNoise() {
+        return noise;
+    }
+
+    public void setNoise(boolean noise) {
+        this.noise = noise;
     }
 
     public static Settings load(){

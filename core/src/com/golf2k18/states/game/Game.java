@@ -36,6 +36,7 @@ public class Game extends State3D {
     private boolean paused = false;
     private boolean isPushed = false;
     private boolean isSettings = false;
+    private boolean moving = false;
 
     private StateManager manager;
 
@@ -73,7 +74,7 @@ public class Game extends State3D {
     public void create() {
         super.create();
 
-        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
+        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y),0);
         controller.initFocus(ball.getPosition());
 
         engine = new Engine(terrain, ball, StateManager.settings.getSolver());
@@ -170,21 +171,19 @@ public class Game extends State3D {
         givUp.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(course.getSize() != hole_number){
-                    course.setScore(hole_number,17);
-                    endState(new LoseState(manager,g));
-                }
+                player.giveUp();
+                endState(course.getSize()>hole_number?new LoseState(manager,g):new WinState(manager,g));
             }
         });
         organizer.row();
         organizer.add(givUp).top().pad(10f);
-
 
         TextButton restart = new TextButton("Restart", StateManager.skin);
         restart.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 restart();
+                resume();
             }
         });
         organizer.row();
@@ -231,6 +230,7 @@ public class Game extends State3D {
     public void update(float dt) {
         super.update(dt);
         if(isPushed){
+            paused = false;
             isPushed = false;
             setProcessors();
         }
@@ -240,16 +240,24 @@ public class Game extends State3D {
         }
         if (paused) return;
         if (!ball.isStopped()) {
-            engine.updateBall(dt);
-            ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y));
-        } else {
+            if(!moving){
+                moving = true;
+                Gdx.input.setInputProcessor(new InputMultiplexer(this,hud));
+            }
+            ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x, ball.getPosition().y),engine.updateBall(dt));
+        }
+        else {
+            if(moving){
+                moving = false;
+                setProcessors();
+            }
             player.handleInput(this);
         }
         if(engine.isGoal()) {
             if(hole_number == course.getSize()) endState(new WinState(manager,this));
             else endState(new TerrainWinState(manager,this));
         }
-        if(player.getHitCount() > 17) endState(new LoseState(manager,this));
+        if(player.getHitCount() >= 17) endState(new LoseState(manager,this));
         updateLabels();
     }
 
@@ -289,7 +297,7 @@ public class Game extends State3D {
     public void restart(){
         ball.getPosition().set(terrain.getStart().cpy());
         ball.setStopped();
-        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y));
+        ball.updateInstance(terrain.getFunction().evaluateF(ball.getPosition().x,ball.getPosition().y),0);
         player.resetCount();
     }
 
