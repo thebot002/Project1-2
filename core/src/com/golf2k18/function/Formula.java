@@ -45,7 +45,7 @@ public class Formula implements Function, Serializable {
                 tempRight = nodeStack.pop();
                 tempRoot.right = tempRight;
 
-                if(!postFix[i].equals("sin") && !postFix[i].equals("cos"))
+                if(!postFix[i].equals("ln") && !postFix[i].equals("sin") && !postFix[i].equals("cos"))
                 {
                     tempLeft = nodeStack.pop();
                     tempRoot.left = tempLeft;
@@ -57,6 +57,7 @@ public class Formula implements Function, Serializable {
         root = nodeStack.peek();
 
         xDeriv = xDerive(root);
+        printTree(xDeriv);
         yDeriv = yDerive(root);
 
         boolean x = false;
@@ -100,7 +101,7 @@ public class Formula implements Function, Serializable {
 	 */
 	private static boolean isOperator(String s)
 	{
-		if(s.equals("(") || s.equals(")") || s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("sin") || s.equals("cos"))
+		if(s.equals("(") || s.equals(")") || s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("^") || s.equals("ln") || s.equals("sin") || s.equals("cos"))
 		{
 			return true;
 		}
@@ -129,7 +130,7 @@ public class Formula implements Function, Serializable {
 		{
 			priority = 2;
 		}
-		if(op.equals("sin") || op.equals("cos"))
+		if(op.equals("ln") || op.equals("sin") || op.equals("cos"))
 		{
 			priority = 3;
 		}
@@ -266,10 +267,36 @@ public class Formula implements Function, Serializable {
 			return leftValue * rightValue;
 		
 		if(root.value.equals("/"))
-			return leftValue / rightValue;
+        {
+            if (rightValue == 0)
+            {
+                return 0f;
+            }
+            return leftValue / rightValue;
+        }
 		
 		if(root.value.equals("^"))
 			return (float)Math.pow(leftValue, rightValue);
+
+		if(root.value.equals("ln"))
+		{
+			if(leftValue == null)
+			{
+			    if(rightValue <= 0)
+			    {
+			        return 0f;
+                }
+				return (float)Math.log(rightValue);
+			}
+			else
+			{
+			    if(leftValue <= 0)
+                {
+                    return 0f;
+                }
+				return (float)Math.log(leftValue);
+			}
+		}
 		
 		if(root.value.equals("sin"))
 			if(leftValue == null)
@@ -360,19 +387,42 @@ public class Formula implements Function, Serializable {
 		if(root.value.equals("^"))
 		{
 			Node tempNode = new Node("*");
-			tempNode.left = new Node("*");
-			tempNode.right = new Node("^");
-			tempNode.right.right = new Node("-");
-			tempNode.right.right.right = new Node("1");
+			tempNode.left = new Node("^");
+			tempNode.right = new Node("+");
+			tempNode.right.left = new Node("/");
+			tempNode.right.right = new Node("*");
+			tempNode.right.left.left = new Node("*");
+			tempNode.right.right.right = new Node("ln");
 
-			tempNode.left.left =  xDerive(root.left);
+			tempNode.left.left = root.left;
 			tempNode.left.right = root.right;
-			tempNode.right.left = root.left;
-			tempNode.right.right.left = root.right;
+			tempNode.right.left.left.left = xDerive(root.left);
+			tempNode.right.left.left.right = root.right;
+			tempNode.right.left.right = root.left;
+			tempNode.right.right.left = xDerive(root.right);
+			tempNode.right.right.right.right = root.left;
 
 			return tempNode;
 		}
-		
+
+		if(root.value.equals("ln"))
+		{
+			Node tempNode = new Node("/");
+
+			if(root.left == null)
+			{
+				tempNode.left = xDerive(root.right);
+				tempNode.right = root.right;
+			}
+			else
+			{
+				tempNode.left = xDerive(root.left);
+				tempNode.right = root.left;
+			}
+
+			return tempNode;
+		}
+
 		if(root.value.equals("sin"))
 		{
 			Node tempNode = new Node("*");
@@ -480,19 +530,42 @@ public class Formula implements Function, Serializable {
 		if(root.value.equals("^"))
 		{
 			Node tempNode = new Node("*");
-			tempNode.left = new Node("*");
-			tempNode.right = new Node("^");
-			tempNode.right.right = new Node("-");
-			tempNode.right.right.right = new Node("1");
+			tempNode.left = new Node("^");
+			tempNode.right = new Node("+");
+			tempNode.right.left = new Node("/");
+			tempNode.right.right = new Node("*");
+			tempNode.right.left.left = new Node("*");
+			tempNode.right.right.right = new Node("ln");
 
-			tempNode.left.left =  yDerive(root.left);
+			tempNode.left.left = root.left;
 			tempNode.left.right = root.right;
-			tempNode.right.left = root.left;
-			tempNode.right.right.left = root.right;
+			tempNode.right.left.left.left = yDerive(root.left);
+			tempNode.right.left.left.right = root.right;
+			tempNode.right.left.right = root.left;
+			tempNode.right.right.left = yDerive(root.right);
+			tempNode.right.right.right.right = root.left;
 			
 			return tempNode;
 		}
-		
+
+		if(root.value.equals("ln"))
+		{
+			Node tempNode = new Node("/");
+
+			if(root.left == null)
+			{
+				tempNode.left = yDerive(root.right);
+				tempNode.right = root.right;
+			}
+			else
+			{
+				tempNode.left = yDerive(root.left);
+				tempNode.right = root.left;
+			}
+
+			return tempNode;
+		}
+
 		if(root.value.equals("sin"))
 		{
 			Node tempNode = new Node("*");
