@@ -153,7 +153,6 @@ public class TerrainModel {
             Model wall = builder.createBox(p0p1.len()+(2*thickness),2*thickness,2*thickness,
                     new Material(TextureAttribute.createDiffuse(brick)),attr);
             walls.add(new ModelInstance(wall, new Matrix4(position,orientation,new Vector3(1,1,1))));
-
         }
         return walls;
     }
