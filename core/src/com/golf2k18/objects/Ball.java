@@ -118,8 +118,4 @@ public class Ball implements Collider{
     public Vector3 getBottomRightCorner() {
         return new Vector3(position.x + DIAMETER/2, position.y - DIAMETER/2,1);
     }
-
-    public boolean justHit(){
-        return justHit;
-    }
 }

@@ -8,6 +8,8 @@ import com.golf2k18.function.Matrix;
 import com.golf2k18.objects.Ball;
 import com.golf2k18.objects.Terrain;
 import com.golf2k18.objects.Wall;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -95,12 +97,6 @@ public class Engine {
         ball.getVelocity().set(newVel.cpy());
         Vector3 newPos = sherlock.solvePos(new Vector3(position),new Vector3(velocity));
         ball.getPosition().set(newPos);
-        Vector3 w = findWallSide();
-        if(w != null){
-            Vector3 normalVector = w.crs(0,0,1).nor();
-            bounce(newVel,normalVector);
-            ball.getVelocity().set(normalVector);
-        }
 
         updateBall(newPos,newVel);
 
@@ -117,27 +113,25 @@ public class Engine {
         if(position.x <= 0){
             Vector3 n = new Vector3(1,0,0);
             bounce(velocity, n);
-            ball.getVelocity().set(n);
             ball.getPosition().x = 0;
         }
         if(position.x >= terrain.getWidth()){
             Vector3 n = new Vector3(-1,0,0);
             bounce(velocity, n);
-            ball.getVelocity().set(n);
             ball.getPosition().x = terrain.getWidth();
         }
         if(position.y <= 0){
             Vector3 n = new Vector3(0,1,0);
             bounce(velocity, n);
-            ball.getVelocity().set(n);
             ball.getPosition().y = 0;
         }
         if(position.y >= terrain.getHeight()){
             Vector3 n = new Vector3(0,-1,0);
             bounce(velocity,n);
-            ball.getVelocity().set(n);
             ball.getPosition().y = terrain.getHeight();
         }
+
+        //collide();
 
         ball.getPosition().z = terrain.getFunction().evaluateF(position.x,position.y);
     }
@@ -148,6 +142,7 @@ public class Engine {
         n.scl(dot);
         n.add(v.scl(-1));
         n.scl(-1);
+        ball.getVelocity().set(n);
     }
 
     public boolean isGoal() {
@@ -182,79 +177,41 @@ public class Engine {
         return v.scl((float)(-1.225f*0.47f*vel.len()*Math.PI*Math.pow(ball.getDiameter()/2,2))/2);
     }
 
-    public boolean isBotGoal() {
-        Vector3 pos = ball.getPosition().cpy();
-        Vector3 vel = ball.getVelocity().cpy();
-        Vector3 hol = terrain.getHole().cpy();
-        pos.z = 0f;
-        vel.z = 0f;
-        hol.z = 0f;
-        boolean goal = false;
-        if ((pos.dst(hol) < radius*.5) && vel.len() < GOAL_TOLERANCE*.95)
-        {
-            goal = true;
-        }
-        return goal;
-    }
-
     public double getGoalTolerance()
     {
         return GOAL_TOLERANCE;
     }
 
+    public void collide() {
+        float r = ball.getDiameter()/2f;
+        Vector3 C = ball.getPosition().cpy();
 
-    public Wall collide() {
         for (Wall wall : terrain.getObstacles()) {
-            if ((wall.getBottomRightCorner().x < ball.getTopLeftCorner().x || ball.getBottomRightCorner().x < wall.getTopLeftCorner().x || wall.getBottomRightCorner().y < ball.getTopLeftCorner().y || ball.getBottomRightCorner().y < wall.getTopLeftCorner().y)) {
-                System.out.println("Returned a wall");
-                return null;
-            }
-            else{
-                return wall;
+            for (int i = 0; i < 4; i++) {
+                ArrayList<Vector3> edge = wall.getEdge(i);
+                Vector3 A = edge.get(0).cpy();
+                Vector3 B = edge.get(1).cpy();
+
+                Vector3 ab = B.cpy().sub(A);
+                Vector3 ac = A.cpy().sub(C);
+
+                //projection
+
+                Vector3 D = A.cpy().scl(ab.dot(ac) / (ab.len()*ab.len())) ;
+
+                Vector3 ad = D.cpy().sub(A);
+                Vector3 bd = D.cpy().sub(B);
+
+                if(ab.len() > ad.len() && ab.len() > bd.len()){
+                    Vector3 dc = D.cpy().sub(C);
+
+                    if(dc.len() <= r){
+                        //bounce(ball.getVelocity(),dc.nor());
+                        return;
+                    }
+                }
             }
         }
-        return null;
-
-    }
-
-    public Vector3 findWallSide(){
-        Wall wall = collide();
-        if(wall != null) {
-            //Vertical left wall
-            if(wall.getBottomRightCorner().x < ball.getBottomRightCorner().x && wall.getTopRightCorner().x >  ball.getBottomRightCorner().x && wall.getBottomRightCorner().y < ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y > ball.getBottomRightCorner().y){
-                return wall.getBottomRightCorner().sub(wall.getBottomLeftCorner());
-            }
-           // Vertical Right wall
-            if(wall.getTopRightCorner().x >= ball.getTopLeftCorner().x && wall.getBottomRightCorner().x <= ball.getBottomRightCorner().x && wall.getTopRightCorner().y <= ball.getTopLeftCorner().y && wall.getTopLeftCorner().y >= ball.getTopLeftCorner().y){
-                return wall.getTopRightCorner().sub(wall.getTopLeftCorner());
-            }
-            //Vertical Top wall
-            if(wall.getBottomLeftCorner().x <= ball.getBottomRightCorner().x && wall.getTopLeftCorner().x >=  ball.getBottomRightCorner().x && wall.getBottomLeftCorner().y >= ball.getBottomRightCorner().y && wall.getBottomRightCorner().y <= ball.getBottomRightCorner().y){
-                return wall.getBottomLeftCorner().sub(wall.getTopLeftCorner());
-            }
-            //Vertical Bottom wall
-            if(wall.getBottomRightCorner().x <= ball.getTopLeftCorner().x && wall.getTopRightCorner().x >=  ball.getTopLeftCorner().x && wall.getBottomRightCorner().y <= ball.getTopLeftCorner().y && wall.getBottomLeftCorner().y >= ball.getTopLeftCorner().y){
-                return wall.getBottomRightCorner().sub(wall.getBottomRightCorner());
-            }
-            //Horizontal Right wall
-            if (wall.getBottomRightCorner().x >= ball.getTopLeftCorner().x && wall.getBottomLeftCorner().x <= ball.getTopLeftCorner().x && wall.getBottomRightCorner().y <= ball.getTopLeftCorner().y && wall.getTopRightCorner().y >= ball.getTopLeftCorner().y) {
-                return wall.getTopRightCorner().sub(wall.getBottomRightCorner());
-            }
-            //Horizontal Left wall
-            if (wall.getBottomLeftCorner().x <= ball.getBottomRightCorner().x && wall.getBottomRightCorner().x >= ball.getBottomRightCorner().x && wall.getBottomLeftCorner().y <= ball.getBottomRightCorner().y && wall.getTopLeftCorner().y >= ball.getBottomRightCorner().y) {
-                return wall.getTopLeftCorner().sub(wall.getBottomLeftCorner());
-            }
-            //Horizontal Top wall
-            if (wall.getTopLeftCorner().x  <= ball.getBottomRightCorner().x && wall.getTopRightCorner().x >= ball.getBottomRightCorner().x && wall.getTopLeftCorner().y >= ball.getBottomRightCorner().y && wall.getBottomLeftCorner().y <= ball.getBottomRightCorner().y) {
-                return wall.getTopLeftCorner().sub(wall.getTopRightCorner());
-            }
-            //Horizontal Bottom wall
-            if (wall.getBottomLeftCorner().x <= ball.getTopLeftCorner().x && wall.getBottomRightCorner().x >= ball.getTopLeftCorner().x && wall.getBottomLeftCorner().y <= ball.getTopLeftCorner().y && wall.getTopLeftCorner().y >= ball.getTopLeftCorner().y) {
-                return wall.getBottomLeftCorner().sub(wall.getBottomRightCorner());
-            }
-
-        }
-        return null;
     }
 
     public void sclDt(float scl){

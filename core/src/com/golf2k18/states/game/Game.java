@@ -254,6 +254,7 @@ public class Game extends State3D {
             player.handleInput(this);
         }
         if(engine.isGoal()) {
+
             if(hole_number == course.getSize()) endState(new WinState(manager,this));
             else endState(new TerrainWinState(manager,this));
         }
