@@ -131,7 +131,7 @@ public class Engine {
             ball.getPosition().y = terrain.getHeight();
         }
 
-        collide();
+        //collide();
 
         ball.getPosition().z = terrain.getFunction().evaluateF(position.x,position.y);
     }
@@ -195,10 +195,14 @@ public class Engine {
                 Vector3 ab = B.cpy().sub(A);
                 Vector3 ac = A.cpy().sub(C);
 
-                float d = ab.dot(ac);
+                //projection
 
-                if(d < ab.len() && d > 0){
-                    Vector3 D = A.cpy().add(ab.cpy().nor().scl(d));
+                Vector3 D = A.cpy().scl(ab.dot(ac) / (ab.len()*ab.len())) ;
+
+                Vector3 ad = D.cpy().sub(A);
+                Vector3 bd = D.cpy().sub(B);
+
+                if(ab.len() > ad.len() && ab.len() > bd.len()){
                     Vector3 dc = D.cpy().sub(C);
 
                     if(dc.len() <= r){
