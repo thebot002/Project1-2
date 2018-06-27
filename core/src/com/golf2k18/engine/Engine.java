@@ -159,6 +159,20 @@ public class Engine {
         return goal;
     }
 
+    public boolean isBotGoal() {
+        Vector3 pos = ball.getPosition().cpy();
+        Vector3 vel = ball.getVelocity().cpy();
+        Vector3 hol = terrain.getHole().cpy();
+        pos.z = 0f;
+        vel.z = 0f;
+        hol.z = 0f;
+        boolean goal = false;
+        if ((pos.dst(hol) < radius * 0.5) && vel.len() < GOAL_TOLERANCE * 0.8) {
+            goal = true;
+        }
+        return goal;
+    }
+
     public Vector3 noise(Vector3 vel){
         double r = new Random().nextGaussian()/10;
 
