@@ -142,7 +142,7 @@ public class Engine {
         n.scl(dot);
         n.add(v.scl(-1));
         n.scl(-1);
-        velocity.set(n);
+        ball.getVelocity().set(n);
     }
 
     public boolean isGoal() {
@@ -197,12 +197,14 @@ public class Engine {
 
                 float d = ab.dot(ac);
 
-                Vector3 D = A.cpy().add(ab.cpy().nor().scl(d));
-                Vector3 dc = C.cpy().sub(D);
+                if(d < ab.len() && d > 0){
+                    Vector3 D = A.cpy().add(ab.cpy().nor().scl(d));
+                    Vector3 dc = D.cpy().sub(C);
 
-                if(d < ab.len() && d > 0 /*&& dc.len() <= r*/){
-                    System.out.println(dc.len());
-                    //bounce(ball.getVelocity(),dc.nor());
+                    if(dc.len() <= r){
+                        //bounce(ball.getVelocity(),dc.nor());
+                        return;
+                    }
                 }
             }
         }

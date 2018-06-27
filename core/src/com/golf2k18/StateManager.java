@@ -44,9 +44,9 @@ public class StateManager extends ApplicationAdapter {
         skin = new Skin(Gdx.files.internal("Skins/gdx-skins-master/cloud-form/skin/cloud-form-ui.json"));
         settings = Settings.load();
         reset();
-        //State start = new MainMenu(this);
+        State start = new MainMenu(this);
         //State start = new TerrainEditor(this,DataIO.getTerrain("Cos"));
-        State start = new Game(this,new Course(DataIO.getTerrain("WallTerrain")),new HumanDrag());
+        //State start = new Game(this,new Course(DataIO.getTerrain("WallTerrain")),new HumanDrag());
         //State start = new Game(this,DataIO.getCourse("Default"),new HumanDrag());
         //State start = new Game(this,new Course(DataIO.getTerrain("Plane")),new simulatingBot());
         start.create();
@@ -145,7 +145,7 @@ public class StateManager extends ApplicationAdapter {
         Course course = new Course(terrains,"Default");
         DataIO.writeCourse(course);
 
-        c5.getObstacles().add(new Wall(new Vector3(10,8,1), new Vector3(8,10,1)));
+        c5.getObstacles().add(new Wall(new Vector3(10,8,1), new Vector3(10,10,1)));
         c5.setName("WallTerrain");
         DataIO.writeTerrain(c5);
     }
